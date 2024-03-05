@@ -237,15 +237,12 @@ function initGlobal() {
 	document.global.ui.two = 0;
 	document.global.ui.tournament = 0;
 	document.global.ui.multi = 0;
-
-	//login
-	document.global.login = {};
-	document.global.login.status = 0;
+	document.global.ui.auth = 0;
 
 	//fetch
 	document.global.fetch = {};
-	document.global.fetch.auth = "auth/";
-	document.global.fetch.logout = "logout/";
+	document.global.fetch.authURL = "auth/";
+	document.global.fetch.logoutURL = "logout/";
 
 	//websockets
 	document.global.socket = {}

@@ -6,7 +6,7 @@ function getCookie (name) {
 
 async function fetch_login(data) {
 	try {
-		const response = await fetch(document.global.fetch.auth, { 
+		const response = await fetch(document.global.fetch.authURL, { 
 			method:"POST",
 			credentials: "include",
 			headers: {
@@ -23,7 +23,7 @@ async function fetch_login(data) {
 
 async function fetch_logout() {
 	try {
-		const response = await fetch(document.global.fetch.logout, { 
+		const response = await fetch(document.global.fetch.logoutURL, { 
 			method:"POST",
 			credentials: "include",
 			headers: {
