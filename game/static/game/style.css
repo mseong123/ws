@@ -1,0 +1,583 @@
+body {
+	margin:0;
+}
+
+i {
+	padding:0 0.5rem;
+}
+
+p {
+	margin:0;
+}
+
+input:focus {
+	outline:none;
+}
+
+
+button:hover, button:focus {
+	outline:none;
+	cursor:pointer;
+}
+
+.inter-pong, button {
+	font-family: "Inter", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+	font-variation-settings:
+	  "slnt" 0;
+  }
+
+.banner {
+	position:absolute;
+	z-index: 2;
+	font-size: 2rem;
+	/* letter-spacing: 1px; */
+	color:white;
+	margin-left:0.5rem;
+	margin-top:2rem;
+}
+
+.icon {
+	font-size: 2rem;
+	margin-right:0.5rem;
+	vertical-align:text-bottom;
+}
+
+.underline {
+	text-decoration:underline;
+}
+
+.toggle-canvas, .toggle-chat, .toggle-game, .toggle-cheat {
+	padding: 5px 6px;
+	background-color: transparent;
+	border: 1px solid white;
+	border-radius: 4px;
+  }
+
+.toggle-cheat {
+	background-color:red;
+	width:32px;
+	height:26px;
+	color:white;	
+}
+
+.toggle-cheat i {
+	padding:0;
+}
+
+.toggle-canvas .icon-bar, .toggle-chat .icon-bar, .toggle-game .icon-bar{
+	display: block;
+	width: 18px;
+	height: 2px;
+	border-radius: 1px;
+	background-color:white;
+  }
+.toggle-canvas .icon-bar + .icon-bar, .toggle-chat .icon-bar + .icon-bar, .toggle-game .icon-bar + .icon-bar{
+	margin-top: 4px;
+  }
+
+.menu-canvas {
+	font-size: 0.75rem;
+	margin-top:0.5rem;
+	position:absolute;
+	color:rgb(177,177,177);
+	background-color:rgb(49,49,49);
+	right:0;
+	border-radius:0.25rem;
+	padding:0.5rem;
+}
+
+.menu-chat {
+	font-size: 0.75rem;
+	margin-top:0.5rem;
+	position:absolute;
+	color:rgb(177,177,177);
+	background-color:rgb(49,49,49);
+	left:0;
+	border-radius:0.25rem;
+	padding:0.5rem;
+	width:80%;
+	border:1px solid rgb(177,177,177);
+}
+
+.menu-game {
+	font-size: 0.75rem;
+	margin-top:0.5rem;
+	position:absolute;
+	color:rgb(177,177,177);
+	background-color:rgb(49,49,49);
+	top:30px;
+	right:0;
+	border-radius:0.25rem;
+	padding:0.5rem;
+}
+
+hr {
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+	border: 0;
+	border-top: 1px solid rgb(177,177,177);
+}
+
+.menu-canvas button, .menu-chat button, .menu-game button{
+	border:0;
+	background-color:transparent;
+	align-items:baseline;
+	color:rgb(177,177,177);
+	padding:1px 1px;
+	white-space:nowrap;
+}
+
+.menu-canvas .nav, .menu-chat .nav, .menu-game .nav{
+	width:100%;
+	font-size: 0.75rem;
+	margin:0.25rem 0;
+	display:flex;
+}
+
+.menu-canvas button:hover, .menu-canvas button:focus, .menu-chat button:hover, .menu-chat button:focus, .menu-game button:hover, .menu-game button:focus {
+	color:white;
+}
+
+.menu-canvas .nav i:nth-child(2), .menu-chat .nav i:nth-child(2), .menu-game .nav i:nth-child(2){
+	margin-left: auto;
+}
+
+.profile h4 {
+	padding:1px 6px;
+	margin:0;
+}
+
+.display-none {
+	display:none !important;
+}
+
+.display-block {
+	display:block !important;
+}
+
+.nav-chat, .nav-canvas {
+	color:rgb(2,238,139) !important;
+}
+
+.chat-container {
+	width:100%;
+	background-color:rgb(49,49,49);
+	color:rgb(177,177,177);
+	display:none;
+	padding:2rem;
+}
+.chat-icon {
+	display:flex;
+	height:100%;
+	align-items:center;
+	justify-content: center;
+}
+
+.chat-nav-container {
+	position:relative;
+}
+
+.main-menu, .login-menu, .local-menu, .single-menu, .two-menu, .tournament-menu, .multi-menu {
+	font-weight:normal;
+}
+
+.local-menu form {
+	background-color:rgb(49,44,44);
+	border-radius:0.25rem;
+	padding:0.25rem;
+}
+
+.local-menu form div {
+	margin:0.25rem 0;
+}
+
+.single-alias, .two-alias, .tournament-alias {
+	background-color:rgb(28,28,28);
+	border-radius:0.25rem;
+	padding:0.25rem;
+	margin-bottom:0.1rem;
+}
+.single-alias-display, .two-alias-display, .tournament-alias-display {
+	display:grid;
+	grid-template-columns: auto auto;
+}
+.tournament-alias-display {
+	max-height:45px;
+	overflow-y:auto;
+}
+
+.single-alias-display-inside, .two-alias-display-inside, .tournament-alias-display-inside {
+	display:grid;
+	grid-template-columns: auto auto auto;
+}
+.single-alias-display-warning, .two-alias-display-warning, .tournament-alias-display-warning {
+	color:red;
+	font-size: 0.5rem;
+}
+
+#single-alias-text, #two-alias-text, #tournament-alias-text {
+	margin-left:0.25rem;
+	width:140px;
+	height:18px;
+	background-color:transparent;
+	border:0;
+	color:rgb(143,143,143);
+	border-bottom:1px solid rgb(143,143,143);
+}
+
+#single-alias-text:focus, #two-alias-text:focus, #tournament-alias-text:focus {
+	border:1px solid rgb(143,143,143);
+}
+
+#single-duration, #two-duration, #tournament-duration {
+	width:77px;
+	height:24px;
+	background-color:transparent;
+	border:1px solid rgb(143,143,143);
+	color:rgb(143,143,143);
+}
+
+.single-submit, .two-submit, .tournament-submit {
+	display:grid;
+	grid-template-columns: auto auto;
+	margin:0;
+}
+
+.single-submit div, .two-submit div, .tournament-submit div {
+	margin:0.1rem 0;
+}
+
+.single-ludicrious, .two-ludicrious, .tournament-ludicrious {
+	color:rgb(2,238,139);
+}
+.single-start, .two-start, .tournament-start {
+	border-radius:0.25rem;
+	border:1px solid rgb(2,238,139)!important;
+	color:rgb(2,238,139)!important;
+}
+.single-start:focus, .single-start:hover, .two-start:hover, .two-start:focus, .tournament-start:hover, .tournament-start:focus {
+	color:white!important;
+	border:1px solid white!important;
+}
+
+.scoreboard {
+	box-sizing: border-box;
+	position:absolute;
+	width:100%;
+	top:0;
+	color:white;
+	font-size: 1rem;
+	padding:1rem 1.5rem;
+	z-index: 0;
+	display: grid;
+	grid-template-columns: auto auto auto;
+	justify-content:space-between;
+}
+
+.scoreboard-one p, .scoreboard-two p{
+	display:inline-block;
+	margin:0 1rem;
+}
+
+.scoreboard-one .scoreboard-one-score, .scoreboard-two .scoreboard-two-score {
+	width:10px;
+}
+
+.pause {
+	z-index:3;
+	position:absolute;
+	top:0;
+	left:0;
+	height:100%;
+	width:100%;
+	background-color:rgb(32,32,32,0.7);
+	display:grid;
+	justify-content: center;
+	align-content: center;
+	color:white;
+}
+
+.pause-header{
+	border:1px solid white;
+	border-radius:0.25rem;
+	padding:0.25rem;
+}
+
+
+.next-one, .next-two {
+	margin:0 1rem;
+	color:rgb(177,177,177);
+	font-size: 0.75rem;
+}
+
+.toggle-game-container, .toggle-cheat{
+	position:absolute;
+	right:1.25rem;
+	z-index: 2;
+}
+.toggle-game-container {
+	top:56px;
+}
+
+.toggle-cheat {
+	top:90px;
+	z-index: 1;
+}
+
+.timer {
+	border-radius:0.25rem;
+	border:1px solid white;
+	padding:0.25rem 0.5rem; 
+}
+
+.timer-ludicrious {
+	color:rgb(2,238,139);
+	border-color:rgb(2,238,139);
+}
+
+.game-summary-container {
+	z-index:3;
+	position:absolute;
+	top:0;
+	left:0;
+	height:100%;
+	width:100%;
+	display:grid;
+	grid-template-columns:75%;
+	grid-template-rows:75%;
+	justify-content: center;
+	align-content: center;
+	color:white;
+}
+
+.game-summary {
+	display:grid;
+	align-content:space-between;
+	background-color:rgb(32,32,32,0.7);
+	border-radius:0.25rem;
+	min-height:50%;
+	min-width: 50%;
+	padding:0.5rem;
+	font-size: 0.75rem;
+
+}
+.game-summary-header {
+	margin:0.5rem 0;
+	font-size: 1rem;
+}
+.game-summary-display {
+	display:grid;
+	grid-template-columns:auto auto;
+	
+}
+.game-summary-items {
+	display:grid;
+	justify-content:space-between;
+	grid-template-areas:
+		"round round"
+		"player-1 player-2";
+	border:1px solid white;
+	border-radius:0.25rem;
+	padding:0.25rem;
+	margin:0.25rem 0.25rem;
+}
+
+.won {
+	background-color:rgb(2,238,139);
+	border-radius:0.25rem;
+}
+
+.game-summary-items div span{
+	margin:0 0.1rem;
+}
+.game-summary-items div:nth-child(1) {
+	text-decoration:underline;
+}
+
+.game-summary-items div:nth-child(2) {
+	grid-area:player-1;
+}
+.game-summary-items div:nth-child(3) {
+	grid-area:player-2;
+}
+
+.reset-game {
+	display:grid;
+	justify-content:end;
+}
+.reset-game-button {
+	border:1px solid rgb(2,238,139);
+	background-color:transparent;
+	border-radius:0.25rem;
+	color:rgb(2,238,139);
+	padding:0.25rem 0.25rem;
+	font-size: 0.75rem;
+}
+
+.reset-game-button:hover, .reset-game-button:focus {
+	border:1px solid white;
+	color:white;
+}
+
+.game-end-display-container {
+	display:grid;
+	grid-template-columns: 50%;
+	justify-content:center;
+}
+
+.game-end-display {
+	border:1px solid rgb(2,238,139);
+	border-radius:0.25rem;
+	text-align:center;
+}
+
+@media (min-width:577px) {
+	.banner {
+		margin-top:3rem;
+		margin-left:2rem;
+	}
+	.icon {
+		font-size: 3rem;
+	}
+	.toggle-canvas, .toggle-chat, .toggle-game {
+		padding: 9px 10px;
+	}
+	.toggle-canvas .icon-bar, .toggle-chat .icon-bar, .toggle-game .icon-bar{
+		width:22px;
+	}
+	.menu-game {
+		top:40px;
+	}
+	hr {
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+	}
+	.scoreboard {
+		font-size: 1.5rem;
+		padding:1.5rem;
+	}
+	.scoreboard-one .scoreboard-one-score, .scoreboard-two .scoreboard-two-score {
+		width:15px;
+	}
+	.next-one, .next-two {
+		font-size: 1.25rem;
+	}
+	.toggle-game-container {
+		top:78px;
+	}
+	
+	.toggle-cheat {
+		top:126px;
+		width:44px;
+		height:34px;
+	}
+	.game-summary-display {
+		grid-template-columns: auto auto;
+		justify-content:normal;
+	}
+	
+}
+
+@media (min-width:769px) {
+	.banner {
+		margin-top:4rem;
+		margin-left:3rem;
+		font-size: 4rem;
+	}
+	.icon {
+		font-size: 4rem;
+	}
+	.chat-divider {
+		display:block;
+	}
+	.chat-container {
+		width:500px;
+		display:block;
+	}
+
+	.menu-canvas, .menu-chat, .menu-game {
+		padding:1rem;
+		font-size: 1rem;
+	}
+
+	.menu-canvas .nav, .menu-chat .nav, .menu-game .nav{
+		margin:0.5rem 0;
+		font-size: 1rem;
+	}
+	.main-container {
+		display:grid;
+		grid-template-columns: auto auto;
+		grid-gap:0;
+		justify-content:center;
+		align-content: center;
+		min-height:100vh;
+		overflow-x: hidden;
+	}
+	.chat-menu, .canvas-menu {
+		display:none;
+	}
+	.toggle-chat {
+		display:none;
+	}
+	.menu-back, .menu-home {
+		font-size: 1.5rem;
+		margin: 1px 3px;
+	}
+	.local-menu form div {
+		margin:0.5rem 0;
+	}
+	.single-alias, .two-alias, .tournament-alias {
+		padding:0.5rem;
+		margin-bottom:0.25rem;
+	}
+	.single-alias-display-warning, .two-alias-display-warning, .tournament-alias-display-warning{
+		color:red;
+		font-size: 0.75rem;
+	}
+	.single-submit div, .two-submit div, .tournament-submit div {
+		margin:0.25rem 0;
+	}
+	.tournament-alias-display {
+		max-height:60px;
+	}
+	.scoreboard {
+		font-size: 1.75rem;
+	}
+	.scoreboard-one .scoreboard-one-score, .scoreboard-two .scoreboard-two-score {
+		width:17.5px;
+	}
+	.next-one, .next-two {
+		font-size: 1.25rem;
+	}
+
+	.toggle-game-container {
+		top:102px;
+	}
+	
+	.toggle-cheat {
+		top:146px;
+	}
+	.pause-header{
+		padding:0.75rem;
+		font-size: 1.75rem;
+	}
+	.game-summary {
+		padding:0.75rem;
+		font-size: 1rem;
+	
+	}
+	.game-summary-header {
+		margin:0.5rem 0;
+		font-size: 1.25rem;
+	}
+	.game-summary-items div span{
+		margin:0 0.5rem;
+	}
+	.reset-game-button {
+		font-size: 1rem;
+	}
+	
+}

@@ -1,0 +1,305 @@
+{% load static %}
+<html>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" href="{% static 'game/canvas.css' %}">
+	<link rel="stylesheet" href="{% static 'game/style.css' %}">
+	
+	<body class="inter-pong">
+		<div class="main-container">
+			<div class="canvas-container">
+				<h2 class="banner">
+					<i class="fas fa-ping-pong-paddle-ball"></i>
+					<span class="underline">LudicriousPong</span>
+					<button type="button" class="toggle-canvas">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<div class="menu-canvas display-none">
+						<div class="profile">
+							<h4><i class="fas fa-user"></i>Profile</h4>
+						</div>
+						<hr></hr>
+						<div class="main-menu display-none">
+							<button type="button" class="nav nav-login"><i class="fa fa-sign-in"></i>Login &nbsp;<i class="fa fa-caret-right"></i></button>
+							<button type="button" class="nav nav-local"><i class="fas fa-location-dot"></i>Local &nbsp;<i class="fa fa-caret-right"></i></button>
+							<button type="button" class="nav nav-multi"><i class="fas fa-network-wired"></i>Multiplayer &nbsp;<i class="fa fa-caret-right"></i></button>
+						</div>
+						<!-- login menu -->
+						<div class="login-menu display-none">
+							<button type="button" class="menu-back login-back"><i class="fa fa-caret-left"></i></button>
+							<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
+							<h4>LOGIN</h4>
+							<form class="login">
+								<div>
+									<label for="username">Enter Username</label>
+									<input type="text" id="username" placeholder="username" required>
+									<label for="password">Enter Password</label>
+									<input type="text" id="password" placeholder="password" required>
+									<button type="submit" class="login-submit"><i class="fa fa-caret-right"></i></button>
+								</div>
+							</form>
+						</div>
+						<!-- local menu -->
+						<div class="local-menu display-none">
+							<button type="button" class="menu-back local-back"><i class="fa fa-caret-left"></i></button>
+							<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
+							<h4><i class="fas fa-location-dot"></i>LOCAL GAME</h4>
+							<button type="button" class="nav nav-single">Single Player (vs A.I.) &nbsp;<i class="fa fa-caret-right"></i></button>
+							<button type="button" class="nav nav-two">Two Player &nbsp;<i class="fa fa-caret-right"></i></button>
+							<button type="button" class="nav nav-tournament">Local Tournament &nbsp;<i class="fa fa-caret-right"></i></button>
+						</div>
+						<div class="single-menu display-none">
+								<button type="button" class="menu-back single-back"><i class="fa fa-caret-left"></i></button>
+								<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
+								<h4>SINGLE PLAYER (V.S. A.I.)</h4>
+								<form class="single-alias">
+									<div class="single-alias-display">
+										<p>Player(s): &nbsp;</p>
+										<div class="single-alias-display-inside"></div>
+									</div>
+									<p class="single-alias-display-warning">Enter only 1 alias</p>
+									<hr>
+									
+									<div>
+										<label for="single-alias-text">Enter Alias</label>
+										<input type="text" id="single-alias-text" required pattern="^[A-Za-z][A-Za-z0-9]*$" placeholder="alias">
+										<button type="submit" class="single-alias-submit"><i class="fa fa-caret-right"></i></button>
+									</div>
+								</form>
+								<form class="single-submit">
+									<div>
+										<label for="single-duration">Duration</label>
+										<input type="time" id="single-duration">
+									</div>
+									<div>
+										<label for="single-powerup">Power Up</label>
+										<input type="checkbox" id="single-powerup" checked>
+									</div>
+									<div>
+										<label for="single-ludicrious" class="single-ludicrious">Ludicious Mode</label>
+										<input type="checkbox" id="single-ludicrious" checked>
+									</div>
+									<button type="button" class="single-start"><i class="fa fa-play"></i>Play</button>
+								</form>
+						</div>
+						<!-- single vs ai menu -->
+						<div class="single-menu display-none">
+								<button type="button" class="menu-back single-back"><i class="fa fa-square-caret-left"></i></button>
+								<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
+								<h4>SINGLE PLAYER (V.S. A.I.)</h4>
+								<form class="single-alias">
+									<div class="single-alias-display">
+										<p>Player(s): &nbsp;</p>
+										<div class="single-alias-display-inside"></div>
+									</div>
+									<p class="single-alias-display-warning">Enter only 1 alias</p>
+									<hr>
+									
+									<div>
+										<label for="single-alias-text">Enter Alias</label>
+										<input type="text" id="single-alias-text" required pattern="^[A-Za-z][A-Za-z0-9]*$" placeholder="alias">
+										<button type="submit" class="single-alias-submit"><i class="fa fa-caret-right"></i></button>
+									</div>
+								</form>
+								<form class="single-submit">
+									<div>
+										<label for="single-duration">Duration</label>
+										<input type="time" id="single-duration">
+									</div>
+									<div>
+										<label for="single-powerup">Power Up</label>
+										<input type="checkbox" id="single-powerup" checked>
+									</div>
+									<div>
+										<label for="single-ludicrious" class="single-ludicrious">Ludicious Mode</label>
+										<input type="checkbox" id="single-ludicrious" checked>
+									</div>
+									<button type="button" class="single-start"><i class="fa fa-play"></i>Play</button>
+								</form>
+						</div>
+						<!-- two player menu -->
+						<div class="two-menu display-none">
+							<button type="button" class="menu-back two-back"><i class="fa fa-caret-left"></i></button>
+							<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
+							<h4>TWO PLAYER</h4>
+							<form class="two-alias">
+								<div class="two-alias-display">
+									<p>Player(s): &nbsp;</p>
+									<div class="two-alias-display-inside"></div>
+								</div>
+								<p class="two-alias-display-warning">Enter only 2 alias</p>
+								<hr>
+								
+								<div>
+									<label for="two-alias-text">Enter Alias</label>
+									<input type="text" id="two-alias-text" required pattern="^[A-Za-z][A-Za-z0-9]*$" placeholder="alias">
+									<button type="submit" class="two-alias-submit"><i class="fa fa-caret-right"></i></button>
+								</div>
+							</form>
+							<form class="two-submit">
+								<div>
+									<label for="two-duration">Duration</label>
+									<input type="time" id="two-duration">
+								</div>
+								<div>
+									<label for="two-powerup">Power Up</label>
+									<input type="checkbox" id="two-powerup" checked>
+								</div>
+								<div>
+									<label for="two-ludicrious" class="two-ludicrious">Ludicious Mode</label>
+									<input type="checkbox" id="two-ludicrious" checked>
+								</div>
+								<button type="button" class="two-start"><i class="fa fa-play"></i>Play</button>
+							</form>
+						</div>
+					<!-- local tournament menu -->
+					<div class="tournament-menu display-none">
+						<button type="button" class="menu-back tournament-back"><i class="fa fa-caret-left"></i></button>
+						<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
+						<h4>LOCAL TOURNAMENT</h4>
+						<form class="tournament-alias">
+							<div class="tournament-alias-display">
+								<p>Player(s): &nbsp;</p>
+								<div class="tournament-alias-display-inside"></div>
+							</div>
+							<p class="tournament-alias-display-warning">Enter at least 2 alias</p>
+							<hr>
+							
+							<div>
+								<label for="tournament-alias-text">Enter Alias</label>
+								<input type="text" id="tournament-alias-text" required pattern="^[A-Za-z][A-Za-z0-9]*$" placeholder="alias">
+								<button type="submit" class="tournament-alias-submit"><i class="fa fa-caret-right"></i></button>
+							</div>
+						</form>
+						<form class="tournament-submit">
+							<div>
+								<label for="tournament-duration">Duration</label>
+								<input type="time" id="tournament-duration">
+							</div>
+							<div>
+								<label for="tournament-powerup">Power Up</label>
+								<input type="checkbox" id="tournament-powerup" checked>
+							</div>
+							<div>
+								<label for="tournament-ludicrious" class="tournament-ludicrious">Ludicious Mode</label>
+								<input type="checkbox" id="tournament-ludicrious" checked>
+							</div>
+							<button type="button" class="tournament-start"><i class="fa fa-play"></i>Play</button>
+						</form>
+					</div>
+					<!-- multiplayer menu -->
+					<div class="multi-menu display-none">
+						<button type="button" class="menu-back multi-back"><i class="fa fa-caret-left"></i></button>
+						<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
+						<h4>MULTIPLAYER</h4>
+					</div>
+					<!-- chat menu -->
+					<div class="chat-menu">
+						<hr class="chat-divider"></hr>
+						<button type="button" class="nav nav-chat"><i class="fas fa-comment"></i>Live Chat &nbsp;<i class="fa fa-caret-right"></i></button>
+							
+					</div>
+					</div>
+				</h2>
+				<div class="canvas-background canvas-background-1"></div>
+				<div class="canvas-background canvas-background-2"></div>
+				<div class="pause display-none">
+					<h3 class="pause-header">Paused</h3>
+				</div>
+				<div class="game-summary-container display-none">
+					<div class="game-summary">
+						<div>
+							<h4 class="game-summary-header">Score</h4>
+							<hr>
+							<h4 class="game-summary-header-type"></h4>
+							<div class="game-summary-display">
+								
+							</div>
+						</div>
+						<div class="game-end-display-container display-none">
+							<h4 class="game-end-display">Game End</h4>
+						</div>
+						<div class="reset-game display-none"><button class="reset-game-button" type="button">Next</button></div>
+					</div>
+				</div>
+				<canvas class="canvas" tabindex="1"></canvas>
+				<div class="scoreboard display-none">
+					<div class="scoreboard-one">
+						<p class="scoreboard-one-name"></p>
+						<p class="scoreboard-one-score"></p>
+					</div>
+					<div class="timer"></div>
+					<div class="scoreboard-two">
+						<p class="scoreboard-two-name"></p>
+						<p class="scoreboard-two-score"></p>
+					</div>
+					<p class="next-one display-none"></p>
+					<div></div>
+					<p class="next-two display-none"></p>
+				</div>
+				<div class="toggle-game-container">
+					<button type="button" class="toggle-game display-none">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<div class="menu-game display-none">
+						<div class="profile">
+							<h4><i class="fas fa-user"></i>Profile</h4>
+						</div>
+						<hr>
+						<button type="button" class="nav nav-pause">Pause &nbsp;<i class="fa fa-2xs">ESC</i></button>
+						<button type="button" class="nav nav-game-summary">Game Score &nbsp;<i class="fa fa-2xs">TAB</i></button>
+						<button type="button" class="nav nav-reset">Reset &nbsp;<i class="fa fa-2xs"></i></button>
+						<div class="chat-menu">
+							<hr class="chat-divider"></hr>
+							<button type="button" class="nav nav-chat"><i class="fas fa-comment"></i>Live Chat &nbsp;<i class="fa fa-caret-right"></i></button>
+						</div>
+					</div>
+				</div>
+					<button type="button" class="toggle-cheat display-none">
+						<i class="fa fa-bolt"></i>
+					</button>
+			
+					
+					
+				
+			</div>
+			<div class="chat-container">
+				<div class="chat-nav-container">
+					<button type="button" class="toggle-chat">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+					</button>
+					<div class="menu-chat display-none">
+						<div class="profile">
+							<h4><i class="fas fa-user"></i>Profile</h4>
+						</div>
+						<div class="canvas-menu">
+							<hr class="chat-divider"></hr>
+							<button type="button" class="nav nav-canvas"><i class="fas fa-comment"></i>Game &nbsp;<i class="fa fa-caret-right"></i></button>
+						</div>
+
+						
+					</div>
+				</div>
+				<div class="chat-icon">
+					<i class="fas fa-comment fa-10x fa-fw"></i>
+				</div>
+				
+			</div>
+		</div>
+		
+	</body>
+	<script type="module" src="{% static 'game/init.js' %}"></script>
+	<script type="module" src="{% static 'game/render.js' %}"></script>
+	<script type="module" src="{% static 'game/gameplay.js' %}"></script>
+	<script type="module" src="{% static 'game/multiplayer.js' %}"></script>
+	
+	
+</html>
