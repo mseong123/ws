@@ -140,6 +140,7 @@ function initGlobal() {
 		
 	//gameplay
 	document.global.gameplay = {};
+	document.global.gameplay.username = "";
 	document.global.gameplay.backgroundClass = ["canvas-url-space", "canvas-url-ocean", "canvas-url-alien", "canvas-url-desert"];
 	document.global.gameplay.backgroundIndex = Math.floor(Math.random() * 4); 
 	document.global.gameplay.roundStart = 0;
@@ -236,6 +237,20 @@ function initGlobal() {
 	document.global.ui.two = 0;
 	document.global.ui.tournament = 0;
 	document.global.ui.multi = 0;
+
+	//login
+	document.global.login = {};
+	document.global.login.status = 0;
+
+	//fetch
+	document.global.fetch = {};
+	document.global.fetch.auth = "auth/";
+	document.global.fetch.logout = "logout/";
+
+	//websockets
+	document.global.socket = {}
+	document.global.socket.gameLobby;
+	document.global.socket.gameLobbyInfo;
 	
 }
 

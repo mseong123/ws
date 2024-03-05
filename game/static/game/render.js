@@ -476,6 +476,14 @@ function processUI() {
 		document.querySelector(".multi-menu").classList.add("display-block"):document.querySelector(".multi-menu").classList.remove("display-block");
 	document.global.gameplay.ludicrious?
 		document.querySelector(".timer").classList.add("timer-ludicrious"):document.querySelector(".timer").classList.remove("timer-ludicrious");
+	if (document.global.login.status) {
+		document.querySelector(".login-true").classList.remove("display-none");
+		document.querySelectorAll(".login-false").forEach(element=>element.classList.add("display-none"))
+	}
+	else {
+		document.querySelectorAll(".login-false").forEach(element=>element.classList.remove("display-none"))
+		document.querySelector(".login-true").classList.add("display-none");
+	}
 	
 	
 	for (let i = 0; i < document.global.gameplay.localSingleInfo.player.length; i++) {

@@ -253,7 +253,7 @@ hr {
 .single-ludicrious, .two-ludicrious, .tournament-ludicrious {
 	color:rgb(2,238,139);
 }
-.single-start, .two-start, .tournament-start {
+.single-start, .two-start, .tournament-start, .nav-logout {
 	border-radius:0.25rem;
 	border:1px solid rgb(2,238,139)!important;
 	color:rgb(2,238,139)!important;
