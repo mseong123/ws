@@ -53,26 +53,22 @@ function createGameLobbyWebSocket() {
 	};
 }
 
-// function createGameSocket() {
-// 	document.global.socket.gameSocket = new WebSocket(
-// 		'ws://'
-// 		+ window.location.host
-// 		+ '/game/lobby/'
-// 	);
+export function createGameSocket(mainClient) {
+	document.global.socket.gameSocket = new WebSocket(
+		'ws://'
+		+ window.location.host
+		+ '/game/game/' + mainClient + '/'
+	);
 
-// 	document.global.socket.gameSocket.onmessage = function(e) {
-		
-// 		const data = JSON.parse(e.data);
-// 		const user = document.createElement('p');
-// 		user.textContent = data.user;
-// 		user.classList.add(data.user)
-// 		document.querySelector('.lobby').appendChild(user);
-// 	};
+	document.global.socket.gameSocket.onmessage = function(e) {
+		const data = JSON.parse(e.data);
+		document.global.socket.gameSocketInfo = data.gameSocketInfo;
+	};
 
-// 	document.global.socket.gameSocket.onclose = function(e) {
-// 		console.error('Game socket closed unexpectedly');
-// 	};
-// }
+	document.global.socket.gameSocket.onclose = function(e) {
+		console.error('Game socket closed unexpectedly');
+	};
+}
 
 
 export function keyBindingMultiplayer() {
@@ -86,11 +82,13 @@ export function keyBindingMultiplayer() {
 	multiLobbyBack.addEventListener("click", (e)=>{
 		document.global.ui.mainMenu = 1;
 		document.global.ui.multiLobby = 0;
+		document.global.socket.gameLobbySocket.close();
 	})
-	const multiGameBack = document.querySelector(".multi-create-back");
-	multiGameBack.addEventListener("click", (e)=>{
+	const multiCreateLeave = document.querySelector(".multi-leave");
+	multiCreateLeave.addEventListener("click", (e)=>{
 		document.global.ui.multiLobby = 1;
 		document.global.ui.multiCreate = 0;
+		document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
 	})
 	const login = document.querySelector(".nav-login");
 	login.addEventListener("click", (e)=>{
@@ -125,10 +123,13 @@ export function keyBindingMultiplayer() {
 	})
 	const multiCreateGame = document.querySelector(".multi-create-game");
 	multiCreateGame.addEventListener("click", (e)=>{
-		// createGameSocket()
-		document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"create", username:document.global.gameplay.username}));
-		document.global.ui.multiCreate = 1;
-		document.global.ui.multiLobby = 0;
+		if (document.global.socket.gameLobbyInfo.every(gameLobbyInfo=>{
+			return gameLobbyInfo.mainClient !== document.global.gameplay.username
+		})) {
+			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"create", player:document.global.gameplay.username}));
+			document.global.ui.multiCreate = 1;
+			document.global.ui.multiLobby = 0;
+		}
 		
 	})
 }

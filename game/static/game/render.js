@@ -8,6 +8,7 @@ import {createFirstHalfCircleGeometry} from './powerup.js';
 import {createSecondHalfCircleGeometry} from './powerup.js';
 import {resetPowerUp} from './gameplay.js'
 import {init} from './init.js'
+import {createGameSocket} from './multiplayer.js'
 
 function resizeRendererToDisplaySize( renderer ) {
 
@@ -476,6 +477,14 @@ function processUI() {
 		document.querySelector(".multi-lobby-menu").classList.add("display-block"):document.querySelector(".multi-lobby-menu").classList.remove("display-block");
 	document.global.ui.multiCreate?
 		document.querySelector(".multi-create-menu").classList.add("display-block"):document.querySelector(".multi-create-menu").classList.remove("display-block");
+	if (document.global.socket.gameLobbyInfo.length) {
+		document.querySelector(".multi-create-option-menu").classList.remove("display-none");
+		document.querySelector(".multi-create-warning").classList.add("display-none");
+	}
+	else {
+		document.querySelector(".multi-create-option-menu").classList.add("display-none");
+		document.querySelector(".multi-create-warning").classList.remove("display-none");
+	}
 
 	document.global.gameplay.ludicrious?
 		document.querySelector(".timer").classList.add("timer-ludicrious"):document.querySelector(".timer").classList.remove("timer-ludicrious");
@@ -656,21 +665,33 @@ function processUI() {
 	else if (!document.global.gameplay.gameSummary && !document.global.gameplay.gameEnd)
 		document.querySelector(".game-summary-container").classList.add("display-none");
 	for (let i = 0; i < document.global.socket.gameLobbyInfo.length; i++) {
-		const target = document.querySelector(".multi-create-" + document.global.socket.gameLobbyInfo[i].mainClient)
+		const target = document.querySelector(".multi-join"+"."+document.global.socket.gameLobbyInfo[i].mainClient)
 		if (!target) {
-			const user = document.createElement('p');
+			const user = document.createElement('button');
+			user.setAttribute("type","button")
 			user.textContent = document.global.socket.gameLobbyInfo[i].mainClient;
-			user.classList.add("multi-create-" + document.global.socket.gameLobbyInfo[i].mainClient)
+			user.classList.add("multi-join")
+			user.classList.add(document.global.socket.gameLobbyInfo[i].mainClient)
+			user.addEventListener("click", (e)=>{
+				if (document.global.gameplay.username !== e.target.classList[1]) {
+					document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"join", mainClient:e.target.classList[1]}))
+					document.global.ui.multiCreate = 1;
+					document.global.ui.multiLobby = 0;
+				}
+				
+				// createGameSocket(e.target.classList[0])
+			})
 			document.querySelector('.multi-lobby-display').appendChild(user);
 		}
 	}
 	const multiLobbyDisplay = document.querySelector(".multi-lobby-display")
 	Array.from(multiLobbyDisplay.children).forEach(child=>{
 		if (document.global.socket.gameLobbyInfo.every(game=>{
-			return "multi-create-" + game.mainClient !== child.classList[0]
+			return game.mainClient !== child.classList[1]
 		}))
 		multiLobbyDisplay.removeChild(child);
 	})
+	
 }
 
 function arenaRotateY() {
