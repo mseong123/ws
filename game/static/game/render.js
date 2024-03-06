@@ -472,8 +472,11 @@ function processUI() {
 		document.querySelector(".two-menu").classList.add("display-block"):document.querySelector(".two-menu").classList.remove("display-block");
 	document.global.ui.tournament?
 		document.querySelector(".tournament-menu").classList.add("display-block"):document.querySelector(".tournament-menu").classList.remove("display-block");
-	document.global.ui.multi?
-		document.querySelector(".multi-menu").classList.add("display-block"):document.querySelector(".multi-menu").classList.remove("display-block");
+	document.global.ui.multiLobby?
+		document.querySelector(".multi-lobby-menu").classList.add("display-block"):document.querySelector(".multi-lobby-menu").classList.remove("display-block");
+	document.global.ui.multiCreate?
+		document.querySelector(".multi-create-menu").classList.add("display-block"):document.querySelector(".multi-create-menu").classList.remove("display-block");
+
 	document.global.gameplay.ludicrious?
 		document.querySelector(".timer").classList.add("timer-ludicrious"):document.querySelector(".timer").classList.remove("timer-ludicrious");
 	if (document.global.ui.auth) {
@@ -652,6 +655,22 @@ function processUI() {
 		document.querySelector(".game-summary-container").classList.remove("display-none");
 	else if (!document.global.gameplay.gameSummary && !document.global.gameplay.gameEnd)
 		document.querySelector(".game-summary-container").classList.add("display-none");
+	for (let i = 0; i < document.global.socket.gameLobbyInfo.length; i++) {
+		const target = document.querySelector(".multi-create-" + document.global.socket.gameLobbyInfo[i].mainClient)
+		if (!target) {
+			const user = document.createElement('p');
+			user.textContent = document.global.socket.gameLobbyInfo[i].mainClient;
+			user.classList.add("multi-create-" + document.global.socket.gameLobbyInfo[i].mainClient)
+			document.querySelector('.multi-lobby-display').appendChild(user);
+		}
+	}
+	const multiLobbyDisplay = document.querySelector(".multi-lobby-display")
+	Array.from(multiLobbyDisplay.children).forEach(child=>{
+		if (document.global.socket.gameLobbyInfo.every(game=>{
+			return "multi-create-" + game.mainClient !== child.classList[0]
+		}))
+		multiLobbyDisplay.removeChild(child);
+	})
 }
 
 function arenaRotateY() {

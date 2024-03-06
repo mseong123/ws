@@ -202,7 +202,6 @@ function initGlobal() {
 		duration:document.global.gameplay.defaultDuration,
 		durationCount:document.global.gameplay.defaultDuration,
 	};
-	
 	document.global.gameplay.computerScore = 0;
 	document.global.gameplay.computerWinner = false;
 	document.global.gameplay.mainClient = 1;
@@ -236,8 +235,10 @@ function initGlobal() {
 	document.global.ui.single = 0;
 	document.global.ui.two = 0;
 	document.global.ui.tournament = 0;
-	document.global.ui.multi = 0;
+	document.global.ui.multiLobby = 0;
+	document.global.ui.multiCreate = 0;
 	document.global.ui.auth = 0;
+	
 
 	//fetch
 	document.global.fetch = {};
@@ -246,8 +247,10 @@ function initGlobal() {
 
 	//websockets
 	document.global.socket = {}
-	document.global.socket.gameLobby;
-	document.global.socket.gameLobbyInfo;
+	document.global.socket.gameLobbySocket;
+	document.global.socket.gameLobbyInfo = [];
+	document.global.socket.gameSocket;
+	document.global.socket.gameSocketInfo = [];
 	
 }
 

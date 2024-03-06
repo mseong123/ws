@@ -37,41 +37,60 @@ async function fetch_logout() {
 }
 
 function createGameLobbyWebSocket() {
-	document.global.socket.gameLobby = new WebSocket(
+	document.global.socket.gameLobbySocket = new WebSocket(
 		'ws://'
 		+ window.location.host
 		+ '/game/lobby/'
 	);
 
+	document.global.socket.gameLobbySocket.onmessage = function(e) {
+		const data = JSON.parse(e.data);
+		document.global.socket.gameLobbyInfo = data.gameLobbyInfo;
+	};
 
-	// gameSocket.onmessage = function(e) {
-		
-	// 	const data = JSON.parse(e.data);
-	// 	const user = document.createElement('p');
-	// 	user.textContent = data.user;
-	// 	user.classList.add(data.user)
-	// 	document.querySelector('.lobby').appendChild(user);
-	// };
-
-	// gameSocket.onclose = function(e) {
-	// 	const data = JSON.parse(e.data);
-	// 	document.querySelector('.')
-	// 	console.error('Chat socket closed unexpectedly');
-	// };
+	document.global.socket.gameLobbySocket.onclose = function(e) {
+		console.error('Game socket closed unexpectedly');
+	};
 }
+
+// function createGameSocket() {
+// 	document.global.socket.gameSocket = new WebSocket(
+// 		'ws://'
+// 		+ window.location.host
+// 		+ '/game/lobby/'
+// 	);
+
+// 	document.global.socket.gameSocket.onmessage = function(e) {
+		
+// 		const data = JSON.parse(e.data);
+// 		const user = document.createElement('p');
+// 		user.textContent = data.user;
+// 		user.classList.add(data.user)
+// 		document.querySelector('.lobby').appendChild(user);
+// 	};
+
+// 	document.global.socket.gameSocket.onclose = function(e) {
+// 		console.error('Game socket closed unexpectedly');
+// 	};
+// }
 
 
 export function keyBindingMultiplayer() {
 	const multi = document.querySelector(".nav-multi");
 	multi.addEventListener("click", (e)=>{
 		document.global.ui.mainMenu = 0;
-		document.global.ui.multi = 1;
+		document.global.ui.multiLobby = 1;
 		createGameLobbyWebSocket();
 	})
-	const multiBack = document.querySelector(".multi-back");
-	multiBack.addEventListener("click", (e)=>{
+	const multiLobbyBack = document.querySelector(".multi-lobby-back");
+	multiLobbyBack.addEventListener("click", (e)=>{
 		document.global.ui.mainMenu = 1;
-		document.global.ui.multi = 0;
+		document.global.ui.multiLobby = 0;
+	})
+	const multiGameBack = document.querySelector(".multi-create-back");
+	multiGameBack.addEventListener("click", (e)=>{
+		document.global.ui.multiLobby = 1;
+		document.global.ui.multiCreate = 0;
 	})
 	const login = document.querySelector(".nav-login");
 	login.addEventListener("click", (e)=>{
@@ -81,7 +100,7 @@ export function keyBindingMultiplayer() {
 	const logout = document.querySelector(".nav-logout");
 	logout.addEventListener("click", (e)=>{
 		fetch_logout().then(data=>{
-			document.global.login.status = 0;
+			document.global.ui.auth = 0;
 		})
 	})
 	const loginBack = document.querySelector(".login-back");
@@ -92,13 +111,24 @@ export function keyBindingMultiplayer() {
 	const loginSubmit = document.querySelector(".login");
 	loginSubmit.addEventListener("submit", (e)=>{
 		e.preventDefault();
-		fetch_login({username:"melee", password:"lameass123"}).then(data=>{
+		fetch_login({username:document.getElementById("username").value, password:document.getElementById("password").value}).then(data=>{
 			if (data.authenticated) {
 				document.global.gameplay.username = data.username;
-				document.global.login.status = 1;
+				document.global.ui.auth = 1;
+				document.global.ui.toggleCanvas = 0;
+				document.global.ui.login = 0;
+				document.global.ui.mainMenu = 1;
 			}
 			else
-				document.global.login.status = 0;
+				document.global.ui.auth = 0;
 		});
+	})
+	const multiCreateGame = document.querySelector(".multi-create-game");
+	multiCreateGame.addEventListener("click", (e)=>{
+		// createGameSocket()
+		document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"create", username:document.global.gameplay.username}));
+		document.global.ui.multiCreate = 1;
+		document.global.ui.multiLobby = 0;
+		
 	})
 }

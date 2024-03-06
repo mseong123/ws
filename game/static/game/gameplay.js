@@ -505,8 +505,9 @@ export function keyBinding() {
 			document.global.ui.single = 0;
 			document.global.ui.two = 0;
 			document.global.ui.tournament = 0;
-			document.global.ui.multi = 0;
 			document.global.ui.login = 0;
+			document.global.ui.multiLobby = 0;
+			document.global.ui.multiCreate = 0;
 		})
 	)
 }

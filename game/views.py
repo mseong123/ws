@@ -16,7 +16,6 @@ def auth(request):
 		user = authenticate(username=json_data['username'], password=json_data['password'])
 		if user is not None:
 			login(request, user)
-			print(type(request.user))
 			return JsonResponse({
 					'authenticated':True,
 					"username":str(request.user)
