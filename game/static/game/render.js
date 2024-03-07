@@ -725,7 +725,7 @@ function processUI() {
 		document.global.socket.gameInfo.mainClient !== document.global.gameplay.username? document.getElementById("multi-create-duration").disabled = true:document.getElementById("multi-create-duration").disabled = false
 		document.global.socket.gameInfo.ludicrious? document.getElementById("multi-create-ludicrious").checked=true:document.getElementById("multi-create-ludicrious").checked=false;
 		document.global.socket.gameInfo.mainClient !== document.global.gameplay.username? document.getElementById("multi-create-ludicrious").disabled = true:document.getElementById("multi-create-ludicrious").disabled = false
-		document.global.socket.gameInfo.ludicrious? document.getElementById("multi-create-powerUp").checked=true:document.getElementById("multi-create-ludicrious").checked=false;
+		document.global.socket.gameInfo.powerUp? document.getElementById("multi-create-powerUp").checked=true:document.getElementById("multi-create-powerUp").checked=false;
 		document.global.socket.gameInfo.mainClient !== document.global.gameplay.username? document.getElementById("multi-create-powerUp").disabled = true:document.getElementById("multi-create-powerUp").disabled = false
 	}
 	

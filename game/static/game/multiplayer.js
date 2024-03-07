@@ -168,14 +168,14 @@ export function keyBindingMultiplayer() {
 	multiCreatePowerUp.addEventListener("change", (e) => {
 		if (document.global.socket.gameInfo.mainClient && document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
 			document.global.socket.gameInfo.powerUp? document.global.socket.gameInfo.powerUp = 0:document.global.socket.gameInfo.powerUp = 1;
-			document.global.socket.gameSocket.send(JSON.stringify({mode:"updatePowerUp", duration:document.global.socket.gameInfo.powerUp}))
+			document.global.socket.gameSocket.send(JSON.stringify({mode:"updatePowerUp", powerUp:document.global.socket.gameInfo.powerUp}))
 		}
 	})
 	const multiCreateLudicrious = document.getElementById("multi-create-ludicrious");
 	multiCreateLudicrious.addEventListener("change", (e) => {
 		if (document.global.socket.gameInfo.mainClient && document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
 			document.global.socket.gameInfo.ludicrious? document.global.socket.gameInfo.ludicrious = 0:document.global.socket.gameInfo.ludicrious = 1;
-			document.global.socket.gameSocket.send(JSON.stringify({mode:"updateLudicrious", duration:document.global.socket.gameInfo.ludicrious}))
+			document.global.socket.gameSocket.send(JSON.stringify({mode:"updateLudicrious", ludicrious:document.global.socket.gameInfo.ludicrious}))
 		}
 	})
 }

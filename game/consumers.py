@@ -87,6 +87,13 @@ class GameConsumer(WebsocketConsumer):
 			GameConsumer.gameInfo[self.room_group_name] = data_json["gameData"]
 		elif data_json.get("mode") is not None and data_json.get("mode") == 'join':
 			GameConsumer.gameInfo[self.room_group_name]['player'].append(str(self.scope["user"]))
+		elif data_json.get("mode") is not None and data_json["mode"] == 'updateLudicrious':
+			GameConsumer.gameInfo[self.room_group_name]['ludicrious'] = data_json['ludicrious']
+		elif data_json.get("mode") is not None and data_json.get("mode") == 'updateDuration':
+			GameConsumer.gameInfo[self.room_group_name]['duration'] = data_json['duration']
+		elif data_json.get("mode") is not None and data_json.get("mode") =='updatePowerUp':
+			GameConsumer.gameInfo[self.room_group_name]['powerUp'] = data_json['powerUp']
+			print(GameConsumer.gameInfo[self.room_group_name]['powerUp'])
 		# Send message to room group
 		async_to_sync(self.channel_layer.group_send)(
 			self.room_group_name, {"type": "game_message"}
