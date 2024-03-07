@@ -145,12 +145,15 @@ export function keyBindingMultiplayer() {
 			return gameLobbyInfo.mainClient !== document.global.gameplay.username
 		})) {
 			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"create", player:document.global.gameplay.username}));
-			document.global.ui.multiCreate = 1;
-			document.global.ui.multiLobby = 0;
 			createGameSocket(document.global.gameplay.username)
 			document.global.socket.gameSocket.onopen = function() {
+				document.global.ui.multiCreate = 1;
+				document.global.ui.multiLobby = 0;
 				document.global.socket.gameInfo.mainClient = document.global.gameplay.username;
-				document.global.socket.gameSocket.send(JSON.stringify(document.global.socket.gameInfo))
+				document.global.socket.gameSocket.send(JSON.stringify({
+					mode:"create",
+					gameData:document.global.socket.gameInfo
+				}))
 			}
 		}
 	})

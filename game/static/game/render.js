@@ -477,14 +477,14 @@ function processUI() {
 		document.querySelector(".multi-lobby-menu").classList.add("display-block"):document.querySelector(".multi-lobby-menu").classList.remove("display-block");
 	document.global.ui.multiCreate?
 		document.querySelector(".multi-create-menu").classList.add("display-block"):document.querySelector(".multi-create-menu").classList.remove("display-block");
-	// if (document.global.socket.gameLobbyInfo.length) {
-	// 	document.querySelector(".multi-create-option-menu").classList.remove("display-none");
-	// 	document.querySelector(".multi-create-warning").classList.add("display-none");
-	// }
-	// else {
-	// 	document.querySelector(".multi-create-option-menu").classList.add("display-none");
-	// 	document.querySelector(".multi-create-warning").classList.remove("display-none");
-	// }
+	if (document.global.socket.gameInfo.mainClient) {
+		document.querySelector(".multi-create-option-menu").classList.remove("display-none");
+		document.querySelector(".multi-create-warning").classList.add("display-none");
+	}
+	else {
+		document.querySelector(".multi-create-option-menu").classList.add("display-none");
+		document.querySelector(".multi-create-warning").classList.remove("display-none");
+	}
 
 	document.global.gameplay.ludicrious?
 		document.querySelector(".timer").classList.add("timer-ludicrious"):document.querySelector(".timer").classList.remove("timer-ludicrious");
@@ -675,13 +675,17 @@ function processUI() {
 			user.addEventListener("click", (e)=>{
 				if (document.global.gameplay.username !== e.target.classList[1]) {
 					document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"join", mainClient:e.target.classList[1]}))
-					document.global.ui.multiCreate = 1;
-					document.global.ui.multiLobby = 0;
+					
 					createGameSocket(e.target.classList[1])
 					document.global.socket.gameSocket.onopen = function() {
-						document.global.socket.gameSocket.send(JSON.stringify({
-							mode:"join",
-						}))
+						// if (document.global.socket.gameInfo.mainClient && document.global.socket.gameInfo.player.every(player=>{
+						// 	return player !== document.global.gameplay.username
+						// })) {
+							document.global.ui.multiCreate = 1;
+							document.global.ui.multiLobby = 0;
+							document.global.socket.gameSocket.send(JSON.stringify({
+								mode:"join",
+							}))
 					}
 				}
 				
@@ -698,7 +702,6 @@ function processUI() {
 		multiLobbyDisplay.removeChild(child);
 	})
 	if (document.global.socket.gameInfo.mainClient) {
-		console.log("here")
 		document.querySelector(".multi-create-mainClient").textContent = 'Main Client ' + document.global.socket.gameInfo.mainClient;
 		
 		for (let i = 0; i < document.global.socket.gameInfo.player.length; i++) {
