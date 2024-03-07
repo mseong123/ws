@@ -95,7 +95,7 @@ export function keyBindingMultiplayer() {
 		document.global.ui.multiLobby = 1;
 		document.global.ui.multiCreate = 0;
 		document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
-		document.global.socket.gameSocket.send(JSON.stringify({mode:"leave"}));
+		document.global.socket.gameSocket.close();
 		document.global.socket.gameInfo = {
 			mainClient:"",
 			player:[],
