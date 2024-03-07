@@ -4,6 +4,10 @@ function getCookie (name) {
 	if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+function getCookie2() {
+	return document.querySelector('[name="csrfmiddlewaretoken"]').value
+}
+
 async function fetch_login(data) {
 	try {
 		const response = await fetch(document.global.fetch.authURL, { 
@@ -11,7 +15,7 @@ async function fetch_login(data) {
 			credentials: "include",
 			headers: {
 				"Content-Type": "application/json",
-				"X-CSRFToken": getCookie('csrftoken')
+				"X-CSRFToken": getCookie2()
 			  },
 			body: JSON.stringify(data),
 		});
@@ -57,12 +61,12 @@ export function createGameSocket(mainClient) {
 	document.global.socket.gameSocket = new WebSocket(
 		'ws://'
 		+ window.location.host
-		+ '/game/game/' + mainClient + '/'
+		+ '/game/active/' + mainClient + '/'
 	);
 
 	document.global.socket.gameSocket.onmessage = function(e) {
 		const data = JSON.parse(e.data);
-		document.global.socket.gameSocketInfo = data.gameSocketInfo;
+		document.global.socket.gameInfo = data.gameInfo;
 	};
 
 	document.global.socket.gameSocket.onclose = function(e) {
@@ -74,9 +78,11 @@ export function createGameSocket(mainClient) {
 export function keyBindingMultiplayer() {
 	const multi = document.querySelector(".nav-multi");
 	multi.addEventListener("click", (e)=>{
-		document.global.ui.mainMenu = 0;
-		document.global.ui.multiLobby = 1;
-		createGameLobbyWebSocket();
+		if (document.global.gameplay.username) {
+			document.global.ui.mainMenu = 0;
+			document.global.ui.multiLobby = 1;
+			createGameLobbyWebSocket();
+		}
 	})
 	const multiLobbyBack = document.querySelector(".multi-lobby-back");
 	multiLobbyBack.addEventListener("click", (e)=>{
@@ -84,11 +90,23 @@ export function keyBindingMultiplayer() {
 		document.global.ui.multiLobby = 0;
 		document.global.socket.gameLobbySocket.close();
 	})
-	const multiCreateLeave = document.querySelector(".multi-leave");
+	const multiCreateLeave = document.querySelector(".multi-leave-game");
 	multiCreateLeave.addEventListener("click", (e)=>{
 		document.global.ui.multiLobby = 1;
 		document.global.ui.multiCreate = 0;
 		document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+		document.global.socket.gameSocket.send(JSON.stringify({mode:"leave"}));
+		document.global.socket.gameInfo = {
+			mainClient:"",
+			player:[],
+			playerGame:[],
+			currentRound:0,
+			round:0,
+			ludicrious:1,
+			powerUp:1,
+			duration:document.global.gameplay.defaultDuration,
+			durationCount:document.global.gameplay.defaultDuration,
+		};
 	})
 	const login = document.querySelector(".nav-login");
 	login.addEventListener("click", (e)=>{
@@ -129,7 +147,32 @@ export function keyBindingMultiplayer() {
 			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"create", player:document.global.gameplay.username}));
 			document.global.ui.multiCreate = 1;
 			document.global.ui.multiLobby = 0;
+			createGameSocket(document.global.gameplay.username)
+			document.global.socket.gameSocket.onopen = function() {
+				document.global.socket.gameInfo.mainClient = document.global.gameplay.username;
+				document.global.socket.gameSocket.send(JSON.stringify(document.global.socket.gameInfo))
+			}
 		}
-		
+	})
+	const multiCreateDuration = document.getElementById("multi-create-duration");
+	multiCreateDuration.addEventListener("change", (e) => {
+		if (document.global.socket.gameInfo.mainClient && document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+			document.global.socket.gameInfo.duration = e.target.value;
+			document.global.socket.gameSocket.send(JSON.stringify({mode:"updateDuration", duration:document.global.socket.gameInfo.duration}))
+		}
+	})
+	const multiCreatePowerUp = document.getElementById("multi-create-powerUp");
+	multiCreatePowerUp.addEventListener("change", (e) => {
+		if (document.global.socket.gameInfo.mainClient && document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+			document.global.socket.gameInfo.powerUp? document.global.socket.gameInfo.powerUp = 0:document.global.socket.gameInfo.powerUp = 1;
+			document.global.socket.gameSocket.send(JSON.stringify({mode:"updatePowerUp", duration:document.global.socket.gameInfo.powerUp}))
+		}
+	})
+	const multiCreateLudicrious = document.getElementById("multi-create-ludicrious");
+	multiCreateLudicrious.addEventListener("change", (e) => {
+		if (document.global.socket.gameInfo.mainClient && document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+			document.global.socket.gameInfo.ludicrious? document.global.socket.gameInfo.ludicrious = 0:document.global.socket.gameInfo.ludicrious = 1;
+			document.global.socket.gameSocket.send(JSON.stringify({mode:"updateLudicrious", duration:document.global.socket.gameInfo.ludicrious}))
+		}
 	})
 }

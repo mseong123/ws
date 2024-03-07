@@ -250,7 +250,17 @@ function initGlobal() {
 	document.global.socket.gameLobbySocket;
 	document.global.socket.gameLobbyInfo = [];
 	document.global.socket.gameSocket;
-	document.global.socket.gameSocketInfo = [];
+	document.global.socket.gameInfo = {
+		mainClient:"",
+		player:[],
+		playerGame:[],
+		currentRound:0,
+		round:0,
+		ludicrious:1,
+		powerUp:1,
+		duration:document.global.gameplay.defaultDuration,
+		durationCount:document.global.gameplay.defaultDuration,
+	};
 	
 }
 

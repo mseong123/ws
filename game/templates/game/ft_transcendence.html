@@ -1,5 +1,7 @@
 {% load static %}
+
 <html>
+		{% csrf_token %}
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
@@ -37,7 +39,7 @@
 							<form class="login">
 								<div>
 									<label for="username">Enter Username</label>
-									<input type="text" id="username"  value="mseong" placeholder="username" required>
+									<input type="text" id="username" placeholder="username" required>
 									<label for="password" >Enter Password</label>
 									<input type="text" value="lameass123" id="password" placeholder="password" required>
 									<button type="submit" class="login-submit"><i class="fa fa-caret-right"></i></button>
@@ -206,16 +208,29 @@
 					<!-- multiplayer game menu -->
 					<div class="multi-create-menu display-none">
 							<h4>MULTIPLAYER CREATE</h4>
-							<div class="multi-create-option-menu display-none">
+							<div class="multi-create-option-menu">
 								<p class="multi-create-mainClient"></p>
+								<p>Players</p>
 								<div class="multi-create-display-player">
 									
+								</div>
+								<div>
+									<label for="multi-create-duration">Duration</label>
+									<input type="time" id="multi-create-duration">
+								</div>
+								<div>
+									<label for="multi-create-ludicrious" class="multi-create-ludicrious">Ludicious Mode</label>
+									<input type="checkbox" id="multi-create-ludicrious">
+								</div>
+								<div>
+									<label for="multi-create-powerUp" class="multi-create-powerUp">Power Up</label>
+									<input type="checkbox" id="multi-create-powerUp">
 								</div>
 							</div>
 							<div class="multi-create-warning display-none">
 								Game Creator has left. Exit channel
 							</div>
-							<button type="button" class="multi-leave">Leave</button>
+							<button type="button" class="multi-leave-game">Leave</button>
 							
 						
 						</div>

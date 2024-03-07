@@ -477,14 +477,14 @@ function processUI() {
 		document.querySelector(".multi-lobby-menu").classList.add("display-block"):document.querySelector(".multi-lobby-menu").classList.remove("display-block");
 	document.global.ui.multiCreate?
 		document.querySelector(".multi-create-menu").classList.add("display-block"):document.querySelector(".multi-create-menu").classList.remove("display-block");
-	if (document.global.socket.gameLobbyInfo.length) {
-		document.querySelector(".multi-create-option-menu").classList.remove("display-none");
-		document.querySelector(".multi-create-warning").classList.add("display-none");
-	}
-	else {
-		document.querySelector(".multi-create-option-menu").classList.add("display-none");
-		document.querySelector(".multi-create-warning").classList.remove("display-none");
-	}
+	// if (document.global.socket.gameLobbyInfo.length) {
+	// 	document.querySelector(".multi-create-option-menu").classList.remove("display-none");
+	// 	document.querySelector(".multi-create-warning").classList.add("display-none");
+	// }
+	// else {
+	// 	document.querySelector(".multi-create-option-menu").classList.add("display-none");
+	// 	document.querySelector(".multi-create-warning").classList.remove("display-none");
+	// }
 
 	document.global.gameplay.ludicrious?
 		document.querySelector(".timer").classList.add("timer-ludicrious"):document.querySelector(".timer").classList.remove("timer-ludicrious");
@@ -677,6 +677,12 @@ function processUI() {
 					document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"join", mainClient:e.target.classList[1]}))
 					document.global.ui.multiCreate = 1;
 					document.global.ui.multiLobby = 0;
+					createGameSocket(e.target.classList[1])
+					document.global.socket.gameSocket.onopen = function() {
+						document.global.socket.gameSocket.send(JSON.stringify({
+							mode:"join",
+						}))
+					}
 				}
 				
 				// createGameSocket(e.target.classList[0])
@@ -691,6 +697,35 @@ function processUI() {
 		}))
 		multiLobbyDisplay.removeChild(child);
 	})
+	if (document.global.socket.gameInfo.mainClient) {
+		console.log("here")
+		document.querySelector(".multi-create-mainClient").textContent = 'Main Client ' + document.global.socket.gameInfo.mainClient;
+		
+		for (let i = 0; i < document.global.socket.gameInfo.player.length; i++) {
+			const target = document.querySelector(".multi-create-player"+"."+document.global.socket.gameInfo.player[i])
+			if (!target) {
+				const player = document.createElement('p');
+				player.textContent = document.global.socket.gameInfo.player[i];
+				player.classList.add("multi-create-player")
+				player.classList.add(document.global.socket.gameInfo.player[i])
+				document.querySelector('.multi-create-display-player').appendChild(player);
+			}
+		}
+		const multiCreateDisplayPlayer = document.querySelector(".multi-create-display-player")
+		Array.from(multiCreateDisplayPlayer.children).forEach(child=>{
+			if (document.global.socket.gameInfo.player.every(player=>{
+				return player !== child.classList[1]
+			}))
+			multiCreateDisplayPlayer.removeChild(child);
+		})
+		document.getElementById("multi-create-duration").value = document.global.socket.gameInfo.duration;
+		document.global.socket.gameInfo.mainClient !== document.global.gameplay.username? document.getElementById("multi-create-duration").disabled = true:document.getElementById("multi-create-duration").disabled = false
+		document.global.socket.gameInfo.ludicrious? document.getElementById("multi-create-ludicrious").checked=true:document.getElementById("multi-create-ludicrious").checked=false;
+		document.global.socket.gameInfo.mainClient !== document.global.gameplay.username? document.getElementById("multi-create-ludicrious").disabled = true:document.getElementById("multi-create-ludicrious").disabled = false
+		document.global.socket.gameInfo.ludicrious? document.getElementById("multi-create-powerUp").checked=true:document.getElementById("multi-create-ludicrious").checked=false;
+		document.global.socket.gameInfo.mainClient !== document.global.gameplay.username? document.getElementById("multi-create-powerUp").disabled = true:document.getElementById("multi-create-powerUp").disabled = false
+	}
+	
 	
 }
 
