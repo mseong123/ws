@@ -53,7 +53,7 @@ function createGameLobbyWebSocket() {
 	};
 
 	document.global.socket.gameLobbySocket.onclose = function(e) {
-		console.error('Game socket closed unexpectedly');
+		console.log('Game socket closed');
 	};
 }
 
@@ -70,7 +70,7 @@ export function createGameSocket(mainClient) {
 	};
 
 	document.global.socket.gameSocket.onclose = function(e) {
-		console.error('Game socket closed unexpectedly');
+		console.log('Game socket closed');
 	};
 }
 
@@ -88,17 +88,18 @@ export function keyBindingMultiplayer() {
 	multiLobbyBack.addEventListener("click", (e)=>{
 		document.global.ui.mainMenu = 1;
 		document.global.ui.multiLobby = 0;
-		document.global.socket.gameLobbySocket.close();
+		document.global.socket.gameLobbySocket.close("leave game");
 	})
 	const multiCreateLeave = document.querySelector(".multi-leave-game");
 	multiCreateLeave.addEventListener("click", (e)=>{
 		document.global.ui.multiLobby = 1;
 		document.global.ui.multiCreate = 0;
+		document.global.socket.ready = 0;
 		document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
 		document.global.socket.gameSocket.close();
 		document.global.socket.gameInfo = {
 			mainClient:"",
-			player:[],
+			player:{},
 			playerGame:[],
 			currentRound:0,
 			round:0,
@@ -107,6 +108,11 @@ export function keyBindingMultiplayer() {
 			duration:document.global.gameplay.defaultDuration,
 			durationCount:document.global.gameplay.defaultDuration,
 		};
+	})
+	const multiCreateReady = document.querySelector(".multi-ready-game");
+	multiCreateReady.addEventListener("click", (e) => {
+		document.global.socket.ready? document.global.socket.ready = 0:document.global.socket.ready =1;
+		document.global.socket.gameSocket.send(JSON.stringify({mode:"updateReady", ready:document.global.socket.ready}))
 	})
 	const login = document.querySelector(".nav-login");
 	login.addEventListener("click", (e)=>{

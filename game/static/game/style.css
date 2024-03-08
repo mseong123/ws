@@ -15,6 +15,7 @@ input:focus {
 }
 
 
+
 button:hover, button:focus {
 	outline:none;
 	cursor:pointer;
@@ -432,6 +433,16 @@ hr {
 	border:1px solid rgb(2,238,139);
 	border-radius:0.25rem;
 	text-align:center;
+}
+
+.ready, .multi-ready {
+	background-color:rgb(2,238,139) !important;
+}
+
+.multi-ready-game:disabled, .multi-ready-game:disabled:hover, .multi-ready-game:disabled:focus {
+	cursor:default;
+	color:rgb(177,177,177);
+
 }
 
 @media (min-width:577px) {

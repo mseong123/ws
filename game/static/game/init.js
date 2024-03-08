@@ -252,7 +252,7 @@ function initGlobal() {
 	document.global.socket.gameSocket;
 	document.global.socket.gameInfo = {
 		mainClient:"",
-		player:[],
+		player:{},
 		playerGame:[],
 		currentRound:0,
 		round:0,
@@ -261,6 +261,7 @@ function initGlobal() {
 		duration:document.global.gameplay.defaultDuration,
 		durationCount:document.global.gameplay.defaultDuration,
 	};
+	document.global.socket.ready = 0;
 	
 }
 

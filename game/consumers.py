@@ -73,7 +73,7 @@ class GameConsumer(WebsocketConsumer):
 		if GameConsumer.gameInfo.get(str(self.scope["user"])) is not None:
 			del GameConsumer.gameInfo[str(self.scope["user"])]
 		elif GameConsumer.gameInfo.get(self.room_group_name) is not None:
-			GameConsumer.gameInfo[self.room_group_name]['player'] = [player for player in GameConsumer.gameInfo[self.room_group_name]['player'] if player != str(self.scope["user"])]
+			del GameConsumer.gameInfo[self.room_group_name]['player'][str(self.scope["user"])]
 		async_to_sync(self.channel_layer.group_discard)(
 			self.room_group_name, self.channel_name)
 		async_to_sync(self.channel_layer.group_send)(
@@ -86,14 +86,18 @@ class GameConsumer(WebsocketConsumer):
 		if data_json.get("mode") is not None and data_json.get("mode") == 'create':
 			GameConsumer.gameInfo[self.room_group_name] = data_json["gameData"]
 		elif data_json.get("mode") is not None and data_json.get("mode") == 'join':
-			GameConsumer.gameInfo[self.room_group_name]['player'].append(str(self.scope["user"]))
+			GameConsumer.gameInfo[self.room_group_name]['player'][str(self.scope["user"])] = {
+				"name":str(self.scope["user"]),
+				"ready":0
+			}
 		elif data_json.get("mode") is not None and data_json["mode"] == 'updateLudicrious':
 			GameConsumer.gameInfo[self.room_group_name]['ludicrious'] = data_json['ludicrious']
 		elif data_json.get("mode") is not None and data_json.get("mode") == 'updateDuration':
 			GameConsumer.gameInfo[self.room_group_name]['duration'] = data_json['duration']
 		elif data_json.get("mode") is not None and data_json.get("mode") =='updatePowerUp':
 			GameConsumer.gameInfo[self.room_group_name]['powerUp'] = data_json['powerUp']
-			print(GameConsumer.gameInfo[self.room_group_name]['powerUp'])
+		elif data_json.get("mode") is not None and data_json.get("mode") =='updateReady':
+			GameConsumer.gameInfo[self.room_group_name]['player'][str(self.scope["user"])]['ready'] = data_json['ready']
 		# Send message to room group
 		async_to_sync(self.channel_layer.group_send)(
 			self.room_group_name, {"type": "game_message"}
