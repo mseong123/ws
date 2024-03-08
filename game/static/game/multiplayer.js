@@ -75,6 +75,8 @@ export function createGameSocket(mainClient) {
 }
 
 
+
+
 export function keyBindingMultiplayer() {
 	const multi = document.querySelector(".nav-multi");
 	multi.addEventListener("click", (e)=>{
@@ -88,7 +90,7 @@ export function keyBindingMultiplayer() {
 	multiLobbyBack.addEventListener("click", (e)=>{
 		document.global.ui.mainMenu = 1;
 		document.global.ui.multiLobby = 0;
-		document.global.socket.gameLobbySocket.close("leave game");
+		document.global.socket.gameLobbySocket.close();
 	})
 	const multiCreateLeave = document.querySelector(".multi-leave-game");
 	multiCreateLeave.addEventListener("click", (e)=>{
@@ -99,12 +101,14 @@ export function keyBindingMultiplayer() {
 		document.global.socket.gameSocket.close();
 		document.global.socket.gameInfo = {
 			mainClient:"",
+			gameMode:"",
 			player:{},
 			playerGame:[],
 			currentRound:0,
 			round:0,
 			ludicrious:1,
 			powerUp:1,
+			teamUp:0,
 			duration:document.global.gameplay.defaultDuration,
 			durationCount:document.global.gameplay.defaultDuration,
 		};
@@ -145,17 +149,37 @@ export function keyBindingMultiplayer() {
 				document.global.ui.auth = 0;
 		});
 	})
-	const multiCreateGame = document.querySelector(".multi-create-game");
-	multiCreateGame.addEventListener("click", (e)=>{
+	const multiCreateVersus = document.querySelector(".multi-create-versus");
+	multiCreateVersus.addEventListener("click", (e)=>{
 		if (document.global.socket.gameLobbyInfo.every(gameLobbyInfo=>{
 			return gameLobbyInfo.mainClient !== document.global.gameplay.username
 		})) {
-			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"create", player:document.global.gameplay.username}));
+			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"create", gameMode:"versus"}));
 			createGameSocket(document.global.gameplay.username)
 			document.global.socket.gameSocket.onopen = function() {
 				document.global.ui.multiCreate = 1;
 				document.global.ui.multiLobby = 0;
 				document.global.socket.gameInfo.mainClient = document.global.gameplay.username;
+				document.global.socket.gameInfo.gameMode = "versus";
+				document.global.socket.gameSocket.send(JSON.stringify({
+					mode:"create",
+					gameData:document.global.socket.gameInfo
+				}))
+			}
+		}
+	})
+	const multiCreateTournament = document.querySelector(".multi-create-tournament");
+	multiCreateTournament.addEventListener("click", (e)=>{
+		if (document.global.socket.gameLobbyInfo.every(gameLobbyInfo=>{
+			return gameLobbyInfo.mainClient !== document.global.gameplay.username
+		})) {
+			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"create", gameMode:"tournament"}));
+			createGameSocket(document.global.gameplay.username)
+			document.global.socket.gameSocket.onopen = function() {
+				document.global.ui.multiCreate = 1;
+				document.global.ui.multiLobby = 0;
+				document.global.socket.gameInfo.mainClient = document.global.gameplay.username;
+				document.global.socket.gameInfo.gameMode = "tournament";
 				document.global.socket.gameSocket.send(JSON.stringify({
 					mode:"create",
 					gameData:document.global.socket.gameInfo

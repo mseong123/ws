@@ -9,7 +9,7 @@ function windowResize(e) {
 		document.global.ui.chat = 0;
 
 	//for local  or multiplayer mainClient
-	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.mainClient) {
+	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gamemplay.username === document.global.socket.gameInfo.mainClient) {
 		document.global.sphere.sphereMesh.forEach(sphereMesh=>{
 			sphereMesh.velocityX = canvas.clientWidth / document.global.sphere.velocityDivision;
 			sphereMesh.velocityY = canvas.clientWidth / document.global.sphere.velocityDivision;
@@ -204,7 +204,6 @@ function initGlobal() {
 	};
 	document.global.gameplay.computerScore = 0;
 	document.global.gameplay.computerWinner = false;
-	document.global.gameplay.mainClient = 1;
 	
 	//other game info
 	document.global.gameplay.playerNum = 0;
@@ -252,12 +251,14 @@ function initGlobal() {
 	document.global.socket.gameSocket;
 	document.global.socket.gameInfo = {
 		mainClient:"",
+		gameMode:"",
 		player:{},
 		playerGame:[],
 		currentRound:0,
 		round:0,
 		ludicrious:1,
 		powerUp:1,
+		teamUp:0,
 		duration:document.global.gameplay.defaultDuration,
 		durationCount:document.global.gameplay.defaultDuration,
 	};

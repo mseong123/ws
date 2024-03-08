@@ -485,9 +485,18 @@ function processUI() {
 		else {
 			document.querySelector(".multi-start-game").classList.add("display-none")
 			document.querySelector(".multi-ready-game").classList.remove("display-none");
-		} 
+		}
 		document.querySelector(".multi-create-option-menu").classList.remove("display-none");
 		document.querySelector(".multi-create-warning").classList.add("display-none");
+		if (document.global.socket.gameInfo.gameMode === 'versus') {
+			document.querySelector(".multi-create-display-player-versus").classList.remove("display-none")
+			document.querySelector(".multi-create-display-player-tournament").classList.add("display-none")
+		}
+		else {
+			document.querySelector(".multi-create-display-player-versus").classList.add("display-none")
+			document.querySelector(".multi-create-display-player-tournament").classList.remove("display-none")
+		}
+
 	}
 	else {
 		document.querySelector(".multi-create-option-menu").classList.add("display-none");
@@ -654,8 +663,10 @@ function processUI() {
 		document.querySelector(".banner").classList.add("display-none");
 		document.querySelector(".scoreboard").classList.add("display-none");
 		document.querySelector(".toggle-game").classList.add("display-none");
-		document.querySelector(".toggle-cheat").classList.add("display-none");
-		document.querySelector(".reset-game").classList.remove("display-none");
+		if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.username === document.global.socket.gameInfo.mainClient) {
+			document.querySelector(".toggle-cheat").classList.add("display-none");
+			document.querySelector(".reset-game").classList.remove("display-none");
+		}
 	}
 	else { 
 		//for starting screen before gameStart
@@ -715,6 +726,7 @@ function processUI() {
 	})
 	if (document.global.socket.gameInfo.mainClient) {
 		document.querySelector(".multi-create-mainClient").textContent = 'Main Client ' + document.global.socket.gameInfo.mainClient;
+		document.querySelector(".multi-create-gameMode").textContent = 'Game Mode ' + document.global.socket.gameInfo.gameMode;
 		const playerArray = Object.keys(document.global.socket.gameInfo.player)
 		for (let i = 0; i < playerArray.length; i++) {
 			const target = document.querySelector(".multi-create-player"+"."+document.global.socket.gameInfo.player[playerArray[i]].name)
@@ -730,18 +742,33 @@ function processUI() {
 				player.classList.add("multi-create-player")
 				player.classList.add(document.global.socket.gameInfo.player[playerArray[i]].name)
 				player.appendChild(ready);
-				document.querySelector('.multi-create-display-player').appendChild(player);
+				// if (document.global.socket.gameInfo.gameMode === "versus") 
+				// 	document.querySelector('.multi-create-display-player-versus').appendChild(player)
+				// else 
+				// 	document.querySelector('.multi-create-display-player-tournament').appendChild(player)
+
+				document.global.socket.gameInfo.gameMode === "versus"? document.querySelector('.multi-create-display-player-versus').appendChild(player):document.querySelector('.multi-create-display-player-tournament').appendChild(player)
+	
 			}
 			document.global.socket.gameInfo.player[playerArray[i]].ready? document.querySelector(".multi-ready-"+document.global.socket.gameInfo.player[playerArray[i]].name).classList.remove("display-none"):document.querySelector(".multi-ready-" + document.global.socket.gameInfo.player[playerArray[i]].name).classList.add("display-none")
-		}	
-		
-		const multiCreateDisplayPlayer = document.querySelector(".multi-create-display-player")
-		Array.from(multiCreateDisplayPlayer.children).forEach(child=>{
+		}
+		let activeMultiCreateDisplayPlayer;
+		let inactiveMultiCreateDisplayPlayer;
+		if (document.global.socket.gameInfo.gameMode === "versus") {
+			activeMultiCreateDisplayPlayer = document.querySelector(".multi-create-display-player-versus")
+			inactiveMultiCreateDisplayPlayer = document.querySelector(".multi-create-display-player-tournament")
+		}
+		else {
+			activeMultiCreateDisplayPlayer = document.querySelector(".multi-create-display-player-tournament")
+			inactiveMultiCreateDisplayPlayer = document.querySelector(".multi-create-display-player-versus")
+		}
+		Array.from(activeMultiCreateDisplayPlayer.children).forEach(child=>{
 			if (playerArray.every(player=>{
 				return player !== child.classList[1]
 			}))
-			multiCreateDisplayPlayer.removeChild(child);
+			activeMultiCreateDisplayPlayer.removeChild(child);
 		})
+		inactiveMultiCreateDisplayPlayer.innerHTML = '';
 		document.getElementById("multi-create-duration").value = document.global.socket.gameInfo.duration;
 		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
 			document.getElementById("multi-create-duration").disabled = false;
@@ -759,6 +786,15 @@ function processUI() {
 		document.global.socket.gameInfo.ludicrious? document.getElementById("multi-create-ludicrious").checked=true:document.getElementById("multi-create-ludicrious").checked=false;
 		document.global.socket.gameInfo.powerUp? document.getElementById("multi-create-powerUp").checked=true:document.getElementById("multi-create-powerUp").checked=false;
 		document.global.socket.ready? document.querySelector(".multi-ready-game").classList.add("ready"):document.querySelector(".multi-ready-game").classList.remove("ready");
+		if (document.global.socket.gameInfo.gameMode === "versus") {
+			document.querySelector(".multi-create-display-player-versus").classList.remove("display-none");
+			document.querySelector(".multi-create-display-player-tournament").classList.add("display-none");
+		}
+		else {
+			document.querySelector(".multi-create-display-player-versus").classList.add("display-none");
+			document.querySelector(".multi-create-display-player-tournament").classList.remove("display-none");
+		}
+
 	}
 	
 	
@@ -830,7 +866,7 @@ function setTimer() {
 			document.global.pointLight.castShadow = true;
 	
 		// Below gameplay delay and powerup executed by mainClient
-		if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.mainClient) {
+		if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.username === document.global.socket.gameInfo.mainClient) {
 			if (document.global.gameplay.roundStart === 0) 
 				document.global.gameplay.roundStartFrame++;
 			

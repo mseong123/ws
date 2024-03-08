@@ -116,7 +116,8 @@ function gameStart() {
 		sphereMesh.rotation.x = 0;
 	})
 	//enable powerup based on game option
-	resetPowerUp();
+	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.username === document.global.socket.gameInfo.mainClient)
+		resetPowerUp();
 }
 
 function resetGame() {
@@ -507,7 +508,8 @@ export function keyBinding() {
 			document.global.ui.tournament = 0;
 			document.global.ui.login = 0;
 			document.global.ui.multiLobby = 0;
-			document.global.ui.multiCreate = 0;
+			document.global.ui.multiCreateVersus = 0;
+			document.global.ui.multiCreateTournament = 0;
 		})
 	)
 }
@@ -760,7 +762,6 @@ export function resetPowerUp() {
 				sphereMeshProperty.visible = true;
 			else
 				sphereMeshProperty.visible = false;
-
 		})
 		//reset visible for powerup mesh
 		document.global.powerUp.meshProperty.forEach(meshProperty=>{

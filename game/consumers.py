@@ -34,7 +34,7 @@ class GameLobbyConsumer(WebsocketConsumer):
 	def receive(self, text_data):
 		data_json = json.loads(text_data)
 		if data_json["mode"] == 'create':
-			GameLobbyConsumer.gameLobbyInfo.append({"mainClient":str(self.scope["user"]), "player":[]})
+			GameLobbyConsumer.gameLobbyInfo.append({"mainClient":str(self.scope["user"]), "player":[], "gameMode":data_json["gameMode"]})
 		elif data_json["mode"] == 'leave':
 			GameLobbyConsumer.gameLobbyInfo = [
 				game for game in GameLobbyConsumer.gameLobbyInfo if game.get('mainClient') != str(self.scope['user'])
