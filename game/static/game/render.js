@@ -478,24 +478,23 @@ function processUI() {
 	document.global.ui.multiCreate?
 		document.querySelector(".multi-create-menu").classList.add("display-block"):document.querySelector(".multi-create-menu").classList.remove("display-block");
 	if (Object.keys(document.global.socket.gameInfo).length) {
-		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username)
 			document.querySelector(".multi-start-game").classList.remove("display-none")
-			document.querySelector(".multi-ready-game").classList.add("display-none");
-		}
-		else {
+		else
 			document.querySelector(".multi-start-game").classList.add("display-none")
-			document.querySelector(".multi-ready-game").classList.remove("display-none");
-		}
 		document.querySelector(".multi-create-option-menu").classList.remove("display-none");
 		document.querySelector(".multi-create-warning").classList.add("display-none");
 		if (document.global.socket.gameInfo.gameMode === 'versus') {
-			document.querySelector(".multi-create-display-player-versus").classList.remove("display-none")
+			document.querySelector(".multi-create-display-player-versus-one").classList.remove("display-none")
+			document.querySelector(".multi-create-display-player-versus-two").classList.remove("display-none")
 			document.querySelector(".multi-create-display-player-tournament").classList.add("display-none")
 		}
 		else {
-			document.querySelector(".multi-create-display-player-versus").classList.add("display-none")
+			document.querySelector(".multi-create-display-player-versus-one").classList.add("display-none")
+			document.querySelector(".multi-create-display-player-versus-two").classList.add("display-none")
 			document.querySelector(".multi-create-display-player-tournament").classList.remove("display-none")
 		}
+		document.querySelector(".multi-ready-game").classList.remove("display-none");
 
 	}
 	else {
@@ -727,71 +726,119 @@ function processUI() {
 	if (document.global.socket.gameInfo.mainClient) {
 		document.querySelector(".multi-create-mainClient").textContent = 'Main Client ' + document.global.socket.gameInfo.mainClient;
 		document.querySelector(".multi-create-gameMode").textContent = 'Game Mode ' + document.global.socket.gameInfo.gameMode;
-		const playerArray = Object.keys(document.global.socket.gameInfo.player)
-		for (let i = 0; i < playerArray.length; i++) {
-			const target = document.querySelector(".multi-create-player"+"."+document.global.socket.gameInfo.player[playerArray[i]].name)
-			if (!target) {
-				const player = document.createElement('p');
-				const ready = document.createElement('span');
-				ready.textContent = "ready";
-				ready.classList.add("ready");
-				ready.classList.add("multi-ready-"+document.global.socket.gameInfo.player[playerArray[i]].name);
+		if (document.global.socket.gameInfo.gameMode == "versus") {
+			const playerArrayOne = document.global.socket.gameInfo.playerGame[0].player
+			const playerArrayTwo = document.global.socket.gameInfo.playerGame[1].player
+			
+			playerArrayOne.forEach(playerList=>{
+				const target = document.querySelector(".multi-create-" + playerList)
+				if (!target) {
+					const player = document.createElement('p');
+					const ready = document.createElement('span');
+					ready.textContent = "ready";
+					ready.classList.add("ready");
+					ready.classList.add("multi-ready-"+playerList);
+					
+					ready.classList.add("display-none");
+					player.textContent = playerList;
+					player.classList.add("multi-create-" + playerList)
+					player.appendChild(ready);
+					document.querySelector('.multi-create-display-player-versus-one').appendChild(player)
+				}
+			})
+			playerArrayTwo.forEach(playerList=>{
+				const target = document.querySelector(".multi-create-" + playerList)
 				
-				ready.classList.add("display-none");
-				player.textContent = document.global.socket.gameInfo.player[playerArray[i]].name;
-				player.classList.add("multi-create-player")
-				player.classList.add(document.global.socket.gameInfo.player[playerArray[i]].name)
-				player.appendChild(ready);
-				// if (document.global.socket.gameInfo.gameMode === "versus") 
-				// 	document.querySelector('.multi-create-display-player-versus').appendChild(player)
-				// else 
-				// 	document.querySelector('.multi-create-display-player-tournament').appendChild(player)
-
-				document.global.socket.gameInfo.gameMode === "versus"? document.querySelector('.multi-create-display-player-versus').appendChild(player):document.querySelector('.multi-create-display-player-tournament').appendChild(player)
-	
-			}
-			document.global.socket.gameInfo.player[playerArray[i]].ready? document.querySelector(".multi-ready-"+document.global.socket.gameInfo.player[playerArray[i]].name).classList.remove("display-none"):document.querySelector(".multi-ready-" + document.global.socket.gameInfo.player[playerArray[i]].name).classList.add("display-none")
-		}
-		let activeMultiCreateDisplayPlayer;
-		let inactiveMultiCreateDisplayPlayer;
-		if (document.global.socket.gameInfo.gameMode === "versus") {
-			activeMultiCreateDisplayPlayer = document.querySelector(".multi-create-display-player-versus")
-			inactiveMultiCreateDisplayPlayer = document.querySelector(".multi-create-display-player-tournament")
+				if (!target) {
+					
+					const player = document.createElement('p');
+					const ready = document.createElement('span');
+					ready.textContent = "ready";
+					ready.classList.add("ready");
+					ready.classList.add("multi-ready-"+playerList);
+					
+					ready.classList.add("display-none");
+					player.textContent = playerList;
+					player.classList.add("multi-create-" + playerList)
+					player.appendChild(ready);
+					document.querySelector('.multi-create-display-player-versus-two').appendChild(player)
+				}
+			})
+			const versusMultiCreateDisplayPlayerOne = document.querySelector(".multi-create-display-player-versus-one")
+			Array.from(versusMultiCreateDisplayPlayerOne.children).forEach(child=>{
+				if (playerArrayOne.every(player=>{
+					return 'multi-create-' + player !== child.classList[0]
+				}))
+				versusMultiCreateDisplayPlayerOne.removeChild(child);
+			})
+			const versusMultiCreateDisplayPlayerTwo = document.querySelector(".multi-create-display-player-versus-two")
+			Array.from(versusMultiCreateDisplayPlayerTwo.children).forEach(child=>{
+				if (playerArrayTwo.every(player=>{
+					return 'multi-create-' + player !== child.classList[0]
+				}))
+				versusMultiCreateDisplayPlayerTwo.removeChild(child);
+			})
+			const playerArray = Object.keys(document.global.socket.gameInfo.player)
+			playerArray.forEach(player=>{
+				document.global.socket.gameInfo.player[player].ready? document.querySelector(".multi-ready-"+player).classList.remove("display-none"):document.querySelector(".multi-ready-"+player).classList.add("display-none")
+			})
+			
+			document.querySelector('.multi-create-display-player-tournament').innerHTML = ''
 		}
 		else {
-			activeMultiCreateDisplayPlayer = document.querySelector(".multi-create-display-player-tournament")
-			inactiveMultiCreateDisplayPlayer = document.querySelector(".multi-create-display-player-versus")
+			const playerArray = Object.keys(document.global.socket.gameInfo.player)
+			for (let i = 0; i < playerArray.length; i++) {
+				const target = document.querySelector(".multi-create-"+document.global.socket.gameInfo.player[playerArray[i]].name)
+				if (!target) {
+					const player = document.createElement('p');
+					const ready = document.createElement('span');
+					ready.textContent = "ready";
+					ready.classList.add("ready");
+					ready.classList.add("multi-ready-"+document.global.socket.gameInfo.player[playerArray[i]].name);
+					
+					ready.classList.add("display-none");
+					player.textContent = document.global.socket.gameInfo.player[playerArray[i]].name;
+					player.classList.add("multi-create-"+document.global.socket.gameInfo.player[playerArray[i]].name)
+					player.appendChild(ready);
+					document.querySelector('.multi-create-display-player-tournament').appendChild(player)
+				}
+				document.global.socket.gameInfo.player[playerArray[i]].ready? document.querySelector(".multi-ready-"+document.global.socket.gameInfo.player[playerArray[i]].name).classList.remove("display-none"):document.querySelector(".multi-ready-" + document.global.socket.gameInfo.player[playerArray[i]].name).classList.add("display-none")
+			}
+			const tournamentMultiCreateDisplayPlayer = document.querySelector(".multi-create-display-player-tournament")
+			Array.from(tournamentMultiCreateDisplayPlayer.children).forEach(child=>{
+				if (playerArray.every(player=>{
+					return "multi-create-" + player !== child.classList[0]
+				}))
+				tournamentMultiCreateDisplayPlayer.removeChild(child);
+			})
+			document.querySelector('.multi-create-display-player-versus-one').innerHTML = ''
+			document.querySelector('.multi-create-display-player-versus-two').innerHTML = ''
+
 		}
-		Array.from(activeMultiCreateDisplayPlayer.children).forEach(child=>{
-			if (playerArray.every(player=>{
-				return player !== child.classList[1]
-			}))
-			activeMultiCreateDisplayPlayer.removeChild(child);
-		})
-		inactiveMultiCreateDisplayPlayer.innerHTML = '';
-		document.getElementById("multi-create-duration").value = document.global.socket.gameInfo.duration;
+		
 		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
 			document.getElementById("multi-create-duration").disabled = false;
 			document.getElementById("multi-create-ludicrious").disabled = false;
 			document.getElementById("multi-create-powerUp").disabled = false;
-			document.querySelector(".multi-ready-game").disabled = true;
+			
 		}
 		else {
 			document.getElementById("multi-create-duration").disabled = true;
 			document.getElementById("multi-create-ludicrious").disabled = true;
 			document.getElementById("multi-create-powerUp").disabled = true;
-			document.querySelector(".multi-ready-game").disabled = false;
 		}
-		
+		document.getElementById("multi-create-duration").value = document.global.socket.gameInfo.duration;
 		document.global.socket.gameInfo.ludicrious? document.getElementById("multi-create-ludicrious").checked=true:document.getElementById("multi-create-ludicrious").checked=false;
 		document.global.socket.gameInfo.powerUp? document.getElementById("multi-create-powerUp").checked=true:document.getElementById("multi-create-powerUp").checked=false;
 		document.global.socket.ready? document.querySelector(".multi-ready-game").classList.add("ready"):document.querySelector(".multi-ready-game").classList.remove("ready");
 		if (document.global.socket.gameInfo.gameMode === "versus") {
-			document.querySelector(".multi-create-display-player-versus").classList.remove("display-none");
+			document.querySelector(".multi-create-display-player-versus-one").classList.remove("display-none");
+			document.querySelector(".multi-create-display-player-versus-two").classList.remove("display-none");
 			document.querySelector(".multi-create-display-player-tournament").classList.add("display-none");
 		}
 		else {
-			document.querySelector(".multi-create-display-player-versus").classList.add("display-none");
+			document.querySelector(".multi-create-display-player-versus-one").classList.add("display-none");
+			document.querySelector(".multi-create-display-player-versus-two").classList.add("display-none");
 			document.querySelector(".multi-create-display-player-tournament").classList.remove("display-none");
 		}
 

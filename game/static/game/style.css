@@ -445,6 +445,19 @@ hr {
 
 }
 
+.multi-create-display-player-versus-container {
+	display:grid;
+	grid-template-columns: auto auto auto;
+	
+}
+.multi-create-display-player-versus-one {
+	border:1px solid black;
+}
+
+.multi-create-display-player-versus-two {
+	border:1px solid black;
+}
+
 @media (min-width:577px) {
 	.banner {
 		margin-top:3rem;

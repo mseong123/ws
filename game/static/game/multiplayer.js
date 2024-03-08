@@ -161,6 +161,7 @@ export function keyBindingMultiplayer() {
 				document.global.ui.multiLobby = 0;
 				document.global.socket.gameInfo.mainClient = document.global.gameplay.username;
 				document.global.socket.gameInfo.gameMode = "versus";
+				document.global.socket.gameInfo.playerGame = [{teamName:"Team One", score:0, player:[], winner:false},{teamName:"Team Two", score:0, player:[], winner:false}];
 				document.global.socket.gameSocket.send(JSON.stringify({
 					mode:"create",
 					gameData:document.global.socket.gameInfo

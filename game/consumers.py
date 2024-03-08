@@ -34,7 +34,7 @@ class GameLobbyConsumer(WebsocketConsumer):
 	def receive(self, text_data):
 		data_json = json.loads(text_data)
 		if data_json["mode"] == 'create':
-			GameLobbyConsumer.gameLobbyInfo.append({"mainClient":str(self.scope["user"]), "player":[], "gameMode":data_json["gameMode"]})
+			GameLobbyConsumer.gameLobbyInfo.append({"mainClient":str(self.scope["user"]), "player":[str(self.scope["user"])], "gameMode":data_json["gameMode"]})
 		elif data_json["mode"] == 'leave':
 			GameLobbyConsumer.gameLobbyInfo = [
 				game for game in GameLobbyConsumer.gameLobbyInfo if game.get('mainClient') != str(self.scope['user'])
@@ -73,7 +73,10 @@ class GameConsumer(WebsocketConsumer):
 		if GameConsumer.gameInfo.get(str(self.scope["user"])) is not None:
 			del GameConsumer.gameInfo[str(self.scope["user"])]
 		elif GameConsumer.gameInfo.get(self.room_group_name) is not None:
-			del GameConsumer.gameInfo[self.room_group_name]['player'][str(self.scope["user"])]
+			if GameConsumer.gameInfo[self.room_group_name]['gameMode'] == 'versus':
+				GameConsumer.gameInfo[self.room_group_name]['playerGame'][0]['player'] = [player for player in gameConsumer.gameInfo[self.room_group_name]['playerGame'][0]['player'] if player != str(self.scope["user"])]
+			else:
+				del GameConsumer.gameInfo[self.room_group_name]['player'][str(self.scope["user"])]
 		async_to_sync(self.channel_layer.group_discard)(
 			self.room_group_name, self.channel_name)
 		async_to_sync(self.channel_layer.group_send)(
@@ -85,11 +88,22 @@ class GameConsumer(WebsocketConsumer):
 		data_json = json.loads(text_data)
 		if data_json.get("mode") is not None and data_json.get("mode") == 'create':
 			GameConsumer.gameInfo[self.room_group_name] = data_json["gameData"]
+			GameConsumer.gameInfo[self.room_group_name]['player'][str(self.scope["user"])] = {
+				"name":str(self.scope["user"]),
+				"ready":0
+			}
+			if GameConsumer.gameInfo[self.room_group_name]['gameMode'] == "versus":
+				GameConsumer.gameInfo[self.room_group_name]['playerGame'][0]['player'].append(str(self.scope["user"]))
 		elif data_json.get("mode") is not None and data_json.get("mode") == 'join':
 			GameConsumer.gameInfo[self.room_group_name]['player'][str(self.scope["user"])] = {
 				"name":str(self.scope["user"]),
 				"ready":0
 			}
+			if GameConsumer.gameInfo[self.room_group_name]['gameMode'] == "versus":
+				if len(GameConsumer.gameInfo[self.room_group_name]['playerGame'][0]['player']) > len(GameConsumer.gameInfo[self.room_group_name]['playerGame'][1]['player']):
+					GameConsumer.gameInfo[self.room_group_name]['playerGame'][1]['player'].append(str(self.scope["user"]))
+				else:
+					GameConsumer.gameInfo[self.room_group_name]['playerGame'][0]['player'].append(str(self.scope["user"]))
 		elif data_json.get("mode") is not None and data_json["mode"] == 'updateLudicrious':
 			GameConsumer.gameInfo[self.room_group_name]['ludicrious'] = data_json['ludicrious']
 		elif data_json.get("mode") is not None and data_json.get("mode") == 'updateDuration':
