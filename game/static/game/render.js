@@ -730,9 +730,26 @@ function processUI() {
 			const playerArrayOne = document.global.socket.gameInfo.playerGame[0].player
 			const playerArrayTwo = document.global.socket.gameInfo.playerGame[1].player
 			
+			const versusMultiCreateDisplayPlayerOne = document.querySelector(".multi-create-display-player-versus-one")
+			Array.from(versusMultiCreateDisplayPlayerOne.children).forEach(child=>{
+				
+				if (playerArrayOne.every(player=>{
+					return 'multi-create-' + player !== child.classList[0]
+				}))
+					versusMultiCreateDisplayPlayerOne.removeChild(child);
+			})
+			const versusMultiCreateDisplayPlayerTwo = document.querySelector(".multi-create-display-player-versus-two")
+			Array.from(versusMultiCreateDisplayPlayerTwo.children).forEach(child=>{
+				if (playerArrayTwo.every(player=>{
+					return 'multi-create-' + player !== child.classList[0]
+				}))
+					versusMultiCreateDisplayPlayerTwo.removeChild(child);
+			})
+
 			playerArrayOne.forEach(playerList=>{
 				const target = document.querySelector(".multi-create-" + playerList)
 				if (!target) {
+					
 					const player = document.createElement('p');
 					const ready = document.createElement('span');
 					ready.textContent = "ready";
@@ -746,11 +763,10 @@ function processUI() {
 					document.querySelector('.multi-create-display-player-versus-one').appendChild(player)
 				}
 			})
+			
 			playerArrayTwo.forEach(playerList=>{
 				const target = document.querySelector(".multi-create-" + playerList)
-				
 				if (!target) {
-					
 					const player = document.createElement('p');
 					const ready = document.createElement('span');
 					ready.textContent = "ready";
@@ -764,20 +780,8 @@ function processUI() {
 					document.querySelector('.multi-create-display-player-versus-two').appendChild(player)
 				}
 			})
-			const versusMultiCreateDisplayPlayerOne = document.querySelector(".multi-create-display-player-versus-one")
-			Array.from(versusMultiCreateDisplayPlayerOne.children).forEach(child=>{
-				if (playerArrayOne.every(player=>{
-					return 'multi-create-' + player !== child.classList[0]
-				}))
-				versusMultiCreateDisplayPlayerOne.removeChild(child);
-			})
-			const versusMultiCreateDisplayPlayerTwo = document.querySelector(".multi-create-display-player-versus-two")
-			Array.from(versusMultiCreateDisplayPlayerTwo.children).forEach(child=>{
-				if (playerArrayTwo.every(player=>{
-					return 'multi-create-' + player !== child.classList[0]
-				}))
-				versusMultiCreateDisplayPlayerTwo.removeChild(child);
-			})
+			
+			
 			const playerArray = Object.keys(document.global.socket.gameInfo.player)
 			playerArray.forEach(player=>{
 				document.global.socket.gameInfo.player[player].ready? document.querySelector(".multi-ready-"+player).classList.remove("display-none"):document.querySelector(".multi-ready-"+player).classList.add("display-none")
@@ -835,11 +839,13 @@ function processUI() {
 			document.querySelector(".multi-create-display-player-versus-one").classList.remove("display-none");
 			document.querySelector(".multi-create-display-player-versus-two").classList.remove("display-none");
 			document.querySelector(".multi-create-display-player-tournament").classList.add("display-none");
+			document.querySelector(".multi-create-change").classList.remove("display-none");
 		}
 		else {
 			document.querySelector(".multi-create-display-player-versus-one").classList.add("display-none");
 			document.querySelector(".multi-create-display-player-versus-two").classList.add("display-none");
 			document.querySelector(".multi-create-display-player-tournament").classList.remove("display-none");
+			document.querySelector(".multi-create-change").classList.add("display-none");
 		}
 
 	}

@@ -94,24 +94,31 @@ export function keyBindingMultiplayer() {
 	})
 	const multiCreateLeave = document.querySelector(".multi-leave-game");
 	multiCreateLeave.addEventListener("click", (e)=>{
-		document.global.ui.multiLobby = 1;
-		document.global.ui.multiCreate = 0;
-		document.global.socket.ready = 0;
+		
 		document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
 		document.global.socket.gameSocket.close();
-		document.global.socket.gameInfo = {
-			mainClient:"",
-			gameMode:"",
-			player:{},
-			playerGame:[],
-			currentRound:0,
-			round:0,
-			ludicrious:1,
-			powerUp:1,
-			teamUp:0,
-			duration:document.global.gameplay.defaultDuration,
-			durationCount:document.global.gameplay.defaultDuration,
-		};
+		document.global.socket.gameSocket.onclose = function() {
+			document.global.socket.gameInfo = {
+				mainClient:"",
+				gameMode:"",
+				player:{},
+				playerGame:[],
+				currentRound:0,
+				round:0,
+				ludicrious:1,
+				powerUp:1,
+				teamUp:0,
+				duration:document.global.gameplay.defaultDuration,
+				durationCount:document.global.gameplay.defaultDuration,
+			};
+			document.global.ui.multiLobby = 1;
+			document.global.ui.multiCreate = 0;
+			document.global.socket.ready = 0;
+			document.querySelector('.multi-create-display-player-versus-one').innerHTML = ''
+			document.querySelector('.multi-create-display-player-versus-two').innerHTML = ''
+			document.querySelector('.multi-create-display-player-tournament').innerHTML = ''
+		}
+		
 	})
 	const multiCreateReady = document.querySelector(".multi-ready-game");
 	multiCreateReady.addEventListener("click", (e) => {
@@ -208,5 +215,24 @@ export function keyBindingMultiplayer() {
 			document.global.socket.gameInfo.ludicrious? document.global.socket.gameInfo.ludicrious = 0:document.global.socket.gameInfo.ludicrious = 1;
 			document.global.socket.gameSocket.send(JSON.stringify({mode:"updateLudicrious", ludicrious:document.global.socket.gameInfo.ludicrious}))
 		}
+	})
+	const multiCreateChange = document.querySelector(".multi-create-change");
+	multiCreateChange.addEventListener("click", (e) => {
+		
+		let index = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
+		if (index !== -1) {
+			document.global.socket.gameInfo.playerGame[0].player = [...document.global.socket.gameInfo.playerGame[0].player.slice(0, index), ...document.global.socket.gameInfo.playerGame[0].player.slice(index+1)];
+			document.global.socket.gameInfo.playerGame[1].player.push(document.global.gameplay.username)
+			
+		}
+		else {
+			index = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username);
+			if (index !== -1) {
+				document.global.socket.gameInfo.playerGame[1].player = [...document.global.socket.gameInfo.playerGame[1].player.slice(0, index), ...document.global.socket.gameInfo.playerGame[1].player.slice(index+1)];
+				document.global.socket.gameInfo.playerGame[0].player.push(document.global.gameplay.username)
+			}
+		}
+		
+		document.global.socket.gameSocket.send(JSON.stringify({mode:"updatePlayer", playerGame:document.global.socket.gameInfo.playerGame}))
 	})
 }
