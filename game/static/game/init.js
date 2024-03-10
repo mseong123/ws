@@ -242,9 +242,9 @@ function initGlobal() {
 
 	//websockets
 	document.global.socket = {}
-	document.global.socket.gameLobbySocket;
+	document.global.socket.gameLobbySocket = null;
 	document.global.socket.gameLobbyInfo = [];
-	document.global.socket.gameSocket;
+	document.global.socket.gameSocket = null;
 	document.global.socket.gameInfo = {
 		mainClient:"",
 		gameMode:"",

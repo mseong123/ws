@@ -55,6 +55,7 @@ function createGameLobbyWebSocket() {
 	};
 
 	document.global.socket.gameLobbySocket.onclose = function(e) {
+		document.global.socket.gameLobbySocket = null;
 		console.log('Game socket closed');
 	};
 }
@@ -81,11 +82,28 @@ export function createGameSocket(mainClient) {
 		else if (data.mode === "gameStart") {
 			multiGameStart();
 		}
+		else if (data.mode === "mainClient" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username) {
+			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.socket.gameInfo.mainClient);
+			if (paddleIndex === -1)
+				paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.socket.gameInfo.mainClient) + document.global.socket.gameInfo.playerGame[0].player.length;
+			document.global.sphere.sphereMeshProperty = data.liveGameData.sphereMeshProperty;
+			document.global.paddle.paddlesProperty[paddleIndex] = data.liveGameData.paddlesProperty;
+			document.global.gameplay.roundStart = data.liveGameData.roundStart;
+			document.global.gameplay.initRotateY = data.liveGameData.initRotateY;
+			document.global.gameplay.initRotateX = data.liveGameData.initRotateX;
+			document.global.powerUp.meshProperty = data.liveGameData.meshProperty;
+		}
+		else if (data.mode === "player") {
+			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(data.playerName);
+			if (paddleIndex === -1)
+				paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(data.playerName) + document.global.socket.gameInfo.playerGame[0].player.length;
+			document.global.paddle.paddlesProperty[paddleIndex] = data.liveGameData;
+		}
 			
 	};
 
 	document.global.socket.gameSocket.onclose = function(e) {
-		multiGameStart();
+		document.global.socket.gameSocket = null;
 	};
 }
 

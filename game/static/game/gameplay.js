@@ -847,7 +847,7 @@ function updateSpherePosition(sphereMeshProperty) {
 }
 
 export function processGame() {
-	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.mainClient) {
+	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
 		if (document.global.gameplay.roundStart && document.global.gameplay.gameStart && !document.global.gameplay.pause && !document.global.gameplay.gameEnd) {
 			document.global.sphere.sphereMeshProperty.forEach(sphereMeshProperty=>{
 				if (sphereMeshProperty.visible) {

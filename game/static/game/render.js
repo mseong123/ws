@@ -1010,6 +1010,38 @@ function processCountDown(frameTimer) {
 	}
 }
 
+function sendMultiData() {
+	if (document.global.socket.gameInfo.mainClient && document.global.socket.gameSocket) {
+		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
+			if (paddleIndex === -1)
+				paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
+			document.global.socket.gameSocket.send(JSON.stringify({
+				mode:"mainClient",
+				liveGameData:{
+					sphereMeshProperty:document.global.sphere.sphereMeshProperty,
+					paddlesProperty:document.global.paddle.paddlesProperty[paddleIndex],
+					roundStart:document.global.gameplay.roundStart,
+					initRotateY:document.global.gameplay.initRotateY,
+					initRotateX:document.global.gameplay.initRotateX,
+					meshProperty:document.global.powerUp.meshProperty,
+				}
+			}))
+		}
+		else {
+			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
+			if (paddleIndex === -1)
+				paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
+			document.global.socket.gameSocket.send(JSON.stringify({
+				mode:"player",
+				playerName:document.global.gameplay.username,
+				liveGameData:document.global.paddle.paddlesProperty[paddleIndex]
+
+			}))
+		}
+	}
+}
+
 
 export function main() {
 	const frameTimer = {
@@ -1082,6 +1114,9 @@ export function main() {
 		movePaddle();
 		setTimer();
 		renderer.render( scene, camera );
+		sendMultiData()
+		
+
 		document.global.requestID = requestAnimationFrame(render);
 	}
 	document.global.requestID = requestAnimationFrame(render);
