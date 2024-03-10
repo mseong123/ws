@@ -103,6 +103,29 @@ function canvasMouseMove(e) {
 	}
 }
 
+function setPaddle() {
+	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
+			const paddleMeshProperty = document.global.paddle.paddlesProperty;
+			paddleMeshProperty[0].positionX = 0;
+			paddleMeshProperty[0].positionY = 0;
+			paddleMeshProperty[0].positionZ = (document.global.clientWidth / document.global.arena.aspect / 2) - (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier);
+			paddleMeshProperty[1].positionX = 0;
+			paddleMeshProperty[1].positionY = 0;
+			paddleMeshProperty[1].positionZ = -(document.global.clientWidth / document.global.arena.aspect / 2) + (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier)
+	}
+	else {
+		const paddleMeshProperty = document.global.paddle.paddlesProperty;
+		for (let i = 1; i <= document.global.socket.gameInfo.playerGame[0].player.length; i++) {
+			paddleMeshProperty[i - 1].positionZ = (document.global.clientWidth / document.global.arena.aspect / 2) - (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier * i)
+			paddleMeshProperty[i - 1].visible = true;
+		}
+		for (let i = document.global.socket.gameInfo.playerGame[0].player.length + 1; i <= document.global.socket.gameInfo.playerGame[1].player.length; i++) {
+			paddleMeshProperty[i - 1].positionZ = -(document.global.clientWidth / document.global.arena.aspect / 2) + (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier * (i - document.global.socket.gameInfo.playerGame[0].player.length))
+			paddleMeshProperty[i - 1].visible = true;
+		}
+	}
+}
+
 function gameStart() {
 	document.global.gameplay.gameStart = 1;
 	document.global.gameplay.initRotateY = 0;
@@ -115,9 +138,19 @@ function gameStart() {
 		sphereMesh.rotation.y = 0;
 		sphereMesh.rotation.x = 0;
 	})
+	setPaddle()
 	//enable powerup based on game option
 	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.username === document.global.socket.gameInfo.mainClient)
 		resetPowerUp();
+}
+
+function resetPaddle() {
+	document.global.paddle.paddlesProperty.forEach((paddle,idx)=>{
+		if (idx === 0 || idx === 1)
+			paddle.visible = true;
+		else
+			paddle.visible = false;
+	})
 }
 
 function resetGame() {
@@ -135,6 +168,7 @@ function resetGame() {
 	document.global.ui.single = 0;
 	document.global.ui.two = 0;
 	document.global.ui.tournament = 0;
+	resetPaddle();
 	resetPowerUp();
 	document.global.sphere.sphereMesh.forEach(sphereMesh=>{
 		sphereMesh.rotation.x = 0;
@@ -875,12 +909,17 @@ export function movePaddle() {
 	let paddleTwo;
 
 	//local game or multiplayer
-	if (document.global.gameplay.local) {
+	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
 		paddleOne = document.global.paddle.paddlesProperty[0];
 		paddleTwo = document.global.paddle.paddlesProperty[1];
 	}
-	else if (!document.global.gameplay.local)
-		paddleOne = document.global.paddle.paddlesProperty[document.global.gameplay.playerNum];
+	else {
+		let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
+		if (paddleIndex === -1)
+			paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username);
+		paddleOne = document.global.paddle.paddlesProperty[paddleIndex];
+	}
+		
 
 	//modification for large paddle powerup
 	if (paddleOne.largePaddle) {

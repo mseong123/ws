@@ -64,15 +64,16 @@ function initGlobal() {
 	document.global.camera.initRotationX = -Math.PI / 6.5;
 
 
-	const colorSpace = ["#0E2954","#1F6E8C","#2E8A99","#84A7A1"];
-	const colorOcean = ["#F6F4EB","#91C8E4","#749BC2","#4682A9"];
-	const colorAlien = ["#635985","#443C68","#393053","#18122B"];
-	const colorDesert = ["#472D2D","#553939","#704F4F","#A77979"];
+	const colorSpace = ["#0E2954","#1F6E8C","#2E8A99","#84A7A1","#453C67", "#6D67E4", "#46C2CB", "#F2F7A1"];
+	const colorOcean = ["#F6F4EB","#91C8E4","#749BC2","#4682A9", "#ECF4D6", "#9AD0C2", "#2D9596", "#265073"];
+	const colorAlien = ["#635985","#443C68","#393053","#18122B", "#711DB0", "#C21292", "#EF4040", "#FFA732"];
+	const colorDesert = ["#472D2D","#553939","#704F4F","#A77979", "#9B4444", "#C68484","#A3C9AA","#EEEEEE"];
 	document.global.paddle={};
 	document.global.paddle.paddles = [];
 	document.global.paddle.paddlesProperty = [];
 	document.global.paddle.color = [colorSpace, colorOcean, colorAlien, colorDesert];
 	document.global.paddle.opacity = 0.9;
+	document.global.paddle.maxPaddle = 8;
 	document.global.paddle.distanceFromEdgeModifier= 2;
 	document.global.paddle.hitBackModifier = 5;
 	document.global.paddle.defaultWidth = clientWidth / document.global.arena.widthDivision / 5; //5
@@ -204,11 +205,6 @@ function initGlobal() {
 	};
 	document.global.gameplay.computerScore = 0;
 	document.global.gameplay.computerWinner = false;
-	
-	//other game info
-	document.global.gameplay.playerNum = 0;
-	document.global.gameplay.playerCount = 4;
-	
 	
 	//keyboard
 	document.global.keyboard = {};

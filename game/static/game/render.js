@@ -89,103 +89,35 @@ function createCamera() {
 function createPaddleMesh(arena3D) {
 	const colorPalette = document.global.paddle.color[document.global.gameplay.backgroundIndex];
 	const paddleGeometry = new THREE.BoxGeometry(document.global.paddle.defaultWidth, document.global.paddle.defaultHeight, document.global.paddle.thickness )
-	const paddleMaterialOne = new THREE.MeshPhongMaterial( { color: colorPalette[0], emissive: colorPalette[0], transparent:true, opacity:document.global.paddle.opacity });
-	const paddleMaterialTwo = new THREE.MeshPhongMaterial( { color: colorPalette[1], emissive: colorPalette[1], transparent:true, opacity:document.global.paddle.opacity });
-	const paddleMaterialThree = new THREE.MeshPhongMaterial( { color: colorPalette[2], emissive: colorPalette[2], transparent:true, opacity:document.global.paddle.opacity });
-	const paddleMaterialFour = new THREE.MeshPhongMaterial( { color: colorPalette[3], emissive: colorPalette[3], transparent:true, opacity:document.global.paddle.opacity });
-	const paddleMeshPropertyTemplate = {
-		positionX:0,
-		positionY:0,
-		positionZ:0,
-		largePaddle:0,
-		invisibility:0,
-		width:document.global.paddle.defaultWidth,
-		height:document.global.paddle.defaultHeight
-	}
-	
-	if (document.global.gameplay.local) {
-		for (let i = 0; i < 2; i++) {
-			let paddleMesh;
-			const paddleMeshProperty = {...paddleMeshPropertyTemplate};
-			if (i === 0) {
-				paddleMesh = new THREE.Mesh(paddleGeometry, paddleMaterialOne);
-				paddleMesh.castShadow = true;
-				paddleMeshProperty.positionX = 0;
-				paddleMeshProperty.positionY = 0;
-				paddleMeshProperty.positionZ = (document.global.clientWidth / document.global.arena.aspect / 2) - (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier);
-			}
-			else {
-				paddleMesh = new THREE.Mesh(paddleGeometry, paddleMaterialTwo);
-				paddleMesh.castShadow = true;
-				paddleMeshProperty.positionX = 0;
-				paddleMeshProperty.positionY = 0;
-				paddleMeshProperty.positionZ = -(document.global.clientWidth / document.global.arena.aspect / 2) + (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier)
-			}
-			document.global.paddle.paddles.push(paddleMesh);
-			document.global.paddle.paddlesProperty.push(paddleMeshProperty);
-			arena3D.add(paddleMesh);
+	const paddlesProperty = document.global.paddle.paddlesProperty;
+	for (let i = 0; i < document.global.paddle.maxPaddle; i++) {
+		const paddleMaterial = new THREE.MeshPhongMaterial( { color: colorPalette[i], emissive: colorPalette[i], transparent:true, opacity:document.global.paddle.opacity });
+		const paddleMeshPropertyTemplate = {
+			visible:false,
+			positionX:0,
+			positionY:0,
+			positionZ:0,
+			largePaddle:0,
+			invisibility:0,
+			width:document.global.paddle.defaultWidth,
+			height:document.global.paddle.defaultHeight
 		}
+		const paddleMesh = new THREE.Mesh(paddleGeometry, paddleMaterial);
+		paddleMesh.castShadow = true;
+		document.global.paddle.paddles.push(paddleMesh);
+		paddlesProperty.push(paddleMeshPropertyTemplate);
+		arena3D.add(paddleMesh);
 	}
-	else if (!document.global.gameplay.local) {
-		for (let i = 0; i < document.global.gameplay.playerCount; i++) {
-			let paddleMesh;
-			const paddleMeshProperty = {...paddleMeshPropertyTemplate};
+	//render initial paddle
+	paddlesProperty[0].positionX = 0;
+	paddlesProperty[0].positionY = 0;
+	paddlesProperty[0].positionZ = (document.global.clientWidth / document.global.arena.aspect / 2) - (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier);
+	paddlesProperty[0].visible = true;
+	paddlesProperty[1].positionX = 0;
+	paddlesProperty[1].positionY = 0;
+	paddlesProperty[1].positionZ = -(document.global.clientWidth / document.global.arena.aspect / 2) + (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier);
+	paddlesProperty[1].visible = true;
 
-			if (i === 0) {
-				paddleMesh = new THREE.Mesh(paddleGeometry, paddleMaterialOne);
-				paddleMesh.castShadow = true;
-				if (document.global.gameplay.playerCount > 2) {
-					paddleMeshProperty.positionX = -document.global.paddle.defaultWidth / 4;
-					paddleMeshProperty.positionY = -document.global.paddle.defaultHeight / 4;
-					paddleMeshProperty.positionZ = (document.global.clientWidth / document.global.arena.aspect / 2) - (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier)
-				}
-				else {
-					paddleMeshProperty.positionX = 0;
-					paddleMeshProperty.positionY = 0;
-					paddleMeshProperty.positionZ = (document.global.clientWidth / document.global.arena.aspect / 2) - (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier)
-				}
-			}
-			else if (i === 1) {
-				paddleMesh = new THREE.Mesh(paddleGeometry, paddleMaterialTwo);
-				paddleMesh.castShadow = true;
-				if (document.global.gameplay.playerCount == 4) {
-					paddleMeshProperty.positionX = -document.global.paddle.defaultWidth / 4;
-					paddleMeshProperty.positionY = -document.global.paddle.defaultHeight / 4;
-					paddleMeshProperty.positionZ = -(document.global.clientWidth / document.global.arena.aspect / 2) + (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier)
-				}
-				else {
-					paddleMeshProperty.positionX = 0;
-					paddleMeshProperty.positionY = 0;
-					paddleMeshProperty.positionZ = -(document.global.clientWidth / document.global.arena.aspect / 2) + (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier)
-				}
-			}
-			else if (i === 2) {
-				paddleMesh = new THREE.Mesh(paddleGeometry, paddleMaterialThree);
-				paddleMesh.castShadow = true;
-				if (document.global.gameplay.playerCount > 2) {
-					paddleMeshProperty.positionX = document.global.paddle.defaultWidth / 4;
-					paddleMeshProperty.positionY = document.global.paddle.defaultHeight / 4;
-					paddleMeshProperty.positionZ = (document.global.clientWidth / document.global.arena.aspect / 2) - (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier * 4)
-				}
-				else {
-					paddleMeshProperty.positionX = 0;
-					paddleMeshProperty.positionY = 0;
-					paddleMeshProperty.positionZ = (document.global.clientWidth / document.global.arena.aspect / 2) - (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier * 4)
-				}
-			}
-			else if (i === 3) {
-				paddleMesh = new THREE.Mesh(paddleGeometry, paddleMaterialFour);
-				paddleMesh.castShadow = true;
-				paddleMeshProperty.positionX = document.global.paddle.defaultWidth / 4;
-				paddleMeshProperty.positionY = document.global.paddle.defaultHeight / 4;
-				paddleMeshProperty.positionZ = -(document.global.clientWidth / document.global.arena.aspect / 2) + (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier * 4)
-			}
-			document.global.paddle.paddles.push(paddleMesh);
-			document.global.paddle.paddlesProperty.push(paddleMeshProperty);
-			arena3D.add(paddleMesh);
-		}
-	}
-	
 }
 
 function createDirectionalLight(arena3D) {
@@ -280,6 +212,7 @@ function processSphere() {
 function processPaddle() {
 	document.global.paddle.paddles.forEach((paddle,idx)=>{
 		//Update position each paddle
+		paddle.visible = document.global.paddle.paddlesProperty[idx].visible;
 		paddle.position.set(document.global.paddle.paddlesProperty[idx].positionX, document.global.paddle.paddlesProperty[idx].positionY, document.global.paddle.paddlesProperty[idx].positionZ);
 		//Update height and width of each paddle
 		if (document.global.paddle.paddlesProperty[idx].width != paddle.geometry.width || document.global.paddle.paddlesProperty[idx].height != paddle.geometry.height) {
@@ -695,7 +628,7 @@ function processUI() {
 			user.classList.add("multi-join")
 			user.classList.add(document.global.socket.gameLobbyInfo[i].mainClient)
 			user.addEventListener("click", (e)=>{
-				if (document.global.gameplay.username !== e.target.classList[1]) {
+				if (document.global.gameplay.username !== e.target.classList[1] && document.global.socket.gameLobbyInfo.player < document.global.paddle.maxPaddle) {
 					document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"join", mainClient:e.target.classList[1]}))
 					
 					createGameSocket(e.target.classList[1])
