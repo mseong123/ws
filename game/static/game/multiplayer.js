@@ -1,3 +1,5 @@
+import {gameStart} from './gameplay.js'
+
 function getCookie (name) {
 	let value = `; ${document.cookie}`;
 	let parts = value.split(`; ${name}=`);
@@ -57,6 +59,14 @@ function createGameLobbyWebSocket() {
 	};
 }
 
+function multiGameStart() {
+	document.global.gameplay.local = 0;
+	document.global.powerUp.enable = document.global.socket.gameInfo.powerUp;
+	document.querySelector(".game-summary-header-type").textContent = "Multiplayer " + document.global.socket.gameInfo.gameMode;
+	gameStart();
+
+}
+
 export function createGameSocket(mainClient) {
 	document.global.socket.gameSocket = new WebSocket(
 		'ws://'
@@ -66,11 +76,16 @@ export function createGameSocket(mainClient) {
 
 	document.global.socket.gameSocket.onmessage = function(e) {
 		const data = JSON.parse(e.data);
-		document.global.socket.gameInfo = data.gameInfo;
+		if (data.mode === "gameOption")
+			document.global.socket.gameInfo = data.gameInfo;
+		else if (data.mode === "gameStart") {
+			multiGameStart();
+		}
+			
 	};
 
 	document.global.socket.gameSocket.onclose = function(e) {
-		console.log('Game socket closed');
+		multiGameStart();
 	};
 }
 
@@ -234,5 +249,18 @@ export function keyBindingMultiplayer() {
 		}
 		
 		document.global.socket.gameSocket.send(JSON.stringify({mode:"updatePlayer", playerGame:document.global.socket.gameInfo.playerGame}))
+	})
+	const multiStartGame = document.querySelector(".multi-start-game");
+	multiStartGame.addEventListener("click", (e) => {
+		const playerArray = Object.keys(document.global.socket.gameInfo.player)
+		if (document.global.socket.gameInfo.gameMode === "versus" && playerArray.every(player=>{
+			return document.global.socket.gameInfo.player[player].ready === 1
+		}) && document.global.socket.gameInfo.playerGame[0].player.length>0 && document.global.socket.gameInfo.playerGame[1].player.length>0)
+			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
+		else if (document.global.socket.gameInfo.gameMode === "tournament" && playerArray.every(player=>{
+			return document.global.socket.gameInfo.player[player].ready === 1
+		}))
+			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
+		
 	})
 }

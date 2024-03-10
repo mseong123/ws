@@ -628,23 +628,26 @@ function processUI() {
 			user.classList.add("multi-join")
 			user.classList.add(document.global.socket.gameLobbyInfo[i].mainClient)
 			user.addEventListener("click", (e)=>{
-				if (document.global.gameplay.username !== e.target.classList[1] && document.global.socket.gameLobbyInfo.player < document.global.paddle.maxPaddle) {
-					document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"join", mainClient:e.target.classList[1]}))
-					
-					createGameSocket(e.target.classList[1])
-					document.global.socket.gameSocket.onopen = function() {
-						// if (document.global.socket.gameInfo.mainClient && document.global.socket.gameInfo.player.every(player=>{
-						// 	return player !== document.global.gameplay.username
-						// })) {
-							document.global.ui.multiCreate = 1;
-							document.global.ui.multiLobby = 0;
-							document.global.socket.gameSocket.send(JSON.stringify({
-								mode:"join",
-							}))
+				if (document.global.gameplay.username !== e.target.classList[1]) {
+					let currentGame;
+					document.global.socket.gameLobbyInfo.forEach(game=>{
+						if(game.mainClient === e.target.classList[1])
+							currentGame = game;
+					})
+					if (currentGame.player.length < document.global.paddle.maxPaddle) {
+						document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"join", mainClient:e.target.classList[1]}))
+						createGameSocket(e.target.classList[1])
+						document.global.socket.gameSocket.onopen = function() {
+								document.global.ui.multiCreate = 1;
+								document.global.ui.multiLobby = 0;
+								document.global.socket.gameSocket.send(JSON.stringify({
+									mode:"join",
+								}))
+							}
 					}
 				}
 				
-				// createGameSocket(e.target.classList[0])
+	
 			})
 			document.querySelector('.multi-lobby-display').appendChild(user);
 		}
@@ -719,6 +722,12 @@ function processUI() {
 			playerArray.forEach(player=>{
 				document.global.socket.gameInfo.player[player].ready? document.querySelector(".multi-ready-"+player).classList.remove("display-none"):document.querySelector(".multi-ready-"+player).classList.add("display-none")
 			})
+			if ((playerArray.every(player=>{
+				return document.global.socket.gameInfo.player[player].ready === 1
+			})) && document.global.socket.gameInfo.playerGame[0].player.length>0 && document.global.socket.gameInfo.playerGame[1].player.length>0)
+				document.querySelector(".multi-start-game").classList.add("ready")
+			else 
+				document.querySelector(".multi-start-game").classList.remove("ready")
 			
 			document.querySelector('.multi-create-display-player-tournament').innerHTML = ''
 		}
@@ -748,6 +757,12 @@ function processUI() {
 				}))
 				tournamentMultiCreateDisplayPlayer.removeChild(child);
 			})
+			if (playerArray.every(player=>{
+				return document.global.socket.gameInfo.player[player].ready === 1
+			}))
+				document.querySelector(".multi-start-game").classList.add("ready")
+			else 
+				document.querySelector(".multi-start-game").classList.remove("ready")
 			document.querySelector('.multi-create-display-player-versus-one').innerHTML = ''
 			document.querySelector('.multi-create-display-player-versus-two').innerHTML = ''
 

@@ -56,9 +56,15 @@ function canvasMouseMove(e) {
     const mouseX = e.clientX - offsetLeft;
 	const mouseY = e.clientY - offsetTop;
 	const paddlesProperty = document.global.paddle.paddlesProperty;
-
+	let versusPaddleIndex;
+	if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
+		versusPaddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
+		if (versusPaddleIndex === -1)
+			versusPaddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
+	}
+		
 	//large paddle power up modification
-	if ((document.global.gameplay.local && paddlesProperty[0].largePaddle) || (!document.global.gameplay.local && paddlesProperty[document.global.gameplay.playerNum].largePaddle)) { 
+	if ((document.global.gameplay.local && paddlesProperty[0].largePaddle) || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament" && paddlesProperty[0].largePaddle || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus" && paddlesProperty[versusPaddleIndex].largePaddle) { 
 		paddleWidth = paddleWidth * document.global.powerUp.largePaddle.multiplier;
 		paddleHeight = paddleHeight * document.global.powerUp.largePaddle.multiplier;
 	}
@@ -89,16 +95,27 @@ function canvasMouseMove(e) {
 			else
 				paddlesProperty[0].positionX = positionX;
 		}
-		//For multi, mouse is attached to player num
-		if (!document.global.gameplay.local) {
+		//For multi versus, mouse is attached to player num
+		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
 			if ((document.global.arena3D.rotation.x - Math.PI / 2) % (Math.PI * 2) > 0 && (document.global.arena3D.rotation.x - Math.PI/2) % (Math.PI * 2) < Math.PI)
-				paddlesProperty[document.global.gameplay.playerNum].positionX = -positionX;
+				paddlesProperty[versusPaddleIndex].positionX = -positionX;
 			else
-				paddlesProperty[document.global.gameplay.playerNum].positionX = positionX;
+				paddlesProperty[versusPaddleIndex].positionX = positionX;
 			if ((document.global.arena3D.rotation.y - Math.PI / 2) % (Math.PI * 2) > 0 && (document.global.arena3D.rotation.y - Math.PI/2) % (Math.PI * 2) < Math.PI)
-				paddlesProperty[document.global.gameplay.playerNum].positionY = -positionY;
+				paddlesProperty[versusPaddleIndex].positionY = -positionY;
 			else
-				paddlesProperty[document.global.gameplay.playerNum].positionY = positionY;
+				paddlesProperty[versusPaddleIndex].positionY = positionY;
+		}
+		//For multi tournament, mouse is attached to index 0;
+		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
+			if ((document.global.arena3D.rotation.x - Math.PI / 2) % (Math.PI * 2) > 0 && (document.global.arena3D.rotation.x - Math.PI/2) % (Math.PI * 2) < Math.PI)
+				paddlesProperty[0].positionX = -positionX;
+			else
+				paddlesProperty[0].positionX = positionX;
+			if ((document.global.arena3D.rotation.y - Math.PI / 2) % (Math.PI * 2) > 0 && (document.global.arena3D.rotation.y - Math.PI/2) % (Math.PI * 2) < Math.PI)
+				paddlesProperty[0].positionY = -positionY;
+			else
+				paddlesProperty[0].positionY = positionY;
 		}
 	}
 }
@@ -113,20 +130,20 @@ function setPaddle() {
 			paddleMeshProperty[1].positionY = 0;
 			paddleMeshProperty[1].positionZ = -(document.global.clientWidth / document.global.arena.aspect / 2) + (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier)
 	}
-	else {
+	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
 		const paddleMeshProperty = document.global.paddle.paddlesProperty;
 		for (let i = 1; i <= document.global.socket.gameInfo.playerGame[0].player.length; i++) {
 			paddleMeshProperty[i - 1].positionZ = (document.global.clientWidth / document.global.arena.aspect / 2) - (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier * i)
 			paddleMeshProperty[i - 1].visible = true;
 		}
-		for (let i = document.global.socket.gameInfo.playerGame[0].player.length + 1; i <= document.global.socket.gameInfo.playerGame[1].player.length; i++) {
+		for (let i = document.global.socket.gameInfo.playerGame[0].player.length + 1; i <= document.global.socket.gameInfo.playerGame[1].player.length + document.global.socket.gameInfo.playerGame[0].player.length; i++) {
 			paddleMeshProperty[i - 1].positionZ = -(document.global.clientWidth / document.global.arena.aspect / 2) + (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier * (i - document.global.socket.gameInfo.playerGame[0].player.length))
 			paddleMeshProperty[i - 1].visible = true;
 		}
 	}
 }
 
-function gameStart() {
+export function gameStart() {
 	document.global.gameplay.gameStart = 1;
 	document.global.gameplay.initRotateY = 0;
 	document.global.arena3D.rotation.y = 0;
@@ -916,7 +933,7 @@ export function movePaddle() {
 	else {
 		let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
 		if (paddleIndex === -1)
-			paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username);
+			paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
 		paddleOne = document.global.paddle.paddlesProperty[paddleIndex];
 	}
 		
