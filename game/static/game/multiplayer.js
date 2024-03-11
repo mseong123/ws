@@ -63,7 +63,7 @@ function createGameLobbyWebSocket() {
 function multiGameStart() {
 	document.global.gameplay.local = 0;
 	document.global.powerUp.enable = document.global.socket.gameInfo.powerUp;
-	document.querySelector(".game-summary-header-type").textContent = "Multiplayer " + document.global.socket.gameInfo.gameMode;
+	document.querySelector(".game-summary-header-type").textContent = "Multiplayer " + document.global.socket.gameInfo.gameMode.toUpperCase();
 	gameStart();
 }
 
@@ -133,6 +133,7 @@ export function createGameSocket(mainClient) {
 			document.global.gameplay.initRotateY = data.liveGameData.initRotateY;
 			document.global.gameplay.initRotateX = data.liveGameData.initRotateX;
 			document.global.powerUp.meshProperty = data.liveGameData.meshProperty;
+			document.global.powerUp.shake.enable = data.liveGameData.shake;
 		}
 		else if (data.mode === "player" && data.playerName !== document.global.gameplay.username) {
 			const clientWidth = document.global.clientWidth; 
@@ -185,7 +186,6 @@ export function keyBindingMultiplayer() {
 				round:0,
 				ludicrious:1,
 				powerUp:1,
-				teamUp:0,
 				duration:document.global.gameplay.defaultDuration,
 				durationCount:document.global.gameplay.defaultDuration,
 			};
@@ -246,7 +246,7 @@ export function keyBindingMultiplayer() {
 				document.global.ui.multiLobby = 0;
 				document.global.socket.gameInfo.mainClient = document.global.gameplay.username;
 				document.global.socket.gameInfo.gameMode = "versus";
-				document.global.socket.gameInfo.playerGame = [{teamName:"Team One", score:0, player:[], winner:false},{teamName:"Team Two", score:0, player:[], winner:false}];
+				document.global.socket.gameInfo.playerGame = [{teamName:"TeamOne", score:0, player:[], winner:false},{teamName:"TeamTwo", score:0, player:[], winner:false}];
 				document.global.socket.gameSocket.send(JSON.stringify({
 					mode:"create",
 					gameData:document.global.socket.gameInfo

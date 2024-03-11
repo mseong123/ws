@@ -372,7 +372,6 @@ hr {
 .game-summary-display {
 	display:grid;
 	grid-template-columns:auto auto;
-	
 }
 .game-summary-items {
 	display:grid;
@@ -384,6 +383,37 @@ hr {
 	border-radius:0.25rem;
 	padding:0.25rem;
 	margin:0.25rem 0.25rem;
+}
+
+.game-summary-versus-items {
+
+	border:1px solid white;
+	border-radius:0.25rem;
+	padding:0.25rem;
+	margin:0.25rem 0.25rem;
+}
+
+.game-summary-versus-header {
+	display:grid;
+	grid-template-columns:auto auto;
+	justify-content:space-between;
+	margin:0.5rem 0;
+}
+
+.game-summary-versus-header {
+	display:grid;
+	grid-template-columns:auto auto;
+	justify-content:space-between;
+	margin:0.5rem 0;
+}
+
+.game-summary-versus-player {
+	display:grid;
+	grid-template-columns:50% 50%;
+}
+
+.game-summary-versus-color {
+	border-radius:0.25rem;
 }
 
 .won {

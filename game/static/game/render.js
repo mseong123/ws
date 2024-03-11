@@ -365,6 +365,50 @@ function updateGameSummary() {
 			
 		})
 	}
+	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
+		if (parent.children.length === 0) {
+			document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
+				const headerContainer = document.createElement("h4");
+				const teamName = document.createElement("span");
+				const teamScore = document.createElement("span");
+				teamName.textContent = playerGame.teamName;
+				teamScore.textContent = playerGame.score;
+				teamScore.classList.add('versus-'+playerGame.teamName + "-score")
+				
+				
+				headerContainer.appendChild(teamName);
+				headerContainer.appendChild(teamScore);
+				headerContainer.classList.add("game-summary-versus-header");
+				const containerDiv = document.createElement("div");
+				containerDiv.classList.add("game-summary-versus-items");
+				containerDiv.appendChild(headerContainer);
+				playerGame.player.forEach((player, idx1)=>{
+					const playerContainer = document.createElement("div");
+					const playerDisplay = document.createElement("p");
+					const playerColor= document.createElement("p");
+					playerContainer.classList.add("game-summary-versus-player");
+					playerDisplay.textContent = player;
+					playerColor.classList.add("game-summary-versus-color");
+					if (idx === 0)
+						playerColor.style.backgroundColor = document.global.paddle.color[document.global.gameplay.backgroundIndex][idx1];
+					else
+						playerColor.style.backgroundColor = document.global.paddle.color[document.global.gameplay.backgroundIndex][idx1 + document.global.socket.gameInfo.playerGame[0].player.length];
+					playerContainer.append(playerDisplay);
+					playerContainer.append(playerColor);
+					containerDiv.append(playerContainer);
+				})
+				parent.appendChild(containerDiv);
+			})
+		}
+		else {
+			document.querySelector(".versus-" + document.global.socket.gameInfo.playerGame[0].teamName + "-score").textContent = document.global.socket.gameInfo.playerGame[0].score;
+			document.querySelector(".versus-" + document.global.socket.gameInfo.playerGame[1].teamName + "-score").textContent = document.global.socket.gameInfo.playerGame[1].score;
+		}
+		// if (document.global.socket.gameInfo.playerGame[0].winner)
+		// 	document.querySelector(".game-summary-display").children[0].children[1].classList.add("won");
+		// else if (document.global.socket.gameInfo.playerGame[1].winner)
+		// 	document.querySelector(".game-summary-display").children[0].children[2].classList.add("won");
+	}
 }
 
 function processUI() {
@@ -576,6 +620,14 @@ function processUI() {
 			document.querySelector(".scoreboard-two-name").textContent = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].alias;
 			document.querySelector(".scoreboard-two-score").textContent = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].score;
 			document.querySelector(".timer").textContent = document.global.gameplay.localTournamentInfo.durationCount;
+			
+		}
+		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
+			document.querySelector(".scoreboard-one-name").textContent = document.global.socket.gameInfo.playerGame[0].teamName;
+			document.querySelector(".scoreboard-one-score").textContent = document.global.socket.gameInfo.playerGame[0].score;
+			document.querySelector(".scoreboard-two-name").textContent = document.global.socket.gameInfo.playerGame[1].teamName;
+			document.querySelector(".scoreboard-two-score").textContent = document.global.socket.gameInfo.playerGame[1].score;
+			document.querySelector(".timer").textContent = document.global.socket.gameInfo.durationCount;
 			
 		}
 		updateGameSummary();
@@ -1016,6 +1068,7 @@ function sendMultiData() {
 				roundStart:document.global.gameplay.roundStart,
 				initRotateY:document.global.gameplay.initRotateY,
 				initRotateX:document.global.gameplay.initRotateX,
+				shake:document.global.powerUp.shake.enable,
 				meshProperty:JSON.parse(JSON.stringify(document.global.powerUp.meshProperty)),
 			}
 			processSendLiveGameData(liveGameData)
