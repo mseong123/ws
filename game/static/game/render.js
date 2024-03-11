@@ -374,8 +374,6 @@ function updateGameSummary() {
 				teamName.textContent = playerGame.teamName;
 				teamScore.textContent = playerGame.score;
 				teamScore.classList.add('versus-'+playerGame.teamName + "-score")
-				
-				
 				headerContainer.appendChild(teamName);
 				headerContainer.appendChild(teamScore);
 				headerContainer.classList.add("game-summary-versus-header");
@@ -389,6 +387,7 @@ function updateGameSummary() {
 					playerContainer.classList.add("game-summary-versus-player");
 					playerDisplay.textContent = player;
 					playerColor.classList.add("game-summary-versus-color");
+					playerColor.classList.add(player);
 					if (idx === 0)
 						playerColor.style.backgroundColor = document.global.paddle.color[document.global.gameplay.backgroundIndex][idx1];
 					else
@@ -403,12 +402,36 @@ function updateGameSummary() {
 		else {
 			document.querySelector(".versus-" + document.global.socket.gameInfo.playerGame[0].teamName + "-score").textContent = document.global.socket.gameInfo.playerGame[0].score;
 			document.querySelector(".versus-" + document.global.socket.gameInfo.playerGame[1].teamName + "-score").textContent = document.global.socket.gameInfo.playerGame[1].score;
+			document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
+				playerGame.player.forEach((player, idx1)=>{
+					if (idx === 0)
+						document.querySelector(".game-summary-versus-color."+player).style.backgroundColor = document.global.paddle.color[document.global.gameplay.backgroundIndex][idx1];
+					else
+						document.querySelector(".game-summary-versus-color."+player).style.backgroundColor = document.global.paddle.color[document.global.gameplay.backgroundIndex][idx1 + document.global.socket.gameInfo.playerGame[0].player.length];
+				})
+			})
 		}
-		// if (document.global.socket.gameInfo.playerGame[0].winner)
-		// 	document.querySelector(".game-summary-display").children[0].children[1].classList.add("won");
-		// else if (document.global.socket.gameInfo.playerGame[1].winner)
-		// 	document.querySelector(".game-summary-display").children[0].children[2].classList.add("won");
+		if (document.global.socket.gameInfo.playerGame[0].winner)
+			document.querySelector(".game-summary-display").children[0].children[0].classList.add("won");
+		else if (document.global.socket.gameInfo.playerGame[1].winner)
+			document.querySelector(".game-summary-display").children[1].children[0].classList.add("won");
 	}
+}
+
+function processBackground() {
+	
+	if (document.querySelector(".canvas-background").classList[2] !== document.global.gameplay.backgroundClass[document.global.gameplay.backgroundIndex])
+		document.querySelectorAll(".canvas-background").forEach(background=>{
+			background.classList.remove(background.classList[2]);
+			background.classList.add(document.global.gameplay.backgroundClass[document.global.gameplay.backgroundIndex])
+			const colorPalette = document.global.paddle.color[document.global.gameplay.backgroundIndex];
+			for (let i = 0; i < document.global.paddle.maxPaddle; i++) {
+				const paddleMaterial = new THREE.MeshPhongMaterial( { color: colorPalette[i], emissive: colorPalette[i], transparent:true, opacity:document.global.paddle.opacity });
+				document.global.paddle.paddles[i].material.dispose();
+				document.global.paddle.paddles[i].material = paddleMaterial;
+			}
+		})
+	
 }
 
 function processUI() {
@@ -636,15 +659,15 @@ function processUI() {
 		//for gameEnd screen
 		updateGameSummary();
 		document.querySelector(".game-summary-container").classList.remove("display-none");
-		if (document.global.gameplay.single || document.global.gameplay.two || document.global.gameplay.tournament && (document.global.gameplay.localTournamentInfo.currentRound === document.global.gameplay.localTournamentInfo.round - 1))
+		if (document.global.gameplay.single || document.global.gameplay.two || document.global.gameplay.tournament && 
+			(document.global.gameplay.localTournamentInfo.currentRound === document.global.gameplay.localTournamentInfo.round - 1) || 
+			(!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus"))
 			document.querySelector(".game-end-display-container").classList.remove("display-none");
 		document.querySelector(".banner").classList.add("display-none");
 		document.querySelector(".scoreboard").classList.add("display-none");
 		document.querySelector(".toggle-game").classList.add("display-none");
-		if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.username === document.global.socket.gameInfo.mainClient) {
-			document.querySelector(".toggle-cheat").classList.add("display-none");
-			document.querySelector(".reset-game").classList.remove("display-none");
-		}
+		document.querySelector(".reset-game").classList.remove("display-none");
+		document.querySelector(".toggle-cheat").classList.add("display-none");
 	}
 	else { 
 		//for starting screen before gameStart
@@ -994,6 +1017,18 @@ export function populateWinner() {
 			}
 		}
 	}
+	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
+		const scoreOne = parseInt(document.global.socket.gameInfo.playerGame[0].score);
+		const scoreTwo = parseInt(document.global.socket.gameInfo.playerGame[1].score);
+		if (scoreOne > scoreTwo) {
+			document.global.socket.gameInfo.playerGame[0].winner = true;
+			document.global.socket.gameInfo.playerGame[1].winner = false;
+		}
+		else if (scoreTwo > scoreOne) {
+			document.global.socket.gameInfo.playerGame[0].winner = false;
+			document.global.socket.gameInfo.playerGame[1].winner = true;
+		}
+	}
 
 }
 
@@ -1026,7 +1061,13 @@ function reduceTime(info) {
 	}
 	if (minute === '00' && second === '01') {
 		populateWinner()
-		document.global.gameplay.gameEnd = 1; 
+		document.global.gameplay.gameEnd = 1;
+		if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username && document.global.socket.gameInfo.gameMode === "versus") {
+			document.global.socket.gameSocket.send(JSON.stringify({
+				mode:"gameEnd",
+				gameInfo:document.global.socket.gameInfo
+			}));
+		}
 	}
 		
 }
@@ -1051,13 +1092,19 @@ function processCountDown(frameTimer) {
 				frameTimer.prev = frameTimer.now;
 			}
 		}
+		else if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username && document.global.socket.gameInfo.gameMode === "versus") {
+			if (frameTimer.now - frameTimer.prev > 0) {
+				reduceTime(document.global.socket.gameInfo)
+				frameTimer.prev = frameTimer.now;
+			}
+		}
 		
 
 	}
 }
 
 function sendMultiData() {
-	if (document.global.socket.gameInfo.mainClient && document.global.socket.gameSocket.readyState === WebSocket.OPEN && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
+	if (document.global.socket.gameInfo.mainClient && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
 		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
 			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
 			if (paddleIndex === -1)
@@ -1069,12 +1116,13 @@ function sendMultiData() {
 				initRotateY:document.global.gameplay.initRotateY,
 				initRotateX:document.global.gameplay.initRotateX,
 				shake:document.global.powerUp.shake.enable,
+				backgroundIndex:document.global.gameplay.backgroundIndex,
 				meshProperty:JSON.parse(JSON.stringify(document.global.powerUp.meshProperty)),
 			}
 			processSendLiveGameData(liveGameData)
 			document.global.socket.gameSocket.send(JSON.stringify({
 				mode:"mainClient",
-				gameData:document.global.socket.gameInfo,
+				gameInfo:document.global.socket.gameInfo,
 				liveGameData:liveGameData,
 			}))
 		}
@@ -1151,6 +1199,7 @@ export function main() {
 		processPaddle();
 		processPowerUp();
 		processGame();
+		processBackground();
 		processUI();
 		shakeEffect();
 		arenaRotateY();

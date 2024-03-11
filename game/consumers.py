@@ -53,7 +53,6 @@ class GameLobbyConsumer(WebsocketConsumer):
 	# Receive message from room group
 	def gamelobby_message(self, event):
 		# Send message to WebSocket
-		print(GameLobbyConsumer.gameLobbyInfo)
 		self.send(text_data=json.dumps({"gameLobbyInfo": GameLobbyConsumer.gameLobbyInfo}))
 
 class GameConsumer(WebsocketConsumer):
@@ -85,7 +84,7 @@ class GameConsumer(WebsocketConsumer):
 	def receive(self, text_data):
 		data_json = json.loads(text_data)
 		if data_json.get("mode") is not None and data_json.get("mode") == 'create':
-			GameConsumer.gameInfo[self.room_group_name] = data_json["gameData"]
+			GameConsumer.gameInfo[self.room_group_name] = data_json["gameInfo"]
 			GameConsumer.gameInfo[self.room_group_name]['player'][str(self.scope["user"])] = {
 				"name":str(self.scope["user"]),
 				"ready":0
@@ -121,8 +120,11 @@ class GameConsumer(WebsocketConsumer):
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameOption"})
 		elif data_json.get("mode") is not None and data_json.get("mode") =='gameStart':
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameStart"})
+		elif data_json.get("mode") is not None and data_json.get("mode") =='gameEnd':
+			GameConsumer.gameInfo[self.room_group_name] = data_json['gameInfo']
+			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameEnd"})
 		elif data_json.get("mode") is not None and data_json.get("mode") =='mainClient':
-			GameConsumer.gameInfo[self.room_group_name] = data_json["gameData"]
+			GameConsumer.gameInfo[self.room_group_name] = data_json["gameInfo"]
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"mainClient", "liveGameData":data_json["liveGameData"]})
 		elif data_json.get("mode") is not None and data_json.get("mode") =='player':
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"player", "playerName":data_json["playerName"],"liveGameData":data_json["liveGameData"]})
@@ -146,6 +148,11 @@ class GameConsumer(WebsocketConsumer):
 		elif event["message"] == "gameStart":
 			self.send(text_data=json.dumps({
 				"mode": "gameStart"
+				}))
+		elif event["message"] == "gameEnd":
+			self.send(text_data=json.dumps({
+				"mode": "gameEnd",
+				"gameInfo":GameConsumer.gameInfo[self.room_group_name]
 				}))
 		elif event["message"] == "mainClient":
 			self.send(text_data=json.dumps({

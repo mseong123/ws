@@ -187,6 +187,8 @@ function resetGame() {
 	document.global.ui.single = 0;
 	document.global.ui.two = 0;
 	document.global.ui.tournament = 0;
+	document.global.ui.multiLobby = 0;
+	document.global.ui.multiCreate = 0;
 	resetPaddle();
 	resetPowerUp();
 	document.global.sphere.sphereMesh.forEach(sphereMesh=>{
@@ -241,6 +243,25 @@ function resetGame() {
 			document.global.gameplay.tournament = 0;
 		}
 	}
+	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode ==="versus") {
+		document.global.socket.gameSocket.close();
+		document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+		document.global.socket.ready = 0;
+		document.global.socket.gameInfo = {
+			mainClient:"",
+			gameMode:"",
+			player:{},
+			playerGame:[],
+			currentRound:0,
+			round:0,
+			ludicrious:0,
+			powerUp:1,
+			teamUp:0,
+			duration:document.global.gameplay.defaultDuration,
+			durationCount:document.global.gameplay.defaultDuration,
+		};
+		document.global.gameplay.local = 1;
+	} 
 } 
 
 function matchFix() {
@@ -884,9 +905,14 @@ export function processGame() {
 							else if (document.global.gameplay.tournament) {
 								if (sphereMeshProperty.positionZ > 0)
 									document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].score += 1;
-								else {
+								else
 									document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].score += 1;
-								}
+							}
+							else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode ==="versus") {
+								if (sphereMeshProperty.positionZ > 0)
+									document.global.socket.gameInfo.playerGame[1].score += 1;
+								else
+									document.global.socket.gameInfo.playerGame[0].score += 1;
 							}
 							document.global.sphere.sphereMeshProperty.forEach(sphereMeshProperty=>{
 								sphereMeshProperty.positionX = 0;

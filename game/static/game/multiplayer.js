@@ -17,7 +17,7 @@ async function fetch_login(data) {
 			credentials: "include",
 			headers: {
 				"Content-Type": "application/json",
-				"X-CSRFToken": getCookie2()
+				"X-CSRFToken": getCookie("csrftoken")
 			  },
 			body: JSON.stringify(data),
 		});
@@ -115,10 +115,14 @@ export function createGameSocket(mainClient) {
 
 	document.global.socket.gameSocket.onmessage = function(e) {
 		const data = JSON.parse(e.data);
-		if (data.mode === "gameOption")
+		if (data.mode === "gameOption" && document.global.gameplay.gameEnd !== 1)
 			document.global.socket.gameInfo = data.gameInfo;
 		else if (data.mode === "gameStart") {
 			multiGameStart();
+		}
+		else if (data.mode === "gameEnd") {
+			document.global.gameplay.gameEnd = 1;
+			document.global.socket.gameInfo = data.gameInfo;
 		}
 		else if (data.mode === "mainClient" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username) {
 			document.global.socket.gameInfo = data.gameInfo;
@@ -132,6 +136,7 @@ export function createGameSocket(mainClient) {
 			document.global.gameplay.roundStart = data.liveGameData.roundStart;
 			document.global.gameplay.initRotateY = data.liveGameData.initRotateY;
 			document.global.gameplay.initRotateX = data.liveGameData.initRotateX;
+			document.global.gameplay.backgroundIndex = data.liveGameData.backgroundIndex;
 			document.global.powerUp.meshProperty = data.liveGameData.meshProperty;
 			document.global.powerUp.shake.enable = data.liveGameData.shake;
 		}
@@ -188,6 +193,7 @@ export function keyBindingMultiplayer() {
 				powerUp:1,
 				duration:document.global.gameplay.defaultDuration,
 				durationCount:document.global.gameplay.defaultDuration,
+
 			};
 			document.global.ui.multiLobby = 1;
 			document.global.ui.multiCreate = 0;
@@ -249,7 +255,7 @@ export function keyBindingMultiplayer() {
 				document.global.socket.gameInfo.playerGame = [{teamName:"TeamOne", score:0, player:[], winner:false},{teamName:"TeamTwo", score:0, player:[], winner:false}];
 				document.global.socket.gameSocket.send(JSON.stringify({
 					mode:"create",
-					gameData:document.global.socket.gameInfo
+					gameInfo:document.global.socket.gameInfo
 				}))
 			}
 		}
@@ -268,7 +274,7 @@ export function keyBindingMultiplayer() {
 				document.global.socket.gameInfo.gameMode = "tournament";
 				document.global.socket.gameSocket.send(JSON.stringify({
 					mode:"create",
-					gameData:document.global.socket.gameInfo
+					gameInfo:document.global.socket.gameInfo
 				}))
 			}
 		}
