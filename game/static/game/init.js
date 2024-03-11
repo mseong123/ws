@@ -9,7 +9,7 @@ function windowResize(e) {
 		document.global.ui.chat = 0;
 
 	//for local  or multiplayer mainClient
-	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gamemplay.username === document.global.socket.gameInfo.mainClient) {
+	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.username === document.global.socket.gameInfo.mainClient) {
 		document.global.sphere.sphereMesh.forEach(sphereMesh=>{
 			sphereMesh.velocityX = canvas.clientWidth / document.global.sphere.velocityDivision;
 			sphereMesh.velocityY = canvas.clientWidth / document.global.sphere.velocityDivision;
@@ -151,7 +151,7 @@ function initGlobal() {
 	document.global.gameplay.gameSummary = 0;
 	document.global.gameplay.single = 0;
 	document.global.gameplay.playerIndex = []; 
-	document.global.gameplay.immortality = 0; //for gameplay debugging purpose
+	document.global.gameplay.immortality = 1; //for gameplay debugging purpose
 	document.global.gameplay.cheat = 1; // for show purpose
 	document.global.gameplay.ludicrious = 0;
 	document.global.gameplay.ludicriousYminuteUpper = 1;
@@ -175,7 +175,7 @@ function initGlobal() {
 	document.global.gameplay.roundStartFrameLimit = 30;
 	document.global.gameplay.shadowFrame = 0;
 	document.global.gameplay.shadowFrameLimit = 5;
-	document.global.gameplay.defaultDuration = "00:10";
+	document.global.gameplay.defaultDuration = "01:10";
 
 	//local or multiplayer game
 	document.global.gameplay.local = 1;
@@ -252,7 +252,7 @@ function initGlobal() {
 		playerGame:[],
 		currentRound:0,
 		round:0,
-		ludicrious:1,
+		ludicrious:0,
 		powerUp:1,
 		teamUp:0,
 		duration:document.global.gameplay.defaultDuration,

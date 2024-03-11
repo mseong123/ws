@@ -133,10 +133,12 @@ function setPaddle() {
 	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
 		const paddleMeshProperty = document.global.paddle.paddlesProperty;
 		for (let i = 1; i <= document.global.socket.gameInfo.playerGame[0].player.length; i++) {
+			
 			paddleMeshProperty[i - 1].positionZ = (document.global.clientWidth / document.global.arena.aspect / 2) - (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier * i)
 			paddleMeshProperty[i - 1].visible = true;
 		}
 		for (let i = document.global.socket.gameInfo.playerGame[0].player.length + 1; i <= document.global.socket.gameInfo.playerGame[1].player.length + document.global.socket.gameInfo.playerGame[0].player.length; i++) {
+			
 			paddleMeshProperty[i - 1].positionZ = -(document.global.clientWidth / document.global.arena.aspect / 2) + (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier * (i - document.global.socket.gameInfo.playerGame[0].player.length))
 			paddleMeshProperty[i - 1].visible = true;
 		}
@@ -847,7 +849,7 @@ function updateSpherePosition(sphereMeshProperty) {
 }
 
 export function processGame() {
-	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+	if (document.global.gameplay.local || (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username)) {
 		if (document.global.gameplay.roundStart && document.global.gameplay.gameStart && !document.global.gameplay.pause && !document.global.gameplay.gameEnd) {
 			document.global.sphere.sphereMeshProperty.forEach(sphereMeshProperty=>{
 				if (sphereMeshProperty.visible) {

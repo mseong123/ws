@@ -125,7 +125,7 @@ class GameConsumer(WebsocketConsumer):
 			GameConsumer.gameInfo[self.room_group_name] = data_json["gameData"]
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"mainClient", "liveGameData":data_json["liveGameData"]})
 		elif data_json.get("mode") is not None and data_json.get("mode") =='player':
-			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"player", "liveGameData":data_json["liveGameData"]})
+			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"player", "playerName":data_json["playerName"],"liveGameData":data_json["liveGameData"]})
 		# Send message to room group
 		
 
@@ -150,11 +150,13 @@ class GameConsumer(WebsocketConsumer):
 		elif event["message"] == "mainClient":
 			self.send(text_data=json.dumps({
 				"mode": "mainClient",
+				"gameInfo": GameConsumer.gameInfo[self.room_group_name],
 				"liveGameData":event["liveGameData"]
 				}))
 		elif event["message"] == "player":
 			self.send(text_data=json.dumps({
 				"mode": "player",
+				"playerName":event["playerName"],
 				"liveGameData":event["liveGameData"]
 				}))
 	

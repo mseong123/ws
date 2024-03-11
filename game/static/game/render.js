@@ -1,14 +1,8 @@
 import * as THREE from 'https://threejs.org/build/three.module.js';
-import {processGame} from './gameplay.js';
-import {movePaddle} from './gameplay.js';
-import {keyBinding} from './gameplay.js';
-import {keyBindingMultiplayer} from './multiplayer.js';
-import {createPowerUp} from './powerup.js';
-import {createFirstHalfCircleGeometry} from './powerup.js';
-import {createSecondHalfCircleGeometry} from './powerup.js';
-import {resetPowerUp} from './gameplay.js'
+import {processGame,movePaddle,keyBinding,resetPowerUp} from './gameplay.js';
+import {keyBindingMultiplayer,createGameSocket, processSendLiveGameData} from './multiplayer.js';
+import {createPowerUp,createFirstHalfCircleGeometry,createSecondHalfCircleGeometry} from './powerup.js';
 import {init} from './init.js'
-import {createGameSocket} from './multiplayer.js'
 
 function resizeRendererToDisplaySize( renderer ) {
 
@@ -1011,32 +1005,38 @@ function processCountDown(frameTimer) {
 }
 
 function sendMultiData() {
-	if (document.global.socket.gameInfo.mainClient && document.global.socket.gameSocket) {
+	if (document.global.socket.gameInfo.mainClient && document.global.socket.gameSocket.readyState === WebSocket.OPEN && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
 		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
 			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
 			if (paddleIndex === -1)
 				paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
+			let liveGameData = {
+				sphereMeshProperty:JSON.parse(JSON.stringify(document.global.sphere.sphereMeshProperty)),
+				paddlesProperty:{...document.global.paddle.paddlesProperty[paddleIndex]},
+				roundStart:document.global.gameplay.roundStart,
+				initRotateY:document.global.gameplay.initRotateY,
+				initRotateX:document.global.gameplay.initRotateX,
+				meshProperty:JSON.parse(JSON.stringify(document.global.powerUp.meshProperty)),
+			}
+			processSendLiveGameData(liveGameData)
 			document.global.socket.gameSocket.send(JSON.stringify({
 				mode:"mainClient",
-				liveGameData:{
-					sphereMeshProperty:document.global.sphere.sphereMeshProperty,
-					paddlesProperty:document.global.paddle.paddlesProperty[paddleIndex],
-					roundStart:document.global.gameplay.roundStart,
-					initRotateY:document.global.gameplay.initRotateY,
-					initRotateX:document.global.gameplay.initRotateX,
-					meshProperty:document.global.powerUp.meshProperty,
-				}
+				gameData:document.global.socket.gameInfo,
+				liveGameData:liveGameData,
 			}))
 		}
 		else {
 			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
 			if (paddleIndex === -1)
 				paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
+			const clientWidth = document.global.clientWidth; 
+			let paddlesProperty = {...document.global.paddle.paddlesProperty[paddleIndex]}
+			paddlesProperty.positionX = paddlesProperty.positionX / clientWidth;
+			paddlesProperty.positionY = paddlesProperty.positionY / clientWidth;
 			document.global.socket.gameSocket.send(JSON.stringify({
 				mode:"player",
 				playerName:document.global.gameplay.username,
-				liveGameData:document.global.paddle.paddlesProperty[paddleIndex]
-
+				liveGameData:paddlesProperty
 			}))
 		}
 	}

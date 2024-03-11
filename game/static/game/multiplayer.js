@@ -65,6 +65,44 @@ function multiGameStart() {
 	document.global.powerUp.enable = document.global.socket.gameInfo.powerUp;
 	document.querySelector(".game-summary-header-type").textContent = "Multiplayer " + document.global.socket.gameInfo.gameMode;
 	gameStart();
+}
+
+export function processSendLiveGameData(liveGameData) {
+	const clientWidth = document.global.clientWidth; 
+	liveGameData.sphereMeshProperty.forEach(sphereMeshProperty=>{
+		sphereMeshProperty.positionX = sphereMeshProperty.positionX / clientWidth;
+		sphereMeshProperty.positionY = sphereMeshProperty.positionY / clientWidth;
+		sphereMeshProperty.positionZ = sphereMeshProperty.positionZ / clientWidth;
+		sphereMeshProperty.velocityX = sphereMeshProperty.velocityX / clientWidth;
+		sphereMeshProperty.velocityY = sphereMeshProperty.velocityY / clientWidth;
+		sphereMeshProperty.velocityZ = sphereMeshProperty.velocityZ / clientWidth;
+	})
+	liveGameData.paddlesProperty.positionX = liveGameData.paddlesProperty.positionX / clientWidth;
+	liveGameData.paddlesProperty.positionY = liveGameData.paddlesProperty.positionY / clientWidth;
+	liveGameData.meshProperty.forEach(meshProperty=>{
+		meshProperty.positionX = meshProperty.positionX / clientWidth;
+		meshProperty.positionY = meshProperty.positionY / clientWidth;
+		meshProperty.positionZ = meshProperty.positionZ / clientWidth;
+	})
+}
+
+function processReceiveLiveGameData(liveGameData) {
+	const clientWidth = document.global.clientWidth; 
+	liveGameData.sphereMeshProperty.forEach(sphereMeshProperty=>{
+		sphereMeshProperty.positionX = sphereMeshProperty.positionX * clientWidth;
+		sphereMeshProperty.positionY = sphereMeshProperty.positionY * clientWidth;
+		sphereMeshProperty.positionZ = sphereMeshProperty.positionZ * clientWidth;
+		sphereMeshProperty.velocityX = sphereMeshProperty.velocityX * clientWidth;
+		sphereMeshProperty.velocityY = sphereMeshProperty.velocityY * clientWidth;
+		sphereMeshProperty.velocityZ = sphereMeshProperty.velocityZ * clientWidth;
+	})
+	liveGameData.paddlesProperty.positionX = liveGameData.paddlesProperty.positionX * clientWidth;
+	liveGameData.paddlesProperty.positionY = liveGameData.paddlesProperty.positionY * clientWidth;
+	liveGameData.meshProperty.forEach(meshProperty=>{
+		meshProperty.positionX = meshProperty.positionX * clientWidth;
+		meshProperty.positionY = meshProperty.positionY * clientWidth;
+		meshProperty.positionZ = meshProperty.positionZ * clientWidth;
+	})
 
 }
 
@@ -83,6 +121,9 @@ export function createGameSocket(mainClient) {
 			multiGameStart();
 		}
 		else if (data.mode === "mainClient" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username) {
+			document.global.socket.gameInfo = data.gameInfo;
+			let liveGameData = data.liveGameData;
+			processReceiveLiveGameData(liveGameData);
 			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.socket.gameInfo.mainClient);
 			if (paddleIndex === -1)
 				paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.socket.gameInfo.mainClient) + document.global.socket.gameInfo.playerGame[0].player.length;
@@ -93,11 +134,15 @@ export function createGameSocket(mainClient) {
 			document.global.gameplay.initRotateX = data.liveGameData.initRotateX;
 			document.global.powerUp.meshProperty = data.liveGameData.meshProperty;
 		}
-		else if (data.mode === "player") {
+		else if (data.mode === "player" && data.playerName !== document.global.gameplay.username) {
+			const clientWidth = document.global.clientWidth; 
+			let paddlesProperty = data.liveGameData;
+			paddlesProperty.positionX = paddlesProperty.positionX * clientWidth;
+			paddlesProperty.positionY = paddlesProperty.positionY * clientWidth;
 			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(data.playerName);
 			if (paddleIndex === -1)
 				paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(data.playerName) + document.global.socket.gameInfo.playerGame[0].player.length;
-			document.global.paddle.paddlesProperty[paddleIndex] = data.liveGameData;
+			document.global.paddle.paddlesProperty[paddleIndex] = paddlesProperty
 		}
 			
 	};
@@ -271,9 +316,12 @@ export function keyBindingMultiplayer() {
 	const multiStartGame = document.querySelector(".multi-start-game");
 	multiStartGame.addEventListener("click", (e) => {
 		const playerArray = Object.keys(document.global.socket.gameInfo.player)
+		// if (document.global.socket.gameInfo.gameMode === "versus" && playerArray.every(player=>{
+		// 	return document.global.socket.gameInfo.player[player].ready === 1
+		// }) && document.global.socket.gameInfo.playerGame[0].player.length>0 && document.global.socket.gameInfo.playerGame[1].player.length>0)
 		if (document.global.socket.gameInfo.gameMode === "versus" && playerArray.every(player=>{
 			return document.global.socket.gameInfo.player[player].ready === 1
-		}) && document.global.socket.gameInfo.playerGame[0].player.length>0 && document.global.socket.gameInfo.playerGame[1].player.length>0)
+		}))
 			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
 		else if (document.global.socket.gameInfo.gameMode === "tournament" && playerArray.every(player=>{
 			return document.global.socket.gameInfo.player[player].ready === 1
