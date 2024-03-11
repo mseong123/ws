@@ -200,7 +200,6 @@
 						<h4>MULTIPLAYER LOBBY</h4>
 						<div class="multi-lobby">
 							<div class="multi-lobby-display">
-
 							</div>
 							<button type="button" class="multi-create-versus">Create Versus</button>
 							<button type="button" class="multi-create-tournament">Create Tournament</button>
@@ -245,9 +244,8 @@
 							</div>
 							<button type="button" class="multi-leave-game">Leave</button>
 							<button type="button" class="multi-ready-game">Ready</button>
+							<button type="button" class="multi-matchFix display-none">Match Up</button>
 							<button type="button" class="multi-start-game display-none">Start Game</button>
-							
-						
 						</div>
 					<!-- chat menu -->
 					<div class="chat-menu">
@@ -262,6 +260,7 @@
 				<div class="pause display-none">
 					<h3 class="pause-header">Paused</h3>
 				</div>
+				<!-- Game summary tab -->
 				<div class="game-summary-container display-none">
 					<div class="game-summary">
 						<div>
@@ -276,6 +275,22 @@
 							<h4 class="game-end-display">Game End</h4>
 						</div>
 						<div class="reset-game display-none"><button class="reset-game-button" type="button">Next</button></div>
+					</div>
+				</div>
+				<!-- Multiplayer tournament matchFix summary -->
+				<div class="multi-tournament-matchFix-container display-none">
+					<div class="multi-tournament-matchFix">
+						<div>
+							<h4 class="multi-tournament-matchFix-header">Multiplayer Tournament Match Up</h4>
+							<hr>
+							<div class="multi-tournament-matchFix-display">
+								
+							</div>
+						</div>
+						<div>
+							<button class="multi-tournament-matchFix-ready-button" type="button">Ready</button>
+							<button class="multi-tournament-matchFix-start-button display-none" type="button">Start Game</button>
+						</div>
 					</div>
 				</div>
 				<canvas class="canvas" tabindex="1"></canvas>
@@ -333,8 +348,6 @@
 							<hr class="chat-divider"></hr>
 							<button type="button" class="nav nav-canvas"><i class="fas fa-comment"></i>Game &nbsp;<i class="fa fa-caret-right"></i></button>
 						</div>
-
-						
 					</div>
 				</div>
 				<div class="chat-icon">

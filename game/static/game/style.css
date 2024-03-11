@@ -339,7 +339,7 @@ hr {
 	border-color:rgb(2,238,139);
 }
 
-.game-summary-container {
+.game-summary-container, .multi-tournament-matchFix-container {
 	z-index:3;
 	position:absolute;
 	top:0;
@@ -354,7 +354,7 @@ hr {
 	color:white;
 }
 
-.game-summary {
+.game-summary, .multi-tournament-matchFix {
 	display:grid;
 	align-content:space-between;
 	background-color:rgb(32,32,32,0.7);
@@ -365,11 +365,11 @@ hr {
 	font-size: 0.75rem;
 
 }
-.game-summary-header {
+.game-summary-header, .multi-tournament-matchFix-header {
 	margin:0.5rem 0;
 	font-size: 1rem;
 }
-.game-summary-display {
+.game-summary-display, .multi-tournament-matchFix-display {
 	display:grid;
 	grid-template-columns:auto auto;
 }
@@ -530,7 +530,7 @@ hr {
 		width:44px;
 		height:34px;
 	}
-	.game-summary-display {
+	.game-summary-display, .multi-tournament-matchFix-display {
 		grid-template-columns: auto auto;
 		justify-content:normal;
 	}
@@ -620,12 +620,12 @@ hr {
 		padding:0.75rem;
 		font-size: 1.75rem;
 	}
-	.game-summary {
+	.game-summary, .multi-tournament-matchFix {
 		padding:0.75rem;
 		font-size: 1rem;
 	
 	}
-	.game-summary-header {
+	.game-summary-header, .multi-tournament-matchFix-header {
 		margin:0.5rem 0;
 		font-size: 1.25rem;
 	}

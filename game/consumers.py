@@ -123,6 +123,9 @@ class GameConsumer(WebsocketConsumer):
 		elif data_json.get("mode") is not None and data_json.get("mode") =='gameEnd':
 			GameConsumer.gameInfo[self.room_group_name] = data_json['gameInfo']
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameEnd"})
+		elif data_json.get("mode") is not None and data_json.get("mode") =='matchFix':
+			GameConsumer.gameInfo[self.room_group_name] = data_json['gameInfo']
+			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"matchFix"})
 		elif data_json.get("mode") is not None and data_json.get("mode") =='mainClient':
 			GameConsumer.gameInfo[self.room_group_name] = data_json["gameInfo"]
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"mainClient", "liveGameData":data_json["liveGameData"]})
@@ -152,6 +155,11 @@ class GameConsumer(WebsocketConsumer):
 		elif event["message"] == "gameEnd":
 			self.send(text_data=json.dumps({
 				"mode": "gameEnd",
+				"gameInfo":GameConsumer.gameInfo[self.room_group_name]
+				}))
+		elif event["message"] == "matchFix":
+			self.send(text_data=json.dumps({
+				"mode": "matchFix",
 				"gameInfo":GameConsumer.gameInfo[self.room_group_name]
 				}))
 		elif event["message"] == "mainClient":

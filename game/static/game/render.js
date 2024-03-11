@@ -472,24 +472,34 @@ function processUI() {
 	document.global.ui.multiCreate?
 		document.querySelector(".multi-create-menu").classList.add("display-block"):document.querySelector(".multi-create-menu").classList.remove("display-block");
 	if (Object.keys(document.global.socket.gameInfo).length) {
-		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username)
-			document.querySelector(".multi-start-game").classList.remove("display-none")
-		else
-			document.querySelector(".multi-start-game").classList.add("display-none")
 		document.querySelector(".multi-create-option-menu").classList.remove("display-none");
 		document.querySelector(".multi-create-warning").classList.add("display-none");
 		if (document.global.socket.gameInfo.gameMode === 'versus') {
 			document.querySelector(".multi-create-display-player-versus-one").classList.remove("display-none")
 			document.querySelector(".multi-create-display-player-versus-two").classList.remove("display-none")
 			document.querySelector(".multi-create-display-player-tournament").classList.add("display-none")
+			document.querySelector(".multi-matchFix").classList.add("display-none")
+			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username)
+				document.querySelector(".multi-start-game").classList.remove("display-none")
+			else {
+				document.querySelector(".multi-start-game").classList.add("display-none")
+			}
 		}
 		else {
 			document.querySelector(".multi-create-display-player-versus-one").classList.add("display-none")
 			document.querySelector(".multi-create-display-player-versus-two").classList.add("display-none")
 			document.querySelector(".multi-create-display-player-tournament").classList.remove("display-none")
+			document.querySelector(".multi-start-game").classList.add("display-none")
+			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+				document.querySelector(".multi-matchfix").classList.remove("display-none")
+				document.querySelector(".multi-tournament-matchFix-start-button").classList.remove("display-none")
+			}
+			else {
+				document.querySelector(".multi-matchfix").classList.add("display-none")
+				document.querySelector(".multi-tournament-matchFix-start-button").classList.add("display-none")
+			}
+			document.global.socket.matchFix? document.querySelector(".multi-tournament-matchFix-container").classList.remove("display-none"):document.querySelector(".multi-tournament-matchfix-container").classList.add("display-none");
 		}
-		document.querySelector(".multi-ready-game").classList.remove("display-none");
-
 	}
 	else {
 		document.querySelector(".multi-create-option-menu").classList.add("display-none");
@@ -1007,7 +1017,7 @@ export function populateWinner() {
 		}
 
 		for (let i = 0; i < document.global.gameplay.localTournamentInfo.playerGame.length; i++) {
-			if (document.global.gameplay.localTournamentInfo.playerGame[i][0].alias === "<Player>") {
+			if (document.global.gameplay.localTournamentInfo.playerGame[i][0].alias === "?") {
 				document.global.gameplay.localTournamentInfo.playerGame[i][0].alias = winnerAlias;
 				break;
 			}

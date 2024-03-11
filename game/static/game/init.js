@@ -259,6 +259,7 @@ function initGlobal() {
 		durationCount:document.global.gameplay.defaultDuration,
 	};
 	document.global.socket.ready = 0;
+	document.global.socket.matchFix = 0;
 	
 }
 

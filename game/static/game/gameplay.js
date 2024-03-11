@@ -287,11 +287,43 @@ function matchFix() {
 			if (randomNumArray[k] !== undefined)
 				player.alias = document.global.gameplay.localTournamentInfo.player[randomNumArray[k]].alias;
 			else
-				player.alias = "<Player>";
+				player.alias = "?";
 			round.push(player)
 		}
 		j += 2;
 		document.global.gameplay.localTournamentInfo.playerGame.push(round);
+	}
+}
+
+export function matchFixMulti() {
+	const randomNumArray = [];
+	let j = 0;
+	const players = Object.keys(document.global.socket.gameInfo.player)
+	document.global.socket.gameInfo.round = players.length - 1;
+	while (randomNumArray.length != players.length) {
+		const randomNum = Math.floor(Math.random() * players.length)
+		if (randomNumArray.every(array => {
+			return array != randomNum
+		}))
+			randomNumArray.push(randomNum);
+	}
+	for (let i = 0; i < randomNumArray.length - 1; i++) {
+		
+		const round = [];
+		for (let k = j; k < j + 2 && j < (randomNumArray.length - 1) * 2 ; k++) {
+			const player = {
+				alias:'',
+				score:0,
+				winner:false
+			};
+			if (randomNumArray[k] !== undefined)
+				player.alias = players[randomNumArray[k]];
+			else
+				player.alias = "?";
+			round.push(player)
+		}
+		j += 2;
+		document.global.socket.gameInfo.playerGame.push(round);
 	}
 }
 

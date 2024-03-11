@@ -1,4 +1,4 @@
-import {gameStart} from './gameplay.js'
+import {gameStart, matchFixMulti} from './gameplay.js'
 
 function getCookie (name) {
 	let value = `; ${document.cookie}`;
@@ -120,8 +120,12 @@ export function createGameSocket(mainClient) {
 		else if (data.mode === "gameStart") {
 			multiGameStart();
 		}
-		else if (data.mode === "gameEnd") {
+		else if (data.mode === "gameEnd" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username) {
 			document.global.gameplay.gameEnd = 1;
+			document.global.socket.gameInfo = data.gameInfo;
+		}
+		else if (data.mode === "matchFix" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username) {
+			document.global.socket.matchFix = 1;
 			document.global.socket.gameInfo = data.gameInfo;
 		}
 		else if (data.mode === "mainClient" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username) {
@@ -329,10 +333,25 @@ export function keyBindingMultiplayer() {
 			return document.global.socket.gameInfo.player[player].ready === 1
 		}))
 			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
-		else if (document.global.socket.gameInfo.gameMode === "tournament" && playerArray.every(player=>{
-			return document.global.socket.gameInfo.player[player].ready === 1
-		}))
-			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
 		
+	})
+	const multiMatchFix = document.querySelector(".multi-matchFix");
+	multiMatchFix.addEventListener("click", (e) => {
+		const playerArray = Object.keys(document.global.socket.gameInfo.player)
+		if (document.global.socket.gameInfo.gameMode === "tournament" && playerArray.every(player=>{
+			return document.global.socket.gameInfo.player[player].ready === 1
+		})) {
+			matchFixMulti();
+			document.global.socket.matchFix = 1;
+			playerArray.forEach(player=>{
+				document.global.socket.gameInfo.player[player].ready = 0;
+			});
+			document.global.socket.gameSocket.send(JSON.stringify({
+				mode:"matchFix", 
+				gameInfo:document.global.socket.gameInfo
+			}))
+		}
+			
+
 	})
 }
