@@ -371,9 +371,9 @@ hr {
 }
 .game-summary-display, .multi-tournament-matchFix-display {
 	display:grid;
-	grid-template-columns:auto auto;
+	grid-template-columns:50% 50%;
 }
-.game-summary-items {
+.game-summary-items, .multi-tournament-matchFix-items {
 	display:grid;
 	justify-content:space-between;
 	grid-template-areas:
@@ -421,25 +421,26 @@ hr {
 	border-radius:0.25rem;
 }
 
-.game-summary-items div span{
+.game-summary-items div span, .multi-tournament-matchFix-items div span{
 	margin:0 0.1rem;
 }
-.game-summary-items div:nth-child(1) {
+.game-summary-items div:nth-child(1), .multi-tournament-matchFix-items div:nth-child(1){
 	text-decoration:underline;
 }
 
-.game-summary-items div:nth-child(2) {
+.game-summary-items div:nth-child(2), .multi-tournament-matchFix-items div:nth-child(2) {
 	grid-area:player-1;
 }
-.game-summary-items div:nth-child(3) {
+.game-summary-items div:nth-child(3), .multi-tournament-matchFix-items div:nth-child(3){
 	grid-area:player-2;
 }
 
-.reset-game {
+.reset-game, .multi-tournament-matchFix-buttons {
 	display:grid;
 	justify-content:end;
+	grid-template-columns:auto auto;
 }
-.reset-game-button {
+.reset-game-button, .multi-tournament-matchFix-ready-button, .multi-tournament-matchFix-start-button {
 	border:1px solid rgb(2,238,139);
 	background-color:transparent;
 	border-radius:0.25rem;
@@ -448,7 +449,7 @@ hr {
 	font-size: 0.75rem;
 }
 
-.reset-game-button:hover, .reset-game-button:focus {
+.reset-game-button:hover, .reset-game-button:focus, .multi-tournament-matchFix-ready-button:hover, .multi-tournament-matchFix-ready-button:focus, .multi-tournament-matchFix-start-button:hover,.multi-tournament-matchFix-start-button:focus  {
 	border:1px solid white;
 	color:white;
 }
@@ -465,7 +466,7 @@ hr {
 	text-align:center;
 }
 
-.ready, .multi-ready {
+.ready {
 	background-color:rgb(2,238,139) !important;
 }
 
@@ -529,10 +530,6 @@ hr {
 		top:126px;
 		width:44px;
 		height:34px;
-	}
-	.game-summary-display, .multi-tournament-matchFix-display {
-		grid-template-columns: auto auto;
-		justify-content:normal;
 	}
 	
 }

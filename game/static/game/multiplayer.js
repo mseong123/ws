@@ -1,13 +1,10 @@
 import {gameStart, matchFixMulti} from './gameplay.js'
+import {updateMatchFix} from './render.js'
 
 function getCookie (name) {
 	let value = `; ${document.cookie}`;
 	let parts = value.split(`; ${name}=`);
 	if (parts.length === 2) return parts.pop().split(';').shift();
-}
-
-function getCookie2() {
-	return document.querySelector('[name="csrfmiddlewaretoken"]').value
 }
 
 async function fetch_login(data) {
@@ -124,9 +121,12 @@ export function createGameSocket(mainClient) {
 			document.global.gameplay.gameEnd = 1;
 			document.global.socket.gameInfo = data.gameInfo;
 		}
-		else if (data.mode === "matchFix" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username) {
+		else if (data.mode === "matchFix") {
 			document.global.socket.matchFix = 1;
+			document.global.ui.multiCreate = 0;
+			document.global.ui.toggleCanvas = 0;
 			document.global.socket.gameInfo = data.gameInfo;
+			updateMatchFix();
 		}
 		else if (data.mode === "mainClient" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username) {
 			document.global.socket.gameInfo = data.gameInfo;
@@ -326,10 +326,10 @@ export function keyBindingMultiplayer() {
 	const multiStartGame = document.querySelector(".multi-start-game");
 	multiStartGame.addEventListener("click", (e) => {
 		const playerArray = Object.keys(document.global.socket.gameInfo.player)
-		// if (document.global.socket.gameInfo.gameMode === "versus" && playerArray.every(player=>{
+		// if (playerArray.every(player=>{
 		// 	return document.global.socket.gameInfo.player[player].ready === 1
 		// }) && document.global.socket.gameInfo.playerGame[0].player.length>0 && document.global.socket.gameInfo.playerGame[1].player.length>0)
-		if (document.global.socket.gameInfo.gameMode === "versus" && playerArray.every(player=>{
+		if (playerArray.every(player=>{
 			return document.global.socket.gameInfo.player[player].ready === 1
 		}))
 			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
@@ -342,7 +342,6 @@ export function keyBindingMultiplayer() {
 			return document.global.socket.gameInfo.player[player].ready === 1
 		})) {
 			matchFixMulti();
-			document.global.socket.matchFix = 1;
 			playerArray.forEach(player=>{
 				document.global.socket.gameInfo.player[player].ready = 0;
 			});
@@ -351,7 +350,24 @@ export function keyBindingMultiplayer() {
 				gameInfo:document.global.socket.gameInfo
 			}))
 		}
-			
-
 	})
+	const multiMatchFixReady = document.querySelector(".multi-tournament-matchFix-ready-button");
+	multiMatchFixReady.addEventListener("click", (e) => {
+		if (document.global.socket.gameInfo.player[document.global.gameplay.username].ready)
+			document.global.socket.gameSocket.send(JSON.stringify({mode:"updateReady", ready:0}))
+		else 
+			document.global.socket.gameSocket.send(JSON.stringify({mode:"updateReady", ready:1}))
+	})
+
+	const multiMatchFixStart = document.querySelector(".multi-tournament-matchFix-start-button");
+	multiMatchFixStart.addEventListener("click", (e) => {
+		const playerArray = Object.keys(document.global.socket.gameInfo.player)
+		if (playerArray.every(player=>{
+			return document.global.socket.gameInfo.player[player].ready === 1
+		}))
+			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
+		
+	})
+	
+
 }

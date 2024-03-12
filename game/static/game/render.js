@@ -418,6 +418,54 @@ function updateGameSummary() {
 	}
 }
 
+export function updateMatchFix() {
+	const parent = document.querySelector(".multi-tournament-matchFix-display");
+
+	if (document.global.socket.gameInfo.mainClient) {
+		if (parent.children.length === 0) {
+			document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
+				const roundSpan = document.createElement("span");
+				const firstName = document.createElement("span");
+				const firstReady = document.createElement("span");
+				const secondName = document.createElement("span");
+				const secondReady = document.createElement("span");
+				roundSpan.textContent = "Game " + (idx + 1);
+				firstName.textContent = playerGame[0].alias;
+				firstReady.textContent = "Ready"
+				firstReady.classList.add("ready");
+				firstReady.classList.add("display-none");
+				firstReady.setAttribute("data-player","multi-matchFix-" + playerGame[0].alias + "-ready")
+				secondName.textContent = playerGame[1].alias;
+				secondReady.textContent = "Ready";
+				secondReady.classList.add("ready");
+				secondReady.classList.add("display-none");
+				secondReady.setAttribute("data-player", "multi-matchFix-" + playerGame[1].alias + "-ready")
+				const roundDiv = document.createElement("div");
+				const firstDiv = document.createElement("div");
+				const secondDiv = document.createElement("div");
+				roundDiv.append(roundSpan);
+				firstDiv.appendChild(firstName);
+				firstDiv.appendChild(firstReady);
+				secondDiv.appendChild(secondName)
+				secondDiv.appendChild(secondReady);
+				const containerDiv = document.createElement("div");
+				containerDiv.classList.add("multi-tournament-matchFix-items")
+				containerDiv.appendChild(roundDiv);
+				containerDiv.appendChild(firstDiv);
+				containerDiv.appendChild(secondDiv);
+				parent.appendChild(containerDiv);
+			})
+		}
+		else {
+			const playerArray = Object.keys(document.global.socket.gameInfo.player);
+			playerArray.forEach(player=>{
+				document.global.socket.gameInfo.player[player].ready? document.querySelector('[data-player='+'"multi-matchFix-' + player + '-ready"]').classList.remove('display-none') :document.querySelector('[data-player='+'"multi-matchFix-' + player + '-ready"]').classList.add('display-none') 
+			})
+		}
+	}
+	
+}
+
 function processBackground() {
 	
 	if (document.querySelector(".canvas-background").classList[2] !== document.global.gameplay.backgroundClass[document.global.gameplay.backgroundIndex])
@@ -474,13 +522,14 @@ function processUI() {
 	if (Object.keys(document.global.socket.gameInfo).length) {
 		document.querySelector(".multi-create-option-menu").classList.remove("display-none");
 		document.querySelector(".multi-create-warning").classList.add("display-none");
+		document.querySelector(".multi-ready-game").classList.remove("display-none")
 		if (document.global.socket.gameInfo.gameMode === 'versus') {
 			document.querySelector(".multi-create-display-player-versus-one").classList.remove("display-none")
 			document.querySelector(".multi-create-display-player-versus-two").classList.remove("display-none")
 			document.querySelector(".multi-create-display-player-tournament").classList.add("display-none")
-			document.querySelector(".multi-matchFix").classList.add("display-none")
 			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username)
 				document.querySelector(".multi-start-game").classList.remove("display-none")
+				
 			else {
 				document.querySelector(".multi-start-game").classList.add("display-none")
 			}
@@ -489,7 +538,8 @@ function processUI() {
 			document.querySelector(".multi-create-display-player-versus-one").classList.add("display-none")
 			document.querySelector(".multi-create-display-player-versus-two").classList.add("display-none")
 			document.querySelector(".multi-create-display-player-tournament").classList.remove("display-none")
-			document.querySelector(".multi-start-game").classList.add("display-none")
+
+			
 			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
 				document.querySelector(".multi-matchfix").classList.remove("display-none")
 				document.querySelector(".multi-tournament-matchFix-start-button").classList.remove("display-none")
@@ -498,16 +548,21 @@ function processUI() {
 				document.querySelector(".multi-matchfix").classList.add("display-none")
 				document.querySelector(".multi-tournament-matchFix-start-button").classList.add("display-none")
 			}
-			document.global.socket.matchFix? document.querySelector(".multi-tournament-matchFix-container").classList.remove("display-none"):document.querySelector(".multi-tournament-matchfix-container").classList.add("display-none");
+			
 		}
 	}
 	else {
 		document.querySelector(".multi-create-option-menu").classList.add("display-none");
 		document.querySelector(".multi-create-warning").classList.remove("display-none");
-		document.querySelector(".multi-ready-game").classList.add("display-none");
+		document.querySelector(".multi-ready-game").classList.add("display-none")
+		document.querySelector(".multi-start-game").classList.add("display-none")
 	}
-	
-
+	if (document.global.socket.matchFix) {
+		document.querySelector(".multi-tournament-matchFix-container").classList.remove("display-none")
+		updateMatchFix();
+	}
+	else
+		document.querySelector(".multi-tournament-matchfix-container").classList.add("display-none");
 
 	document.global.gameplay.ludicrious?
 		document.querySelector(".timer").classList.add("timer-ludicrious"):document.querySelector(".timer").classList.remove("timer-ludicrious");
@@ -861,7 +916,11 @@ function processUI() {
 		document.getElementById("multi-create-duration").value = document.global.socket.gameInfo.duration;
 		document.global.socket.gameInfo.ludicrious? document.getElementById("multi-create-ludicrious").checked=true:document.getElementById("multi-create-ludicrious").checked=false;
 		document.global.socket.gameInfo.powerUp? document.getElementById("multi-create-powerUp").checked=true:document.getElementById("multi-create-powerUp").checked=false;
-		document.global.socket.ready? document.querySelector(".multi-ready-game").classList.add("ready"):document.querySelector(".multi-ready-game").classList.remove("ready");
+		if (document.global.socket.ready) 
+			document.querySelector(".multi-ready-game").classList.add("ready")
+		else
+			document.querySelector(".multi-ready-game").classList.remove("ready")
+			
 		if (document.global.socket.gameInfo.gameMode === "versus") {
 			document.querySelector(".multi-create-display-player-versus-one").classList.remove("display-none");
 			document.querySelector(".multi-create-display-player-versus-two").classList.remove("display-none");

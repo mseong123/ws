@@ -256,11 +256,36 @@ function resetGame() {
 			round:0,
 			ludicrious:0,
 			powerUp:1,
-			teamUp:0,
 			duration:document.global.gameplay.defaultDuration,
 			durationCount:document.global.gameplay.defaultDuration,
 		};
 		document.global.gameplay.local = 1;
+	}
+	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode ==="tournament") {
+		if (document.global.socket.gameInfo.currentRound < document.global.socket.gameInfo.round - 1) {
+			document.global.socket.gameInfo.currentRound++;
+			document.global.socket.gameInfo.durationCount = document.global.socket.gameInfo.duration;
+			document.global.powerUp.enable = document.global.socket.gameInfo.powerUp;
+			gameStart();
+		}
+		else {
+			document.global.socket.gameSocket.close();
+			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+			document.global.socket.ready = 0;
+			document.global.socket.gameInfo = {
+				mainClient:"",
+				gameMode:"",
+				player:{},
+				playerGame:[],
+				currentRound:0,
+				round:0,
+				ludicrious:0,
+				powerUp:1,
+				duration:document.global.gameplay.defaultDuration,
+				durationCount:document.global.gameplay.defaultDuration,
+			};
+			document.global.gameplay.local = 1;
+		}
 	} 
 } 
 
@@ -614,8 +639,7 @@ export function keyBinding() {
 			document.global.ui.tournament = 0;
 			document.global.ui.login = 0;
 			document.global.ui.multiLobby = 0;
-			document.global.ui.multiCreateVersus = 0;
-			document.global.ui.multiCreateTournament = 0;
+			document.global.ui.multiCreate = 0;
 		})
 	)
 }
@@ -945,6 +969,12 @@ export function processGame() {
 									document.global.socket.gameInfo.playerGame[1].score += 1;
 								else
 									document.global.socket.gameInfo.playerGame[0].score += 1;
+							}
+							else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode ==="tournament") {
+								if (sphereMeshProperty.positionZ > 0)
+									document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].score += 1;
+								else
+								document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].score += 1;
 							}
 							document.global.sphere.sphereMeshProperty.forEach(sphereMeshProperty=>{
 								sphereMeshProperty.positionX = 0;
