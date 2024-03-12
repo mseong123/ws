@@ -1051,7 +1051,7 @@ export function movePaddle() {
 			else
 				tournamentPaddleIndex = -1;
 		}
-		if (tournamentPaddleIndex === 0)
+		if (tournamentPaddleIndex !== -1)
 			paddleOne = document.global.paddle.paddlesProperty[tournamentPaddleIndex];
 	}
 		
