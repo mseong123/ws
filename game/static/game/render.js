@@ -416,6 +416,56 @@ function updateGameSummary() {
 		else if (document.global.socket.gameInfo.playerGame[1].winner)
 			document.querySelector(".game-summary-display").children[1].children[0].classList.add("won");
 	}
+	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode ==="tournament") {
+		if (parent.children.length === 0) {
+			document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
+				const roundSpan = document.createElement("span");
+				const firstName = document.createElement("span");
+				const firstScore = document.createElement("span");
+				const secondName = document.createElement("span");
+				const secondScore = document.createElement("span");
+				roundSpan.textContent = "Game " + (idx + 1);
+				firstName.textContent = playerGame[0].alias;
+				firstScore.textContent = playerGame[0].score;
+				firstScore.setAttribute("data-player","multi-tournament-" + playerGame[0].alias + '-' + idx + "-score")
+				secondName.textContent = playerGame[1].alias;
+				secondScore.textContent = playerGame[1].score;
+				secondScore.setAttribute("data-player", "multi-tournament-" + playerGame[1].alias + '-' + idx + "-score")
+				const roundDiv = document.createElement("div");
+				const firstDiv = document.createElement("div");
+				const secondDiv = document.createElement("div");
+				roundDiv.append(roundSpan);
+				firstDiv.appendChild(firstName);
+				firstDiv.appendChild(firstScore);
+				secondDiv.appendChild(secondName)
+				secondDiv.appendChild(secondScore);
+				const containerDiv = document.createElement("div");
+				containerDiv.classList.add("game-summary-items")
+				containerDiv.appendChild(roundDiv);
+				containerDiv.appendChild(firstDiv);
+				containerDiv.appendChild(secondDiv);
+				parent.appendChild(containerDiv);
+			})
+		}
+		else {
+			document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
+				parent.children[idx].children[1].children[0].textContent = playerGame[0].alias;
+				parent.children[idx].children[2].children[0].textContent = playerGame[1].alias;
+			})
+			document.querySelector('[data-player='+'"multi-tournament-' + document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias + "-" +document.global.socket.gameInfo.currentRound + '-score"]').textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].score;
+			document.querySelector('[data-player='+'"multi-tournament-' + document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias + "-" +document.global.socket.gameInfo.currentRound + '-score"]').textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].score;
+		}
+		document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
+			if (playerGame[0].winner) {
+				document.querySelector(".game-summary-display").children[idx].children[1].classList.add("won");
+			}
+			else if (playerGame[1].winner)
+				document.querySelector(".game-summary-display").children[idx].children[2].classList.add("won");
+			parent.children[idx].children[1].children[1].setAttribute("data-player","multi-tournament-" + playerGame[0].alias + '-' + idx + "-score")
+			parent.children[idx].children[2].children[1].setAttribute("data-player","multi-tournament-" + playerGame[1].alias + '-' + idx + "-score")
+			
+		})
+	}
 }
 
 export function updateMatchFix() {
@@ -718,6 +768,14 @@ function processUI() {
 			document.querySelector(".timer").textContent = document.global.socket.gameInfo.durationCount;
 			
 		}
+		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
+			document.querySelector(".scoreboard-one-name").textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias;
+			document.querySelector(".scoreboard-one-score").textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].score;
+			document.querySelector(".scoreboard-two-name").textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias;
+			document.querySelector(".scoreboard-two-score").textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].score;
+			document.querySelector(".timer").textContent = document.global.gameplay.localTournamentInfo.durationCount;
+			
+		}
 		updateGameSummary();
 	}
 	else if (document.global.gameplay.gameStart && document.global.gameplay.gameEnd) {
@@ -731,7 +789,12 @@ function processUI() {
 		document.querySelector(".banner").classList.add("display-none");
 		document.querySelector(".scoreboard").classList.add("display-none");
 		document.querySelector(".toggle-game").classList.add("display-none");
-		document.querySelector(".reset-game").classList.remove("display-none");
+		if (document.global.gameplay.local)
+			document.querySelector(".reset-game").classList.remove("display-none");
+		if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username)
+			document.querySelector(".reset-game").classList.remove("display-none");
+		if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username && document.global.socket.gameInfo.currentRound === document.global.socket.gameInfo.round - 1)
+			document.querySelector(".reset-game").classList.remove("display-none");
 		document.querySelector(".toggle-cheat").classList.add("display-none");
 	}
 	else { 
@@ -1098,6 +1161,39 @@ export function populateWinner() {
 			document.global.socket.gameInfo.playerGame[1].winner = true;
 		}
 	}
+	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
+		const scoreOne = parseInt(document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].score);
+		const scoreTwo = parseInt(document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].score);
+		let winnerAlias;
+		if (scoreOne > scoreTwo) {
+			document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].winner = true;
+			document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].winner = false;
+			winnerAlias = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias;
+		}
+		else if (scoreTwo > scoreOne) {
+			document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].winner = true;
+			document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].winner = false;
+			winnerAlias = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias;
+		}
+		else {
+			const randomWinner = Math.floor(Math.random() * 1)
+			if (randomWinner === 0)
+				winnerAlias = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias;
+			else
+				winnerAlias = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias;
+		}
+
+		for (let i = 0; i < document.global.socket.gameInfo.playerGame.length; i++) {
+			if (document.global.socket.gameInfo.playerGame[i][0].alias === "?") {
+				document.global.socket.gameInfo.playerGame[i][0].alias = winnerAlias;
+				break;
+			}
+			else if (document.global.socket.gameInfo.playerGame[i][1].alias === "?") {
+				document.global.socket.gameInfo.playerGame[i][1].alias = winnerAlias;
+				break;
+			}
+		}
+	}
 
 }
 
@@ -1129,9 +1225,13 @@ function reduceTime(info) {
 		}
 	}
 	if (minute === '00' && second === '01') {
-		populateWinner()
-		document.global.gameplay.gameEnd = 1;
-		if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username && document.global.socket.gameInfo.gameMode === "versus") {
+		if (document.global.gameplay.local) {
+			document.global.gameplay.gameEnd = 1;
+			populateWinner();
+		}
+		else if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username && document.global.socket.gameInfo.gameMode === "versus") {
+			document.global.gameplay.gameEnd = 1;
+			populateWinner();
 			document.global.socket.gameSocket.send(JSON.stringify({
 				mode:"gameEnd",
 				gameInfo:document.global.socket.gameInfo

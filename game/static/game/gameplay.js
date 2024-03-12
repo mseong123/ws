@@ -178,11 +178,18 @@ export function gameStart() {
 }
 
 function resetPaddle() {
-	document.global.paddle.paddlesProperty.forEach((paddle,idx)=>{
-		if (idx === 0 || idx === 1)
-			paddle.visible = true;
+	document.global.paddle.paddlesProperty.forEach((paddlesProperty,idx)=>{
+		if (idx === 0 || idx === 1) {
+			paddlesProperty.positionX = 0;
+			paddlesProperty.positionY = 0;
+			if (idx === 0)
+				paddlesProperty.positionZ = (document.global.clientWidth / document.global.arena.aspect / 2) - (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier);
+			else
+				paddlesProperty.positionZ = -(document.global.clientWidth / document.global.arena.aspect / 2) + (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier);
+			paddlesProperty.visible = true;
+		}
 		else
-			paddle.visible = false;
+			paddlesProperty.visible = false;
 	})
 }
 
@@ -258,7 +265,7 @@ function resetGame() {
 		}
 	}
 	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode ==="versus") {
-		document.global.socket.gameSocket.close();
+		document.global.socket.gameSocket.close()
 		document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
 		document.global.socket.ready = 0;
 		document.global.socket.gameInfo = {
@@ -280,10 +287,10 @@ function resetGame() {
 			document.global.socket.gameInfo.currentRound++;
 			document.global.socket.gameInfo.durationCount = document.global.socket.gameInfo.duration;
 			document.global.powerUp.enable = document.global.socket.gameInfo.powerUp;
-			gameStart();
+			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
 		}
 		else {
-			document.global.socket.gameSocket.close();
+			document.global.socket.gameSocket.close()
 			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
 			document.global.socket.ready = 0;
 			document.global.socket.gameInfo = {
@@ -617,6 +624,10 @@ export function keyBinding() {
 	navReset.addEventListener("click", (e)=>{
 		document.global.ui.toggleGame = 0;
 		document.global.gameplay.gameEnd = 1;
+		document.global.socket.gameSocket.send(JSON.stringify({
+			mode:"gameEnd",
+			gameInfo:document.global.socket.gameInfo
+		}));
 		populateWinner();
 	})
 

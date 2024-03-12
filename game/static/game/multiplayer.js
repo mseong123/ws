@@ -1,5 +1,6 @@
 import {gameStart, matchFixMulti} from './gameplay.js'
-import {updateMatchFix} from './render.js'
+import {updateMatchFix, populateWinner} from './render.js'
+
 
 function getCookie (name) {
 	let value = `; ${document.cookie}`;
@@ -64,7 +65,6 @@ function multiGameStart() {
 	if (document.global.socket.gameInfo.gameMode === "tournament") {
 		document.global.socket.matchFix = 0;
 	}
-	console.log(document.global.paddle.paddlesProperty)
 	gameStart();
 }
 
@@ -130,6 +130,7 @@ export function createGameSocket(mainClient) {
 		else if (data.mode === "gameEnd" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username) {
 			document.global.gameplay.gameEnd = 1;
 			document.global.socket.gameInfo = data.gameInfo;
+			populateWinner();
 		}
 		else if (data.mode === "matchFix") {
 			document.global.socket.matchFix = 1;
@@ -174,7 +175,6 @@ export function createGameSocket(mainClient) {
 				paddlesProperty.positionX = paddlesProperty.positionX * clientWidth;
 				paddlesProperty.positionY = paddlesProperty.positionY * clientWidth;
 				paddlesProperty.positionZ = paddlesProperty.positionZ * clientWidth;
-				console.log(paddlesProperty.positionZ)
 			}
 			
 			if (document.global.socket.gameInfo.gameMode === "versus") {
