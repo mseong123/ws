@@ -61,6 +61,10 @@ function multiGameStart() {
 	document.global.gameplay.local = 0;
 	document.global.powerUp.enable = document.global.socket.gameInfo.powerUp;
 	document.querySelector(".game-summary-header-type").textContent = "Multiplayer " + document.global.socket.gameInfo.gameMode.toUpperCase();
+	if (document.global.socket.gameInfo.gameMode === "tournament") {
+		document.global.socket.matchFix = 0;
+	}
+	console.log(document.global.paddle.paddlesProperty)
 	gameStart();
 }
 
@@ -74,8 +78,11 @@ export function processSendLiveGameData(liveGameData) {
 		sphereMeshProperty.velocityY = sphereMeshProperty.velocityY / clientWidth;
 		sphereMeshProperty.velocityZ = sphereMeshProperty.velocityZ / clientWidth;
 	})
-	liveGameData.paddlesProperty.positionX = liveGameData.paddlesProperty.positionX / clientWidth;
-	liveGameData.paddlesProperty.positionY = liveGameData.paddlesProperty.positionY / clientWidth;
+	if (Object.keys(liveGameData.paddlesProperty).length) {
+		liveGameData.paddlesProperty.positionX = liveGameData.paddlesProperty.positionX / clientWidth;
+		liveGameData.paddlesProperty.positionY = liveGameData.paddlesProperty.positionY / clientWidth;
+		liveGameData.paddlesProperty.positionZ = liveGameData.paddlesProperty.positionZ / clientWidth;
+	}
 	liveGameData.meshProperty.forEach(meshProperty=>{
 		meshProperty.positionX = meshProperty.positionX / clientWidth;
 		meshProperty.positionY = meshProperty.positionY / clientWidth;
@@ -93,8 +100,11 @@ function processReceiveLiveGameData(liveGameData) {
 		sphereMeshProperty.velocityY = sphereMeshProperty.velocityY * clientWidth;
 		sphereMeshProperty.velocityZ = sphereMeshProperty.velocityZ * clientWidth;
 	})
-	liveGameData.paddlesProperty.positionX = liveGameData.paddlesProperty.positionX * clientWidth;
-	liveGameData.paddlesProperty.positionY = liveGameData.paddlesProperty.positionY * clientWidth;
+	if (Object.keys(liveGameData.paddlesProperty).length) {
+		liveGameData.paddlesProperty.positionX = liveGameData.paddlesProperty.positionX * clientWidth;
+		liveGameData.paddlesProperty.positionY = liveGameData.paddlesProperty.positionY * clientWidth;
+		liveGameData.paddlesProperty.positionZ = liveGameData.paddlesProperty.positionZ * clientWidth;
+	}
 	liveGameData.meshProperty.forEach(meshProperty=>{
 		meshProperty.positionX = meshProperty.positionX * clientWidth;
 		meshProperty.positionY = meshProperty.positionY * clientWidth;
@@ -132,11 +142,24 @@ export function createGameSocket(mainClient) {
 			document.global.socket.gameInfo = data.gameInfo;
 			let liveGameData = data.liveGameData;
 			processReceiveLiveGameData(liveGameData);
-			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.socket.gameInfo.mainClient);
-			if (paddleIndex === -1)
-				paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.socket.gameInfo.mainClient) + document.global.socket.gameInfo.playerGame[0].player.length;
+			if (document.global.socket.gameInfo.gameMode === "versus") {
+				let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.socket.gameInfo.mainClient);
+				if (paddleIndex === -1)
+					paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.socket.gameInfo.mainClient) + document.global.socket.gameInfo.playerGame[0].player.length;
+				document.global.paddle.paddlesProperty[paddleIndex] = data.liveGameData.paddlesProperty;
+			}
+			else {
+				let tournamentPaddleIndex;;
+				if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias === document.global.socket.gameInfo.mainClient)
+					tournamentPaddleIndex = 0;
+				else if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias === document.global.socket.gameInfo.mainClient)
+					tournamentPaddleIndex = 1;
+				else
+					tournamentPaddleIndex = -1;
+				if (tournamentPaddleIndex !== -1)
+					document.global.paddle.paddlesProperty[tournamentPaddleIndex] = data.liveGameData.paddlesProperty;
+			}
 			document.global.sphere.sphereMeshProperty = data.liveGameData.sphereMeshProperty;
-			document.global.paddle.paddlesProperty[paddleIndex] = data.liveGameData.paddlesProperty;
 			document.global.gameplay.roundStart = data.liveGameData.roundStart;
 			document.global.gameplay.initRotateY = data.liveGameData.initRotateY;
 			document.global.gameplay.initRotateX = data.liveGameData.initRotateX;
@@ -147,12 +170,33 @@ export function createGameSocket(mainClient) {
 		else if (data.mode === "player" && data.playerName !== document.global.gameplay.username) {
 			const clientWidth = document.global.clientWidth; 
 			let paddlesProperty = data.liveGameData;
-			paddlesProperty.positionX = paddlesProperty.positionX * clientWidth;
-			paddlesProperty.positionY = paddlesProperty.positionY * clientWidth;
-			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(data.playerName);
-			if (paddleIndex === -1)
-				paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(data.playerName) + document.global.socket.gameInfo.playerGame[0].player.length;
-			document.global.paddle.paddlesProperty[paddleIndex] = paddlesProperty
+			if (Object.keys(paddlesProperty).length) {
+				paddlesProperty.positionX = paddlesProperty.positionX * clientWidth;
+				paddlesProperty.positionY = paddlesProperty.positionY * clientWidth;
+				paddlesProperty.positionZ = paddlesProperty.positionZ * clientWidth;
+				console.log(paddlesProperty.positionZ)
+			}
+			
+			if (document.global.socket.gameInfo.gameMode === "versus") {
+				let paddleIndex; 
+				paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(data.playerName);
+				if (paddleIndex === -1)
+					paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(data.playerName) + document.global.socket.gameInfo.playerGame[0].player.length;
+				document.global.paddle.paddlesProperty[paddleIndex] = paddlesProperty
+			}
+			else {
+				let tournamentPaddleIndex;
+				if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias === data.playerName)
+					tournamentPaddleIndex = 0;
+				else if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias === data.playerName)
+					tournamentPaddleIndex = 1;
+				else
+					tournamentPaddleIndex = -1;
+				if (tournamentPaddleIndex !== -1) {
+					document.global.paddle.paddlesProperty[tournamentPaddleIndex] = paddlesProperty
+				}
+			}
+			
 		}
 			
 	};

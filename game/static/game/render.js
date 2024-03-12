@@ -538,7 +538,7 @@ function processUI() {
 			document.querySelector(".multi-create-display-player-versus-one").classList.add("display-none")
 			document.querySelector(".multi-create-display-player-versus-two").classList.add("display-none")
 			document.querySelector(".multi-create-display-player-tournament").classList.remove("display-none")
-
+			document.querySelector(".multi-start-game").classList.add("display-none")
 			
 			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
 				document.querySelector(".multi-matchfix").classList.remove("display-none")
@@ -1175,39 +1175,96 @@ function processCountDown(frameTimer) {
 function sendMultiData() {
 	if (document.global.socket.gameInfo.mainClient && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
 		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
-			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
-			if (paddleIndex === -1)
-				paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
-			let liveGameData = {
-				sphereMeshProperty:JSON.parse(JSON.stringify(document.global.sphere.sphereMeshProperty)),
-				paddlesProperty:{...document.global.paddle.paddlesProperty[paddleIndex]},
-				roundStart:document.global.gameplay.roundStart,
-				initRotateY:document.global.gameplay.initRotateY,
-				initRotateX:document.global.gameplay.initRotateX,
-				shake:document.global.powerUp.shake.enable,
-				backgroundIndex:document.global.gameplay.backgroundIndex,
-				meshProperty:JSON.parse(JSON.stringify(document.global.powerUp.meshProperty)),
+			let paddlesProperty;
+			if (document.global.socket.gameInfo.gameMode === "versus") {
+				let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
+				if (paddleIndex === -1)
+					paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
+				let liveGameData =
+				{
+					sphereMeshProperty:JSON.parse(JSON.stringify(document.global.sphere.sphereMeshProperty)),
+					paddlesProperty:{...document.global.paddle.paddlesProperty[paddleIndex]},
+					roundStart:document.global.gameplay.roundStart,
+					initRotateY:document.global.gameplay.initRotateY,
+					initRotateX:document.global.gameplay.initRotateX,
+					shake:document.global.powerUp.shake.enable,
+					backgroundIndex:document.global.gameplay.backgroundIndex,
+					meshProperty:JSON.parse(JSON.stringify(document.global.powerUp.meshProperty)),
+				}
+				processSendLiveGameData(liveGameData)
+				document.global.socket.gameSocket.send(JSON.stringify({
+					mode:"mainClient",
+					gameInfo:document.global.socket.gameInfo,
+					liveGameData:liveGameData,
+				}))
 			}
-			processSendLiveGameData(liveGameData)
-			document.global.socket.gameSocket.send(JSON.stringify({
-				mode:"mainClient",
-				gameInfo:document.global.socket.gameInfo,
-				liveGameData:liveGameData,
-			}))
+			else {
+				let tournamentPaddleIndex;
+				if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias === document.global.gameplay.username)
+					tournamentPaddleIndex = 0;
+				else if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias === document.global.gameplay.username)
+					tournamentPaddleIndex = 1;
+				else
+					tournamentPaddleIndex = -1;
+				let liveGameData =
+				{
+					sphereMeshProperty:JSON.parse(JSON.stringify(document.global.sphere.sphereMeshProperty)),
+					paddlesProperty:tournamentPaddleIndex !== -1? {...document.global.paddle.paddlesProperty[tournamentPaddleIndex]}: {},
+					roundStart:document.global.gameplay.roundStart,
+					initRotateY:document.global.gameplay.initRotateY,
+					initRotateX:document.global.gameplay.initRotateX,
+					shake:document.global.powerUp.shake.enable,
+					backgroundIndex:document.global.gameplay.backgroundIndex,
+					meshProperty:JSON.parse(JSON.stringify(document.global.powerUp.meshProperty)),
+				}
+				processSendLiveGameData(liveGameData)
+				document.global.socket.gameSocket.send(JSON.stringify({
+					mode:"mainClient",
+					gameInfo:document.global.socket.gameInfo,
+					liveGameData:liveGameData,
+				}))
+				
+			}
 		}
 		else {
-			let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
-			if (paddleIndex === -1)
-				paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
 			const clientWidth = document.global.clientWidth; 
-			let paddlesProperty = {...document.global.paddle.paddlesProperty[paddleIndex]}
-			paddlesProperty.positionX = paddlesProperty.positionX / clientWidth;
-			paddlesProperty.positionY = paddlesProperty.positionY / clientWidth;
-			document.global.socket.gameSocket.send(JSON.stringify({
-				mode:"player",
-				playerName:document.global.gameplay.username,
-				liveGameData:paddlesProperty
-			}))
+			let paddlesProperty = {}
+			if (document.global.socket.gameInfo.gameMode === "versus") {
+				let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
+				if (paddleIndex === -1)
+					paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
+				paddlesProperty = {...document.global.paddle.paddlesProperty[paddleIndex]}
+				paddlesProperty.positionX = paddlesProperty.positionX / clientWidth;
+				paddlesProperty.positionY = paddlesProperty.positionY / clientWidth;
+				paddlesProperty.positionZ = paddlesProperty.positionZ / clientWidth;
+				document.global.socket.gameSocket.send(JSON.stringify({
+					mode:"player",
+					playerName:document.global.gameplay.username,
+					liveGameData:paddlesProperty
+				}))
+			}
+			else {
+				let tournamentPaddleIndex;
+				if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias === document.global.gameplay.username)
+					tournamentPaddleIndex = 0;
+				else if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias === document.global.gameplay.username)
+					tournamentPaddleIndex = 1;
+				else
+					tournamentPaddleIndex = -1;
+				if (tournamentPaddleIndex !== -1) {
+					paddlesProperty = {...document.global.paddle.paddlesProperty[tournamentPaddleIndex]}
+					paddlesProperty.positionX = paddlesProperty.positionX / clientWidth;
+					paddlesProperty.positionY = paddlesProperty.positionY / clientWidth;
+					paddlesProperty.positionZ = paddlesProperty.positionZ / clientWidth;
+				}
+				document.global.socket.gameSocket.send(JSON.stringify({
+					mode:"player",
+					playerName:document.global.gameplay.username,
+					liveGameData:paddlesProperty,
+				}))
+			}
+			
+			
 		}
 	}
 }
