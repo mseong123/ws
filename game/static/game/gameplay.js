@@ -874,7 +874,7 @@ function isPowerUpCollision(sphereMeshProperty) {
 	return false;
 }
 
-function adjustPaddles(paddlesProperty) {
+export function adjustPaddles(paddlesProperty) {
 	const halfArenaWidth = document.global.arena.width / 2;
 	const halfArenaHeight = document.global.arena.height / 2;
 
@@ -906,41 +906,24 @@ function powerUpCollisionEffect(sphereMeshProperty) {
 	//INDIVIDUAL POWERUP effects
 	//large paddle
 	if (index === 0) {
-		if (sphereMeshProperty.velocityZ <= 0) {
-			if (document.global.gameplay.local || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
+		if (document.global.gameplay.local) {
+			if (sphereMeshProperty.velocityZ <= 0) {
 				document.global.paddle.paddlesProperty[0].largePaddle = 1;
 				document.global.paddle.paddlesProperty[0].width *= document.global.powerUp.largePaddle.multiplier;
 				document.global.paddle.paddlesProperty[0].height *= document.global.powerUp.largePaddle.multiplier;
 				adjustPaddles(document.global.paddle.paddlesProperty[0])
 			}
-			else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
-				const paddlesProperty = document.global.paddle.paddlesProperty;
-				for (let i = 1; i <= document.global.socket.gameInfo.playerGame[0].player.length; i++) {
-					paddlesProperty[i - 1].largePaddle = 1;
-					paddlesProperty[i - 1].width *= document.global.powerUp.largePaddle.multiplier;
-					paddlesProperty[i - 1].height *= document.global.powerUp.largePaddle.multiplier;
-					adjustPaddles(paddlesProperty[i - 1]);
-				}
-			}
-		}
-		else if (sphereMeshProperty.velocityZ > 0) {
-			if (document.global.gameplay.local || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
+			else {
 				document.global.paddle.paddlesProperty[1].largePaddle = 1;
 				document.global.paddle.paddlesProperty[1].width *= document.global.powerUp.largePaddle.multiplier;
 				document.global.paddle.paddlesProperty[1].height *= document.global.powerUp.largePaddle.multiplier;
 				adjustPaddles(document.global.paddle.paddlesProperty[1])
 			}
-			else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
-				const paddlesProperty = document.global.paddle.paddlesProperty;
-				for (let i = document.global.socket.gameInfo.playerGame[0].player.length + 1; i <= document.global.socket.gameInfo.playerGame[1].player.length + document.global.socket.gameInfo.playerGame[0].player.length; i++) {
-					paddlesProperty[i - 1].largePaddle = 1;
-					paddlesProperty[i - 1].width *= document.global.powerUp.largePaddle.multiplier;
-					paddlesProperty[i - 1].height *= document.global.powerUp.largePaddle.multiplier;
-					adjustPaddles(paddlesProperty[i - 1]);
-				}
-			}
 		}
-		
+		else
+			document.global.socket.gameSocket.send(JSON.stringify({
+				mode:"enableLargePaddle",
+			}))
 	}
 	//shake
 	else if (index === 1)
@@ -948,24 +931,16 @@ function powerUpCollisionEffect(sphereMeshProperty) {
 
 	//invisibility
 	else if (index === 2) {
-		if (sphereMeshProperty.velocityZ <= 0) {
-			if (document.global.gameplay.local || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament")
+		if (document.global.gameplay.local) {
+			if (sphereMeshProperty.velocityZ <= 0)
 				document.global.paddle.paddlesProperty[0].invisibility = 1;
-			else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
-				const paddlesProperty = document.global.paddle.paddlesProperty;
-				for (let i = 1; i <= document.global.socket.gameInfo.playerGame[0].player.length; i++) 
-					paddlesProperty[i - 1].invisibility = 1;
-			}
-		}
-		else if (sphereMeshProperty.velocityZ > 0) {
-			if (document.global.gameplay.local || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament")
+			else
 				document.global.paddle.paddlesProperty[1].invisibility = 1;
-			else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
-				const paddlesProperty = document.global.paddle.paddlesProperty;
-				for (let i = document.global.socket.gameInfo.playerGame[0].player.length + 1; i <= document.global.socket.gameInfo.playerGame[1].player.length + document.global.socket.gameInfo.playerGame[0].player.length; i++)
-					paddlesProperty[i - 1].invisibility = 1;
-			}
 		}
+		else 
+			document.global.socket.gameSocket.send(JSON.stringify({
+				mode:"enableInvisibility",
+			}))
 		sphereMeshProperty.opacity = document.global.powerUp.invisibility.opacity;
 		sphereMeshProperty.circleOpacity = document.global.powerUp.invisibility.opacity;
 	}
@@ -1038,15 +1013,20 @@ export function resetPowerUp() {
 		document.global.powerUp.meshProperty.forEach(meshProperty=>{
 			meshProperty.visible = false;
 		})
-		
-		document.global.paddle.paddlesProperty.forEach(paddleProperty=>{
-			//large paddles reset
-			paddleProperty.largePaddle = 0;
-			paddleProperty.width = document.global.paddle.defaultWidth;
-			paddleProperty.height = document.global.paddle.defaultHeight;
-			//paddles invisibility reset
-			paddleProperty.invisibility = 0;
-		});
+		if (document.global.gameplay.local) 
+			document.global.paddle.paddlesProperty.forEach(paddleProperty=>{
+				//large paddles reset
+				paddleProperty.largePaddle = 0;
+				paddleProperty.width = document.global.paddle.defaultWidth;
+				paddleProperty.height = document.global.paddle.defaultHeight;
+				//paddles invisibility reset
+				paddleProperty.invisibility = 0;
+			});
+		else {
+			document.global.socket.gameSocket.send(JSON.stringify({
+				mode:"resetPaddle",
+			}))
+		}
 		//shake reset
 		document.global.powerUp.shake.enable = 0;
 

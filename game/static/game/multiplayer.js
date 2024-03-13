@@ -1,4 +1,4 @@
-import {gameStart, matchFixMulti} from './gameplay.js'
+import {gameStart, matchFixMulti, adjustPaddles} from './gameplay.js'
 import {updateMatchFix, populateWinner} from './render.js'
 
 
@@ -148,6 +148,73 @@ export function createGameSocket(mainClient) {
 			document.global.ui.toggleCanvas = 0;
 			document.global.socket.gameInfo = data.gameInfo;
 			updateMatchFix();
+		}
+		else if (data.mode === "enableLargePaddle") {
+			if (document.global.sphere.sphereMeshProperty[0].velocityZ <= 0) {
+				const paddlesProperty = document.global.paddle.paddlesProperty;
+				if (document.global.socket.gameInfo.gameMode === "tournament") {
+					paddlesProperty[0].largePaddle = 1;
+					paddlesProperty[0].width *= document.global.powerUp.largePaddle.multiplier;
+					paddlesProperty[0].height *= document.global.powerUp.largePaddle.multiplier;
+					adjustPaddles(paddlesProperty[0])
+				}
+				else if (document.global.socket.gameInfo.gameMode === "versus") {
+					for (let i = 1; i <= document.global.socket.gameInfo.playerGame[0].player.length; i++) {
+						paddlesProperty[i - 1].largePaddle = 1;
+						paddlesProperty[i - 1].width *= document.global.powerUp.largePaddle.multiplier;
+						paddlesProperty[i - 1].height *= document.global.powerUp.largePaddle.multiplier;
+						adjustPaddles(paddlesProperty[i - 1]);
+					}
+				}
+			}
+			else {
+				const paddlesProperty = document.global.paddle.paddlesProperty;
+				if (document.global.socket.gameInfo.gameMode === "tournament") {
+					document.global.paddle.paddlesProperty[1].largePaddle = 1;
+					document.global.paddle.paddlesProperty[1].width *= document.global.powerUp.largePaddle.multiplier;
+					document.global.paddle.paddlesProperty[1].height *= document.global.powerUp.largePaddle.multiplier;
+					adjustPaddles(document.global.paddle.paddlesProperty[1])
+				}
+				else if (document.global.socket.gameInfo.gameMode === "versus") {
+					for (let i = document.global.socket.gameInfo.playerGame[0].player.length + 1; i <= document.global.socket.gameInfo.playerGame[1].player.length + document.global.socket.gameInfo.playerGame[0].player.length; i++) {
+						paddlesProperty[i - 1].largePaddle = 1;
+						paddlesProperty[i - 1].width *= document.global.powerUp.largePaddle.multiplier;
+						paddlesProperty[i - 1].height *= document.global.powerUp.largePaddle.multiplier;
+						adjustPaddles(paddlesProperty[i - 1]);
+					}
+				}
+			}
+			
+		}
+		else if (data.mode === "enableInvisibility") {
+			if (document.global.sphere.sphereMeshProperty[0].velocityZ <= 0) {
+				const paddlesProperty = document.global.paddle.paddlesProperty;
+				if (document.global.socket.gameInfo.gameMode === "tournament")
+					paddlesProperty[0].invisibility = 1;
+				else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
+					for (let i = 1; i <= document.global.socket.gameInfo.playerGame[0].player.length; i++) 
+						paddlesProperty[i - 1].invisibility = 1;
+				}
+			}
+			else {
+				const paddlesProperty = document.global.paddle.paddlesProperty;
+				if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament")
+					paddlesProperty[1].invisibility = 1;
+				else if (document.global.socket.gameInfo.gameMode === "versus") {
+					for (let i = document.global.socket.gameInfo.playerGame[0].player.length + 1; i <= document.global.socket.gameInfo.playerGame[1].player.length + document.global.socket.gameInfo.playerGame[0].player.length; i++)
+						paddlesProperty[i - 1].invisibility = 1;
+				}
+			}
+		}
+		else if (data.mode === "resetPaddle") {
+			document.global.paddle.paddlesProperty.forEach(paddleProperty=>{
+				//large paddles reset
+				paddleProperty.largePaddle = 0;
+				paddleProperty.width = document.global.paddle.defaultWidth;
+				paddleProperty.height = document.global.paddle.defaultHeight;
+				//paddles invisibility reset
+				paddleProperty.invisibility = 0;
+			});
 		}
 		else if (data.mode === "pause") {
 			document.global.gameplay.pause = data.pause;
