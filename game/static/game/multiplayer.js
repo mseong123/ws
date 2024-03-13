@@ -8,6 +8,12 @@ function getCookie (name) {
 	if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+function getCookie2 () {
+	return document.querySelector('[name="csrfmiddlewaretoken"]').value;
+}
+
+
+
 async function fetch_login(data) {
 	try {
 		const response = await fetch(document.global.fetch.authURL, { 
@@ -15,7 +21,7 @@ async function fetch_login(data) {
 			credentials: "include",
 			headers: {
 				"Content-Type": "application/json",
-				"X-CSRFToken": getCookie("csrftoken")
+				"X-CSRFToken": getCookie("csrftoken")?getCookie("csrftoken"):getCookie2()
 			  },
 			body: JSON.stringify(data),
 		});
@@ -82,6 +88,8 @@ export function processSendLiveGameData(liveGameData) {
 		liveGameData.paddlesProperty.positionX = liveGameData.paddlesProperty.positionX / clientWidth;
 		liveGameData.paddlesProperty.positionY = liveGameData.paddlesProperty.positionY / clientWidth;
 		liveGameData.paddlesProperty.positionZ = liveGameData.paddlesProperty.positionZ / clientWidth;
+		liveGameData.paddlesProperty.width = liveGameData.paddlesProperty.width / clientWidth;
+		liveGameData.paddlesProperty.height = liveGameData.paddlesProperty.height / clientWidth;
 	}
 	liveGameData.meshProperty.forEach(meshProperty=>{
 		meshProperty.positionX = meshProperty.positionX / clientWidth;
@@ -104,6 +112,8 @@ function processReceiveLiveGameData(liveGameData) {
 		liveGameData.paddlesProperty.positionX = liveGameData.paddlesProperty.positionX * clientWidth;
 		liveGameData.paddlesProperty.positionY = liveGameData.paddlesProperty.positionY * clientWidth;
 		liveGameData.paddlesProperty.positionZ = liveGameData.paddlesProperty.positionZ * clientWidth;
+		liveGameData.paddlesProperty.width = liveGameData.paddlesProperty.width * clientWidth;
+		liveGameData.paddlesProperty.height = liveGameData.paddlesProperty.height * clientWidth;
 	}
 	liveGameData.meshProperty.forEach(meshProperty=>{
 		meshProperty.positionX = meshProperty.positionX * clientWidth;
@@ -139,6 +149,9 @@ export function createGameSocket(mainClient) {
 			document.global.socket.gameInfo = data.gameInfo;
 			updateMatchFix();
 		}
+		else if (data.mode === "pause") {
+			document.global.gameplay.pause = data.pause;
+		}
 		else if (data.mode === "mainClient" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username) {
 			document.global.socket.gameInfo = data.gameInfo;
 			let liveGameData = data.liveGameData;
@@ -161,6 +174,7 @@ export function createGameSocket(mainClient) {
 					document.global.paddle.paddlesProperty[tournamentPaddleIndex] = data.liveGameData.paddlesProperty;
 			}
 			document.global.sphere.sphereMeshProperty = data.liveGameData.sphereMeshProperty;
+			document.global.gameplay.ludicrious = data.liveGameData.ludicrious;
 			document.global.gameplay.roundStart = data.liveGameData.roundStart;
 			document.global.gameplay.initRotateY = data.liveGameData.initRotateY;
 			document.global.gameplay.initRotateX = data.liveGameData.initRotateX;
@@ -175,6 +189,8 @@ export function createGameSocket(mainClient) {
 				paddlesProperty.positionX = paddlesProperty.positionX * clientWidth;
 				paddlesProperty.positionY = paddlesProperty.positionY * clientWidth;
 				paddlesProperty.positionZ = paddlesProperty.positionZ * clientWidth;
+				paddlesProperty.width = paddlesProperty.width * clientWidth;
+				paddlesProperty.height = paddlesProperty.height * clientWidth;
 			}
 			
 			if (document.global.socket.gameInfo.gameMode === "versus") {

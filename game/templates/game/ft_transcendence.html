@@ -1,6 +1,7 @@
 {% load static %}
 
 <html>
+	{%csrf_token%}
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
@@ -9,6 +10,8 @@
 	<link rel="stylesheet" href="{% static 'game/style.css' %}">
 	
 	<body class="inter-pong">
+		<div class="touchX"></div>
+		<div class="touchY"></div>
 		<div class="main-container">
 			<div class="canvas-container">
 				<h2 class="banner">

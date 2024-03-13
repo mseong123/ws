@@ -175,7 +175,7 @@ function initGlobal() {
 	document.global.gameplay.roundStartFrameLimit = 30;
 	document.global.gameplay.shadowFrame = 0;
 	document.global.gameplay.shadowFrameLimit = 5;
-	document.global.gameplay.defaultDuration = "00:10";
+	document.global.gameplay.defaultDuration = "01:10";
 
 	//local or multiplayer game
 	document.global.gameplay.local = 1;
@@ -217,6 +217,12 @@ function initGlobal() {
 	document.global.keyboard.left = 0;
 	document.global.keyboard.right = 0;
 	document.global.keyboard.speed = 5;
+
+	//touchscreen
+	document.global.touch = {}
+	document.global.touch.startX = 0;
+	document.global.touch.startY = 0;
+
 
 	//UI
 	document.global.ui = {}

@@ -773,7 +773,7 @@ function processUI() {
 			document.querySelector(".scoreboard-one-score").textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].score;
 			document.querySelector(".scoreboard-two-name").textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias;
 			document.querySelector(".scoreboard-two-score").textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].score;
-			document.querySelector(".timer").textContent = document.global.gameplay.localTournamentInfo.durationCount;
+			document.querySelector(".timer").textContent = document.global.socket.gameInfo.durationCount;
 			
 		}
 		updateGameSummary();
@@ -1264,6 +1264,12 @@ function processCountDown(frameTimer) {
 				frameTimer.prev = frameTimer.now;
 			}
 		}
+		else if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username && document.global.socket.gameInfo.gameMode === "tournament") {
+			if (frameTimer.now - frameTimer.prev > 0) {
+				reduceTime(document.global.socket.gameInfo)
+				frameTimer.prev = frameTimer.now;
+			}
+		}
 		
 
 	}
@@ -1272,7 +1278,6 @@ function processCountDown(frameTimer) {
 function sendMultiData() {
 	if (document.global.socket.gameInfo.mainClient && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
 		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
-			let paddlesProperty;
 			if (document.global.socket.gameInfo.gameMode === "versus") {
 				let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
 				if (paddleIndex === -1)
@@ -1281,6 +1286,7 @@ function sendMultiData() {
 				{
 					sphereMeshProperty:JSON.parse(JSON.stringify(document.global.sphere.sphereMeshProperty)),
 					paddlesProperty:{...document.global.paddle.paddlesProperty[paddleIndex]},
+					ludicrious:document.global.gameplay.ludicrious,
 					roundStart:document.global.gameplay.roundStart,
 					initRotateY:document.global.gameplay.initRotateY,
 					initRotateX:document.global.gameplay.initRotateX,
@@ -1307,6 +1313,7 @@ function sendMultiData() {
 				{
 					sphereMeshProperty:JSON.parse(JSON.stringify(document.global.sphere.sphereMeshProperty)),
 					paddlesProperty:tournamentPaddleIndex !== -1? {...document.global.paddle.paddlesProperty[tournamentPaddleIndex]}: {},
+					ludicrious:document.global.gameplay.ludicrious,
 					roundStart:document.global.gameplay.roundStart,
 					initRotateY:document.global.gameplay.initRotateY,
 					initRotateX:document.global.gameplay.initRotateX,
@@ -1334,6 +1341,8 @@ function sendMultiData() {
 				paddlesProperty.positionX = paddlesProperty.positionX / clientWidth;
 				paddlesProperty.positionY = paddlesProperty.positionY / clientWidth;
 				paddlesProperty.positionZ = paddlesProperty.positionZ / clientWidth;
+				paddlesProperty.width = paddlesProperty.width / clientWidth;
+				paddlesProperty.height = paddlesProperty.height / clientWidth;
 				document.global.socket.gameSocket.send(JSON.stringify({
 					mode:"player",
 					playerName:document.global.gameplay.username,
@@ -1353,6 +1362,8 @@ function sendMultiData() {
 					paddlesProperty.positionX = paddlesProperty.positionX / clientWidth;
 					paddlesProperty.positionY = paddlesProperty.positionY / clientWidth;
 					paddlesProperty.positionZ = paddlesProperty.positionZ / clientWidth;
+					paddlesProperty.width = paddlesProperty.width / clientWidth;
+					paddlesProperty.height = paddlesProperty.height / clientWidth;
 				}
 				document.global.socket.gameSocket.send(JSON.stringify({
 					mode:"player",

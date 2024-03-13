@@ -108,6 +108,7 @@ class GameConsumer(WebsocketConsumer):
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameOption"})
 		elif data_json.get("mode") is not None and data_json.get("mode") == 'updateDuration':
 			GameConsumer.gameInfo[self.room_group_name]['duration'] = data_json['duration']
+			GameConsumer.gameInfo[self.room_group_name]['durationCount'] = data_json['duration']
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameOption"})
 		elif data_json.get("mode") is not None and data_json.get("mode") =='updatePowerUp':
 			GameConsumer.gameInfo[self.room_group_name]['powerUp'] = data_json['powerUp']
@@ -118,6 +119,8 @@ class GameConsumer(WebsocketConsumer):
 		elif data_json.get("mode") is not None and data_json.get("mode") =='updatePlayer':
 			GameConsumer.gameInfo[self.room_group_name]['playerGame'] = data_json['playerGame']
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameOption"})
+		elif data_json.get("mode") is not None and data_json.get("mode") =='pause':
+			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"pause", "pause":data_json["pause"]})
 		elif data_json.get("mode") is not None and data_json.get("mode") =='gameStart':
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameStart"})
 		elif data_json.get("mode") is not None and data_json.get("mode") =='gameEnd':
@@ -156,6 +159,11 @@ class GameConsumer(WebsocketConsumer):
 			self.send(text_data=json.dumps({
 				"mode": "gameEnd",
 				"gameInfo":GameConsumer.gameInfo[self.room_group_name]
+				}))
+		elif event["message"] == "pause":
+			self.send(text_data=json.dumps({
+				"mode": "pause",
+				"pause":event["pause"]
 				}))
 		elif event["message"] == "matchFix":
 			self.send(text_data=json.dumps({
