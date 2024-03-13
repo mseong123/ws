@@ -160,6 +160,7 @@ function setPaddle() {
 }
 
 export function gameStart() {
+	document.global.gameplay.gameEnd = 0;
 	document.global.gameplay.gameStart = 1;
 	document.global.gameplay.initRotateY = 0;
 	document.global.arena3D.rotation.y = 0;

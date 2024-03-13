@@ -784,16 +784,17 @@ function processUI() {
 		document.querySelector(".game-summary-container").classList.remove("display-none");
 		if (document.global.gameplay.single || document.global.gameplay.two || document.global.gameplay.tournament && 
 			(document.global.gameplay.localTournamentInfo.currentRound === document.global.gameplay.localTournamentInfo.round - 1) || 
-			(!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus"))
+			!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus" ||
+			(!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament" && document.global.socket.gameInfo.currentRound === document.global.socket.gameInfo.round - 1))
 			document.querySelector(".game-end-display-container").classList.remove("display-none");
 		document.querySelector(".banner").classList.add("display-none");
 		document.querySelector(".scoreboard").classList.add("display-none");
 		document.querySelector(".toggle-game").classList.add("display-none");
-		if (document.global.gameplay.local)
+		if (document.global.gameplay.local || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus")
 			document.querySelector(".reset-game").classList.remove("display-none");
-		if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username)
+		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament" && document.global.socket.gameInfo.mainClient === document.global.gameplay.username)
 			document.querySelector(".reset-game").classList.remove("display-none");
-		if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username && document.global.socket.gameInfo.currentRound === document.global.socket.gameInfo.round - 1)
+		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username && document.global.socket.gameInfo.currentRound === document.global.socket.gameInfo.round - 1)
 			document.querySelector(".reset-game").classList.remove("display-none");
 		document.querySelector(".toggle-cheat").classList.add("display-none");
 	}
@@ -1225,13 +1226,9 @@ function reduceTime(info) {
 		}
 	}
 	if (minute === '00' && second === '01') {
-		if (document.global.gameplay.local) {
-			document.global.gameplay.gameEnd = 1;
-			populateWinner();
-		}
-		else if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username && document.global.socket.gameInfo.gameMode === "versus") {
-			document.global.gameplay.gameEnd = 1;
-			populateWinner();
+		document.global.gameplay.gameEnd = 1;
+		populateWinner();
+		if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
 			document.global.socket.gameSocket.send(JSON.stringify({
 				mode:"gameEnd",
 				gameInfo:document.global.socket.gameInfo
