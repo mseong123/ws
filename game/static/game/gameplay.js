@@ -1033,7 +1033,7 @@ export function resetPowerUp() {
 		//set new random powerup and position
 		if (document.global.powerUp.enable) {
 			// const random = Math.floor(Math.random() * 5);
-			const random = 0;
+			const random = 1;
 			document.global.powerUp.meshProperty[random].visible = true;
 			document.global.powerUp.meshProperty[random].positionX = Math.floor((Math.random() * (document.global.arena.width - document.global.powerUp.circleRadius)) - (document.global.arena.width - document.global.powerUp.circleRadius)/ 2);
 			document.global.powerUp.meshProperty[random].positionY = Math.floor((Math.random() * (document.global.arena.height - document.global.powerUp.circleRadius)) - (document.global.arena.height -document.global.powerUp.circleRadius) / 2);

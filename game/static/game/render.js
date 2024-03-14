@@ -1031,7 +1031,7 @@ function arenaRotateX() {
 
 function shakeEffect() {
 	const arena3D = document.global.arena3D;
-	if (document.global.powerUp.shake.enable) {
+	if (document.global.powerUp.shake.enable && !document.global.gameplay.pause) {
 		const randomNum = Math.floor(Math.random() * 6);
 		if (randomNum === 0)
 			arena3D.position.x += 1 * document.global.powerUp.shake.multiplier;
