@@ -272,7 +272,7 @@ export function gameStart() {
 		if (document.global.socket.gameInfo.playerGame[1].player.includes(document.global.gameplay.username))
 			document.global.arena3D.rotation.y = Math.PI;
 	}
-	else {
+	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
 		if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias === document.global.gameplay.username)
 			document.global.arena3D.rotation.y = Math.PI;
 	}
@@ -737,21 +737,38 @@ export function keyBinding() {
 	navReset.addEventListener("click", (e)=>{
 		document.global.ui.toggleGame = 0;
 		document.global.gameplay.gameEnd = 1;
-		populateWinner();
-		if (!document.global.gameplay.local) {
-			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave",}));
-			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username)
+		
+		if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
+			if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
+				document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+				
 				document.global.socket.gameSocket.send(JSON.stringify({
 					mode:"gameEnd",
 					gameInfo:document.global.socket.gameInfo
 				}));
+			}
 			else {
+				if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+					document.global.socket.gameSocket.close();
+			}
+		}
+		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
+			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+				document.global.socket.gameSocket.send(JSON.stringify({
+					mode:"gameEnd",
+					gameInfo:document.global.socket.gameInfo
+				}));
+			}
+			else {
+				document.global.socket.gameInfo.currentRound = document.global.socket.gameInfo.round - 1;
 				if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
 					document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
 				if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
 					document.global.socket.gameSocket.close();
 			}
 		}
+		populateWinner();
 		
 	})
 

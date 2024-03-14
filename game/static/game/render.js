@@ -1157,7 +1157,7 @@ export function populateWinner() {
 				document.global.gameplay.localTournamentInfo.playerGame[i][0].alias = winnerAlias;
 				break;
 			}
-			else if (document.global.gameplay.localTournamentInfo.playerGame[i][1].alias === "<Player>") {
+			else if (document.global.gameplay.localTournamentInfo.playerGame[i][1].alias === "?") {
 				document.global.gameplay.localTournamentInfo.playerGame[i][1].alias = winnerAlias;
 				break;
 			}
@@ -1196,18 +1196,20 @@ export function populateWinner() {
 			else
 				winnerAlias = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias;
 		}
-
-		for (let i = 0; i < document.global.socket.gameInfo.playerGame.length; i++) {
-			if (document.global.socket.gameInfo.playerGame[i][0].alias === "?") {
-				document.global.socket.gameInfo.playerGame[i][0].alias = winnerAlias;
-				break;
-			}
-			else if (document.global.socket.gameInfo.playerGame[i][1].alias === "?") {
-				document.global.socket.gameInfo.playerGame[i][1].alias = winnerAlias;
-				break;
+		if (document.global.socket.gameInfo.currentRound < document.global.socket.gameInfo.round - 1) {
+			for (let i = 0; i < document.global.socket.gameInfo.playerGame.length; i++) {
+				if (document.global.socket.gameInfo.playerGame[i][0].alias === "?") {
+					document.global.socket.gameInfo.playerGame[i][0].alias = winnerAlias;
+					break;
+				}
+				else if (document.global.socket.gameInfo.playerGame[i][1].alias === "?") {
+					document.global.socket.gameInfo.playerGame[i][1].alias = winnerAlias;
+					break;
+				}
 			}
 		}
 	}
+	
 
 }
 

@@ -164,10 +164,12 @@ export function createGameSocket(mainClient) {
 			document.global.gameplay.gameEnd = 1;
 			document.global.socket.gameInfo = data.gameInfo;
 			populateWinner();
-			if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
-				document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
-			if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
-				document.global.socket.gameSocket.close();
+			if (document.global.socket.gameInfo.gameMode === "versus" || document.global.socket.gameInfo.gameMode === "tournament" && document.global.socket.gameInfo.currentRound === document.global.socket.gameInfo.round - 1) {
+				if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
+					document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+				if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+					document.global.socket.gameSocket.close();
+			}
 		}
 		else if (data.mode === "matchFix") {
 			document.global.socket.matchFix = 1;

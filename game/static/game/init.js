@@ -153,7 +153,7 @@ function initGlobal() {
 	document.global.gameplay.gameSummary = 0;
 	document.global.gameplay.single = 0;
 	document.global.gameplay.playerIndex = []; 
-	document.global.gameplay.immortality = 1; //for gameplay debugging purpose
+	document.global.gameplay.immortality = 0; //for gameplay debugging purpose
 	document.global.gameplay.cheat = 1; // for show purpose
 	document.global.gameplay.ludicrious = 0;
 	document.global.gameplay.ludicriousYminuteUpper = 1;
