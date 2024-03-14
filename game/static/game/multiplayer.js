@@ -93,6 +93,7 @@ function multiGameStart() {
 	document.querySelector(".game-summary-header-type").textContent = "Multiplayer " + document.global.socket.gameInfo.gameMode.toUpperCase();
 	if (document.global.socket.gameInfo.gameMode === "tournament") {
 		document.global.socket.matchFix = 0;
+		document.querySelector(".multi-tournament-matchFix-display").innerHTML = '';
 	}
 	gameStart();
 }
