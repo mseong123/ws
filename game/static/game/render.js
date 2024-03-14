@@ -601,14 +601,23 @@ function processUI() {
 			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
 		if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
 			document.global.socket.gameSocket.close();
-		if (!document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
+		if (!document.global.gameplay.gameStart && !document.global.gameplay.gameEnd && !document.global.socket.matchFix) {
 			document.querySelector(".multi-create-option-menu").classList.add("display-none");
 			document.querySelector(".multi-create-warning").classList.remove("display-none");
 			document.querySelector(".multi-ready-game").classList.add("display-none")
 			document.querySelector(".multi-start-game").classList.add("display-none")
 		}
+		if (!document.global.gameplay.gameStart && !document.global.gameplay.gameEnd && document.global.socket.matchFix) {
+			document.global.socket.matchFix = 0;
+			document.querySelector(".multi-host-left-container").classList.remove("display-none")
+		}
 		if (document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
 			document.querySelector(".multi-host-left-container").classList.remove("display-none")
+			document.querySelector(".game-summary-container").classList.add("display-none");
+			document.querySelector(".pause").classList.add("display-none");
+			document.global.powerUp.shake.enable = 0;
+			document.global.gameplay.initRotateY = 0;
+			document.global.gameplay.initRotateX = 0;
 		}
 	}
 	if (document.global.socket.matchFix) {
@@ -737,7 +746,7 @@ function processUI() {
 		document.querySelector(".scoreboard").classList.remove("display-none");
 		document.querySelector(".toggle-game").classList.remove("display-none");
 		document.querySelector(".game-end-display-container").classList.add("display-none");
-		if (document.global.gameplay.cheat)
+		if ((document.global.gameplay.local || (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username)) && document.global.gameplay.cheat )
 			document.querySelector(".toggle-cheat").classList.remove("display-none");
 		else
 			document.querySelector(".toggle-cheat").classList.add("display-none");
@@ -836,7 +845,7 @@ function processUI() {
 						if(game.mainClient === e.target.classList[1])
 							currentGame = game;
 					})
-					if (currentGame.player.length < document.global.paddle.maxPaddle) {
+					if (currentGame.player.length < document.global.paddle.maxPaddle && !currentGame.player.includes(document.global.gameplay.username)) {
 						document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"join", mainClient:e.target.classList[1]}))
 						createGameSocket(e.target.classList[1])
 						document.global.socket.gameSocket.onopen = function() {

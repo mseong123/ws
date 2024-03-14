@@ -108,24 +108,24 @@ function canvasMouseMove(e) {
 		//For multi versus, mouse is attached to player num
 		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
 			if ((document.global.arena3D.rotation.x - Math.PI / 2) % (Math.PI * 2) > 0 && (document.global.arena3D.rotation.x - Math.PI/2) % (Math.PI * 2) < Math.PI)
-				paddlesProperty[versusPaddleIndex].positionX = -positionX;
-			else
-				paddlesProperty[versusPaddleIndex].positionX = positionX;
-			if ((document.global.arena3D.rotation.y - Math.PI / 2) % (Math.PI * 2) > 0 && (document.global.arena3D.rotation.y - Math.PI/2) % (Math.PI * 2) < Math.PI)
 				paddlesProperty[versusPaddleIndex].positionY = -positionY;
 			else
 				paddlesProperty[versusPaddleIndex].positionY = positionY;
+			if ((document.global.arena3D.rotation.y - Math.PI / 2) % (Math.PI * 2) > 0 && (document.global.arena3D.rotation.y - Math.PI/2) % (Math.PI * 2) < Math.PI)
+				paddlesProperty[versusPaddleIndex].positionX = -positionX;
+			else
+				paddlesProperty[versusPaddleIndex].positionX = positionX;
 		}
 		//For multi tournament, mouse is attached to index 0;
 		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament" && tournamentPaddleIndex !== -1) {
 			if ((document.global.arena3D.rotation.x - Math.PI / 2) % (Math.PI * 2) > 0 && (document.global.arena3D.rotation.x - Math.PI/2) % (Math.PI * 2) < Math.PI)
-				paddlesProperty[tournamentPaddleIndex].positionX = -positionX;
-			else
-				paddlesProperty[tournamentPaddleIndex].positionX = positionX;
-			if ((document.global.arena3D.rotation.y - Math.PI / 2) % (Math.PI * 2) > 0 && (document.global.arena3D.rotation.y - Math.PI/2) % (Math.PI * 2) < Math.PI)
 				paddlesProperty[tournamentPaddleIndex].positionY = -positionY;
 			else
 				paddlesProperty[tournamentPaddleIndex].positionY = positionY;
+			if ((document.global.arena3D.rotation.y - Math.PI / 2) % (Math.PI * 2) > 0 && (document.global.arena3D.rotation.y - Math.PI/2) % (Math.PI * 2) < Math.PI)
+				paddlesProperty[tournamentPaddleIndex].positionX = -positionX;
+			else
+				paddlesProperty[tournamentPaddleIndex].positionX = positionX;
 		}
 	}
 }
@@ -268,6 +268,14 @@ export function gameStart() {
 	//enable powerup based on game option
 	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.username === document.global.socket.gameInfo.mainClient)
 		resetPowerUp();
+	if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
+		if (document.global.socket.gameInfo.playerGame[1].player.includes(document.global.gameplay.username))
+			document.global.arena3D.rotation.y = Math.PI;
+	}
+	else {
+		if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias === document.global.gameplay.username)
+			document.global.arena3D.rotation.y = Math.PI;
+	}
 }
 
 function resetPaddle() {
@@ -697,6 +705,8 @@ export function keyBinding() {
 		if (!document.global.gameplay.gameEnd) {
 			document.global.gameplay.pause = 1;
 			document.global.ui.toggleGame = 0;
+			if (!document.global.gameplay.local)
+				document.global.socket.gameSocket.send(JSON.stringify({mode:"pause", pause:document.global.gameplay.pause}))
 		}
 	})
 	const pause = document.querySelector(".pause");
@@ -730,10 +740,17 @@ export function keyBinding() {
 		populateWinner();
 		if (!document.global.gameplay.local) {
 			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave",}));
-			document.global.socket.gameSocket.send(JSON.stringify({
-				mode:"gameEnd",
-				gameInfo:document.global.socket.gameInfo
-			}));
+			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username)
+				document.global.socket.gameSocket.send(JSON.stringify({
+					mode:"gameEnd",
+					gameInfo:document.global.socket.gameInfo
+				}));
+			else {
+				if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
+					document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+				if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+					document.global.socket.gameSocket.close();
+			}
 		}
 		
 	})
