@@ -470,7 +470,7 @@ export function matchFixMulti() {
 export function keyBinding() {
 	const canvas = document.querySelector(".canvas");
 	canvas.addEventListener("mousemove", canvasMouseMove);
-	canvas.addEventListener("touchmove", canvasTouchMove);
+	canvas.addEventListener("touchmove", canvasTouchMove,{ passive: true });
 	canvas.addEventListener("keydown", canvasKeydown);
 	canvas.addEventListener("keyup", canvasKeyup);
 	document.addEventListener("keydown", (e)=>{
@@ -792,9 +792,9 @@ function isPaddleCollision(sphereMeshProperty) {
 	for (let i = 0; i < paddlesProperty.length; i++) {
 		let paddleZ = paddlesProperty[i].positionZ;
 		let sphereZ = sphereMeshProperty.positionZ;
-		if (paddleZ <= 0 && sphereZ - sphereRadius <= paddleZ && sphereZ - sphereRadius >= paddleZ - paddleThickness && isBallAlignedWithPaddleX(paddlesProperty[i], sphereMeshProperty) && isBallAlignedWithPaddleY(paddlesProperty[i], sphereMeshProperty))
+		if (paddleZ <= 0 && sphereZ - sphereRadius <= paddleZ && sphereZ - sphereRadius >= paddleZ - paddleThickness && isBallAlignedWithPaddleX(paddlesProperty[i], sphereMeshProperty) && isBallAlignedWithPaddleY(paddlesProperty[i], sphereMeshProperty) && paddlesProperty[i].visible)
 			return i;
-		else if (paddleZ > 0 && sphereZ + sphereRadius >= paddleZ - paddleThickness && sphereZ + sphereRadius <= paddleZ && isBallAlignedWithPaddleX(paddlesProperty[i], sphereMeshProperty) && isBallAlignedWithPaddleY(paddlesProperty[i], sphereMeshProperty))
+		else if (paddleZ > 0 && sphereZ + sphereRadius >= paddleZ - paddleThickness && sphereZ + sphereRadius <= paddleZ && isBallAlignedWithPaddleX(paddlesProperty[i], sphereMeshProperty) && isBallAlignedWithPaddleY(paddlesProperty[i], sphereMeshProperty) && paddlesProperty[i].visible)
 			return i;
 	}
 	return false;
@@ -1032,7 +1032,8 @@ export function resetPowerUp() {
 
 		//set new random powerup and position
 		if (document.global.powerUp.enable) {
-			const random = Math.floor(Math.random() * 5);
+			// const random = Math.floor(Math.random() * 5);
+			const random = 0;
 			document.global.powerUp.meshProperty[random].visible = true;
 			document.global.powerUp.meshProperty[random].positionX = Math.floor((Math.random() * (document.global.arena.width - document.global.powerUp.circleRadius)) - (document.global.arena.width - document.global.powerUp.circleRadius)/ 2);
 			document.global.powerUp.meshProperty[random].positionY = Math.floor((Math.random() * (document.global.arena.height - document.global.powerUp.circleRadius)) - (document.global.arena.height -document.global.powerUp.circleRadius) / 2);
@@ -1060,6 +1061,7 @@ export function processGame() {
 					}
 					if(isZCollision(sphereMeshProperty)) {
 						//for gameplay debugging
+						document.global.powerUp.durationFrame = 0;
 						if (document.global.gameplay.immortality) {
 							sphereMeshProperty.velocityZ *= -1;
 						}
@@ -1115,7 +1117,6 @@ export function processGame() {
 					let paddleCollisionIndex = isPaddleCollision(sphereMeshProperty);
 					if(paddleCollisionIndex !== false)
 						hitSphereBack(document.global.paddle.paddlesProperty[paddleCollisionIndex], sphereMeshProperty);
-					
 				}
 			})
 		}

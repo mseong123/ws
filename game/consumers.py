@@ -123,6 +123,8 @@ class GameConsumer(WebsocketConsumer):
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"pause", "pause":data_json["pause"]})
 		elif data_json.get("mode") is not None and data_json.get("mode") =='enableLargePaddle':
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"enableLargePaddle"})
+		elif data_json.get("mode") is not None and data_json.get("mode") =='enableInvisibility':
+			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"enableInvisibility"})
 		elif data_json.get("mode") is not None and data_json.get("mode") =='resetPaddle':
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"resetPaddle"})
 		elif data_json.get("mode") is not None and data_json.get("mode") =='gameStart':

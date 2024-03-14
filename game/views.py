@@ -23,6 +23,16 @@ def auth(request):
 		else:
 			return JsonResponse({'authenticated':False})
 
+def session(request):
+	if request.method == 'POST':
+		if request.user is not None and request.user.is_authenticated:
+			return JsonResponse({
+					'authenticated':True,
+					"username":str(request.user)
+					})
+		else:
+			return JsonResponse({'authenticated':False})
+
 def user_logout(request):
 	logout(request)
 	return JsonResponse({'authenticated':False})

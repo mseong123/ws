@@ -349,21 +349,18 @@ function updateGameSummary() {
 			document.global.gameplay.localTournamentInfo.playerGame.forEach((playerGame,idx)=>{
 				parent.children[idx].children[1].children[0].textContent = playerGame[0].alias;
 				parent.children[idx].children[2].children[0].textContent = playerGame[1].alias;
+				parent.children[idx].children[1].children[1].setAttribute("data-player","tournament-" + playerGame[0].alias + '-' + idx + "-score")
+				parent.children[idx].children[2].children[1].setAttribute("data-player","tournament-" + playerGame[1].alias + '-' + idx + "-score")
+				if (playerGame[0].winner) {
+					document.querySelector(".game-summary-display").children[idx].children[1].classList.add("won");
+				}
+					
+				else if (playerGame[1].winner)
+					document.querySelector(".game-summary-display").children[idx].children[2].classList.add("won");
 			})
 			document.querySelector('[data-player='+'"tournament-' + document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].alias + "-" +document.global.gameplay.localTournamentInfo.currentRound + '-score"]').textContent = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].score;
 			document.querySelector('[data-player='+'"tournament-' + document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].alias + "-" +document.global.gameplay.localTournamentInfo.currentRound + '-score"]').textContent = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].score;
 		}
-		document.global.gameplay.localTournamentInfo.playerGame.forEach((playerGame,idx)=>{
-			if (playerGame[0].winner) {
-				document.querySelector(".game-summary-display").children[idx].children[1].classList.add("won");
-			}
-				
-			else if (playerGame[1].winner)
-				document.querySelector(".game-summary-display").children[idx].children[2].classList.add("won");
-			parent.children[idx].children[1].children[1].setAttribute("data-player","tournament-" + playerGame[0].alias + '-' + idx + "-score")
-			parent.children[idx].children[2].children[1].setAttribute("data-player","tournament-" + playerGame[1].alias + '-' + idx + "-score")
-			
-		})
 	}
 	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
 		if (parent.children.length === 0) {
@@ -451,20 +448,17 @@ function updateGameSummary() {
 			document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
 				parent.children[idx].children[1].children[0].textContent = playerGame[0].alias;
 				parent.children[idx].children[2].children[0].textContent = playerGame[1].alias;
-			})
+				parent.children[idx].children[1].children[1].setAttribute("data-player","multi-tournament-" + playerGame[0].alias + '-' + idx + "-score")
+				parent.children[idx].children[2].children[1].setAttribute("data-player","multi-tournament-" + playerGame[1].alias + '-' + idx + "-score")
+				if (playerGame[0].winner) {
+					document.querySelector(".game-summary-display").children[idx].children[1].classList.add("won");
+				}
+				else if (playerGame[1].winner)
+					document.querySelector(".game-summary-display").children[idx].children[2].classList.add("won");
+				})
 			document.querySelector('[data-player='+'"multi-tournament-' + document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias + "-" +document.global.socket.gameInfo.currentRound + '-score"]').textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].score;
 			document.querySelector('[data-player='+'"multi-tournament-' + document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias + "-" +document.global.socket.gameInfo.currentRound + '-score"]').textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].score;
 		}
-		document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
-			if (playerGame[0].winner) {
-				document.querySelector(".game-summary-display").children[idx].children[1].classList.add("won");
-			}
-			else if (playerGame[1].winner)
-				document.querySelector(".game-summary-display").children[idx].children[2].classList.add("won");
-			parent.children[idx].children[1].children[1].setAttribute("data-player","multi-tournament-" + playerGame[0].alias + '-' + idx + "-score")
-			parent.children[idx].children[2].children[1].setAttribute("data-player","multi-tournament-" + playerGame[1].alias + '-' + idx + "-score")
-			
-		})
 	}
 }
 
@@ -1083,7 +1077,7 @@ function setTimer() {
 					return !meshProperty.visible;
 				}))
 					document.global.powerUp.durationFrame++;
-				if (document.global.powerUp.durationFrame === document.global.powerUp.durationFrameLimit) {
+				if (document.global.powerUp.durationFrame >= document.global.powerUp.durationFrameLimit) {
 					resetPowerUp();
 					document.global.powerUp.durationFrame = 0;
 				}

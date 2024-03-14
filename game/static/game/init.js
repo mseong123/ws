@@ -50,8 +50,10 @@ function initGlobal() {
 	document.global.sphere.velocityDivision = 200;
 	document.global.sphere.radius = clientWidth / document.global.sphere.radiusDivision;
 	document.global.sphere.circleRadius = document.global.sphere.radius * 2;
-	document.global.sphere.velocityX = clientWidth / document.global.sphere.velocityDivision;
-	document.global.sphere.velocityY = clientWidth / document.global.sphere.velocityDivision;
+	// document.global.sphere.velocityX = clientWidth / document.global.sphere.velocityDivision;
+	// document.global.sphere.velocityY = clientWidth / document.global.sphere.velocityDivision;
+	document.global.sphere.velocityX = 0;
+	document.global.sphere.velocityY = 0;
 	document.global.sphere.velocityZ = clientWidth / document.global.sphere.velocityDivision;
 
 	//camera info
@@ -117,7 +119,7 @@ function initGlobal() {
 	document.global.powerUp.circleRotation = 0.1;
 	document.global.powerUp.index;
 	document.global.powerUp.durationFrame = 0; //miliseconds
-	document.global.powerUp.durationFrameLimit = 500; //miliseconds
+	document.global.powerUp.durationFrameLimit = 750; //miliseconds
 	document.global.powerUp.mesh = [];
 	document.global.powerUp.meshProperty = [];
 	document.global.powerUp.color = ["#FFA500", "#088F8F", "#7F7F7F", "#B22222", "#123456"];
@@ -175,7 +177,7 @@ function initGlobal() {
 	document.global.gameplay.roundStartFrameLimit = 30;
 	document.global.gameplay.shadowFrame = 0;
 	document.global.gameplay.shadowFrameLimit = 5;
-	document.global.gameplay.defaultDuration = "01:10";
+	document.global.gameplay.defaultDuration = "15:10";
 
 	//local or multiplayer game
 	document.global.gameplay.local = 1;
@@ -244,6 +246,7 @@ function initGlobal() {
 	//fetch
 	document.global.fetch = {};
 	document.global.fetch.authURL = "auth/";
+	document.global.fetch.authURL = "session/";
 	document.global.fetch.logoutURL = "logout/";
 
 	//websockets

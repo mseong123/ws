@@ -12,24 +12,30 @@ function getCookie2 () {
 	return document.querySelector('[name="csrfmiddlewaretoken"]').value;
 }
 
-
-
-async function fetch_login(data) {
+document.addEventListener('DOMContentLoaded', async function () {
 	try {
 		const response = await fetch(document.global.fetch.authURL, { 
 			method:"POST",
 			credentials: "include",
 			headers: {
-				"Content-Type": "application/json",
 				"X-CSRFToken": getCookie("csrftoken")?getCookie("csrftoken"):getCookie2()
-			  },
-			body: JSON.stringify(data),
+			  }
 		});
-		return response.json();
+		const data = await response.json();
+		if (data.authenticated) {
+			document.global.gameplay.username = data.username;
+			document.global.ui.auth = 1;
+			document.global.ui.toggleCanvas = 0;
+			document.global.ui.login = 0;
+			document.global.ui.mainMenu = 1;
+		}
+		else
+			document.global.ui.auth = 0;
+
 	  } catch (error) {
 		console.error(`Server error: ${error.message}`);
 	  }
-}
+})
 
 async function fetch_logout() {
 	try {
