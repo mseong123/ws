@@ -359,6 +359,10 @@ export function resetGame() {
 		}
 	}
 	else if (document.global.socket.gameInfo.gameMode ==="versus") {
+		if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
+				document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+		if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+			document.global.socket.gameSocket.close();
 		document.global.socket.ready = 0;
 		document.global.socket.gameInfo = {
 			mainClient:"",
@@ -382,6 +386,10 @@ export function resetGame() {
 			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
 		}
 		else {
+			if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
+				document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+			if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+				document.global.socket.gameSocket.close();
 			document.global.socket.ready = 0;
 			document.global.socket.gameInfo = {
 				mainClient:"",
@@ -1032,8 +1040,7 @@ export function resetPowerUp() {
 
 		//set new random powerup and position
 		if (document.global.powerUp.enable) {
-			// const random = Math.floor(Math.random() * 5);
-			const random = 1;
+			const random = Math.floor(Math.random() * 5);
 			document.global.powerUp.meshProperty[random].visible = true;
 			document.global.powerUp.meshProperty[random].positionX = Math.floor((Math.random() * (document.global.arena.width - document.global.powerUp.circleRadius)) - (document.global.arena.width - document.global.powerUp.circleRadius)/ 2);
 			document.global.powerUp.meshProperty[random].positionY = Math.floor((Math.random() * (document.global.arena.height - document.global.powerUp.circleRadius)) - (document.global.arena.height -document.global.powerUp.circleRadius) / 2);
@@ -1061,11 +1068,11 @@ export function processGame() {
 					}
 					if(isZCollision(sphereMeshProperty)) {
 						//for gameplay debugging
-						document.global.powerUp.durationFrame = 0;
 						if (document.global.gameplay.immortality) {
 							sphereMeshProperty.velocityZ *= -1;
 						}
 						else {
+							document.global.powerUp.durationFrame = 0;
 							document.global.gameplay.roundStart = 0;
 							if (document.global.gameplay.single) {
 								if (sphereMeshProperty.positionZ > 0)
