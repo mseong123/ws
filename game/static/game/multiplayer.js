@@ -1,4 +1,4 @@
-import {gameStart, matchFixMulti, adjustPaddles} from './gameplay.js'
+import {gameStart, matchFixMulti, adjustPaddles, resetGame} from './gameplay.js'
 import {updateMatchFix, populateWinner} from './render.js'
 
 
@@ -14,7 +14,7 @@ function getCookie2 () {
 
 document.addEventListener('DOMContentLoaded', async function () {
 	try {
-		const response = await fetch(document.global.fetch.authURL, { 
+		const response = await fetch(document.global.fetch.sessionURL, { 
 			method:"POST",
 			credentials: "include",
 			headers: {
@@ -36,6 +36,23 @@ document.addEventListener('DOMContentLoaded', async function () {
 		console.error(`Server error: ${error.message}`);
 	  }
 })
+
+async function fetch_login(data) {
+	try {
+		const response = await fetch(document.global.fetch.authURL, { 
+			method:"POST",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json",
+				"X-CSRFToken": getCookie("csrftoken")
+			  },
+			body: JSON.stringify(data),
+		});
+		return response.json();
+	  } catch (error) {
+		console.error(`Server error: ${error.message}`);
+	  }
+}
 
 async function fetch_logout() {
 	try {
@@ -147,6 +164,10 @@ export function createGameSocket(mainClient) {
 			document.global.gameplay.gameEnd = 1;
 			document.global.socket.gameInfo = data.gameInfo;
 			populateWinner();
+			if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
+				document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+			if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+				document.global.socket.gameSocket.close();
 		}
 		else if (data.mode === "matchFix") {
 			document.global.socket.matchFix = 1;
@@ -315,31 +336,28 @@ export function keyBindingMultiplayer() {
 	})
 	const multiCreateLeave = document.querySelector(".multi-leave-game");
 	multiCreateLeave.addEventListener("click", (e)=>{
-		
-		document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
-		document.global.socket.gameSocket.close();
-		document.global.socket.gameSocket.onclose = function() {
-			document.global.socket.gameInfo = {
-				mainClient:"",
-				gameMode:"",
-				player:{},
-				playerGame:[],
-				currentRound:0,
-				round:0,
-				ludicrious:1,
-				powerUp:1,
-				duration:document.global.gameplay.defaultDuration,
-				durationCount:document.global.gameplay.defaultDuration,
-
-			};
-			document.global.ui.multiLobby = 1;
-			document.global.ui.multiCreate = 0;
-			document.global.socket.ready = 0;
-			document.querySelector('.multi-create-display-player-versus-one').innerHTML = ''
-			document.querySelector('.multi-create-display-player-versus-two').innerHTML = ''
-			document.querySelector('.multi-create-display-player-tournament').innerHTML = ''
-		}
-		
+		if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
+			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+		if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+			document.global.socket.gameSocket.close();
+		document.global.socket.gameInfo = {
+			mainClient:"",
+			gameMode:"",
+			player:{},
+			playerGame:[],
+			currentRound:0,
+			round:0,
+			ludicrious:1,
+			powerUp:1,
+			duration:document.global.gameplay.defaultDuration,
+			durationCount:document.global.gameplay.defaultDuration,
+		};
+		document.global.ui.multiLobby = 1;
+		document.global.ui.multiCreate = 0;
+		document.global.socket.ready = 0;
+		document.querySelector('.multi-create-display-player-versus-one').innerHTML = ''
+		document.querySelector('.multi-create-display-player-versus-two').innerHTML = ''
+		document.querySelector('.multi-create-display-player-tournament').innerHTML = ''
 	})
 	const multiCreateReady = document.querySelector(".multi-ready-game");
 	multiCreateReady.addEventListener("click", (e) => {
@@ -500,6 +518,23 @@ export function keyBindingMultiplayer() {
 		}))
 			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
 		
+	})
+	const multiHostLeftLeave = document.querySelector(".multi-host-left-leave-button");
+	multiHostLeftLeave.addEventListener("click", (e)=>{
+		document.global.socket.ready = 0;
+		document.global.socket.gameInfo = {
+			mainClient:"",
+			gameMode:"",
+			player:{},
+			playerGame:[],
+			currentRound:0,
+			round:0,
+			ludicrious:0,
+			powerUp:1,
+			duration:document.global.gameplay.defaultDuration,
+			durationCount:document.global.gameplay.defaultDuration,
+		};
+		resetGame();
 	})
 	
 

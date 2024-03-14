@@ -339,7 +339,7 @@ hr {
 	border-color:rgb(2,238,139);
 }
 
-.game-summary-container, .multi-tournament-matchFix-container {
+.game-summary-container, .multi-tournament-matchFix-container, .multi-host-left-container {
 	z-index:3;
 	position:absolute;
 	top:0;
@@ -352,6 +352,24 @@ hr {
 	justify-content: center;
 	align-content: center;
 	color:white;
+}
+.multi-host-left {
+	display:grid;
+	align-content:center;
+	background-color:rgb(32,32,32,0.7);
+	min-height:50%;
+	min-width: 50%;
+	padding:0.5rem;
+	font-size: 0.75rem;
+	border:1px solid white;
+	border-radius:0.25rem;
+}
+
+.multi-host-left-header {
+	text-align:center;
+}
+.multi-host-left-leave {
+	text-align:center;
 }
 
 .game-summary, .multi-tournament-matchFix {
@@ -440,7 +458,7 @@ hr {
 	justify-content:end;
 	grid-template-columns:auto auto;
 }
-.reset-game-button, .multi-tournament-matchFix-ready-button, .multi-tournament-matchFix-start-button {
+.reset-game-button, .multi-tournament-matchFix-ready-button, .multi-tournament-matchFix-start-button, .multi-host-left-leave-button {
 	border:1px solid rgb(2,238,139);
 	background-color:transparent;
 	border-radius:0.25rem;

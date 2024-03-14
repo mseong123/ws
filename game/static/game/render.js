@@ -567,6 +567,7 @@ function processUI() {
 		document.querySelector(".multi-create-option-menu").classList.remove("display-none");
 		document.querySelector(".multi-create-warning").classList.add("display-none");
 		document.querySelector(".multi-ready-game").classList.remove("display-none")
+		document.querySelector(".multi-host-left-container").classList.add("display-none")
 		if (document.global.socket.gameInfo.gameMode === 'versus') {
 			document.querySelector(".multi-create-display-player-versus-one").classList.remove("display-none")
 			document.querySelector(".multi-create-display-player-versus-two").classList.remove("display-none")
@@ -596,10 +597,19 @@ function processUI() {
 		}
 	}
 	else {
-		document.querySelector(".multi-create-option-menu").classList.add("display-none");
-		document.querySelector(".multi-create-warning").classList.remove("display-none");
-		document.querySelector(".multi-ready-game").classList.add("display-none")
-		document.querySelector(".multi-start-game").classList.add("display-none")
+		if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
+			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+		if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+			document.global.socket.gameSocket.close();
+		if (!document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
+			document.querySelector(".multi-create-option-menu").classList.add("display-none");
+			document.querySelector(".multi-create-warning").classList.remove("display-none");
+			document.querySelector(".multi-ready-game").classList.add("display-none")
+			document.querySelector(".multi-start-game").classList.add("display-none")
+		}
+		if (document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
+			document.querySelector(".multi-host-left-container").classList.remove("display-none")
+		}
 	}
 	if (document.global.socket.matchFix) {
 		document.querySelector(".multi-tournament-matchFix-container").classList.remove("display-none")
@@ -1270,7 +1280,7 @@ function processCountDown(frameTimer) {
 }
 
 function sendMultiData() {
-	if (document.global.socket.gameInfo.mainClient && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
+	if (document.global.socket.gameInfo.mainClient && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd && document.global.socket.gameSocket) {
 		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
 			if (document.global.socket.gameInfo.gameMode === "versus") {
 				let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
@@ -1337,11 +1347,12 @@ function sendMultiData() {
 				paddlesProperty.positionZ = paddlesProperty.positionZ / clientWidth;
 				paddlesProperty.width = paddlesProperty.width / clientWidth;
 				paddlesProperty.height = paddlesProperty.height / clientWidth;
-				document.global.socket.gameSocket.send(JSON.stringify({
-					mode:"player",
-					playerName:document.global.gameplay.username,
-					liveGameData:paddlesProperty
-				}))
+				
+					document.global.socket.gameSocket.send(JSON.stringify({
+						mode:"player",
+						playerName:document.global.gameplay.username,
+						liveGameData:paddlesProperty
+					}))
 			}
 			else {
 				let tournamentPaddleIndex;

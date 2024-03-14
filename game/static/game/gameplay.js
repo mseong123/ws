@@ -286,10 +286,11 @@ function resetPaddle() {
 	})
 }
 
-function resetGame() {
+export function resetGame() {
 	//overall game reset
 	document.global.gameplay.gameStart = 0;
 	document.global.gameplay.gameEnd = 0;
+	document.global.gameplay.local = 1;
 	document.global.gameplay.initRotateY = 1;
 	document.global.gameplay.initRotateX = 0;
 	document.global.powerUp.enable = 1;
@@ -357,9 +358,7 @@ function resetGame() {
 			document.global.gameplay.tournament = 0;
 		}
 	}
-	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode ==="versus") {
-		document.global.socket.gameSocket.close()
-		document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+	else if (document.global.socket.gameInfo.gameMode ==="versus") {
 		document.global.socket.ready = 0;
 		document.global.socket.gameInfo = {
 			mainClient:"",
@@ -373,9 +372,9 @@ function resetGame() {
 			duration:document.global.gameplay.defaultDuration,
 			durationCount:document.global.gameplay.defaultDuration,
 		};
-		document.global.gameplay.local = 1;
+		
 	}
-	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode ==="tournament") {
+	else if (document.global.socket.gameInfo.gameMode ==="tournament") {
 		if (document.global.socket.gameInfo.currentRound < document.global.socket.gameInfo.round - 1) {
 			document.global.socket.gameInfo.currentRound++;
 			document.global.socket.gameInfo.durationCount = document.global.socket.gameInfo.duration;
@@ -383,8 +382,6 @@ function resetGame() {
 			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
 		}
 		else {
-			document.global.socket.gameSocket.close()
-			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
 			document.global.socket.ready = 0;
 			document.global.socket.gameInfo = {
 				mainClient:"",
@@ -398,7 +395,6 @@ function resetGame() {
 				duration:document.global.gameplay.defaultDuration,
 				durationCount:document.global.gameplay.defaultDuration,
 			};
-			document.global.gameplay.local = 1;
 		}
 	} 
 } 
@@ -723,11 +719,15 @@ export function keyBinding() {
 	navReset.addEventListener("click", (e)=>{
 		document.global.ui.toggleGame = 0;
 		document.global.gameplay.gameEnd = 1;
-		document.global.socket.gameSocket.send(JSON.stringify({
-			mode:"gameEnd",
-			gameInfo:document.global.socket.gameInfo
-		}));
 		populateWinner();
+		if (!document.global.gameplay.local) {
+			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave",}));
+			document.global.socket.gameSocket.send(JSON.stringify({
+				mode:"gameEnd",
+				gameInfo:document.global.socket.gameInfo
+			}));
+		}
+		
 	})
 
 	const menuHome = document.querySelectorAll(".menu-home");
