@@ -917,8 +917,7 @@ function processUI() {
 		multiLobbyDisplay.removeChild(child);
 	})
 	if (document.global.socket.gameInfo.mainClient) {
-		document.querySelector(".multi-create-mainClient").textContent = 'Main Client ' + document.global.socket.gameInfo.mainClient;
-		document.querySelector(".multi-create-gameMode").textContent = 'Game Mode ' + document.global.socket.gameInfo.gameMode;
+		document.querySelector(".multi-create-mainClient").textContent = document.global.socket.gameInfo.mainClient + " " + document.global.socket.gameInfo.gameMode.toUpperCase();
 		if (document.global.socket.gameInfo.gameMode == "versus") {
 			const playerArrayOne = document.global.socket.gameInfo.playerGame[0].player
 			const playerArrayTwo = document.global.socket.gameInfo.playerGame[1].player
@@ -945,10 +944,10 @@ function processUI() {
 					
 					const player = document.createElement('p');
 					const ready = document.createElement('span');
-					ready.textContent = "ready";
+					ready.textContent = "READY";
 					ready.classList.add("ready");
-					ready.classList.add("multi-ready-"+playerList);
-					
+					ready.classList.add("multi-ready");
+					ready.classList.add(playerList);
 					ready.classList.add("display-none");
 					player.textContent = playerList;
 					player.classList.add("multi-create-" + playerList)
@@ -962,9 +961,10 @@ function processUI() {
 				if (!target) {
 					const player = document.createElement('p');
 					const ready = document.createElement('span');
-					ready.textContent = "ready";
+					ready.textContent = "READY";
 					ready.classList.add("ready");
-					ready.classList.add("multi-ready-"+playerList);
+					ready.classList.add("multi-ready");
+					ready.classList.add(playerList);
 					
 					ready.classList.add("display-none");
 					player.textContent = playerList;
@@ -977,7 +977,7 @@ function processUI() {
 			
 			const playerArray = Object.keys(document.global.socket.gameInfo.player)
 			playerArray.forEach(player=>{
-				document.global.socket.gameInfo.player[player].ready? document.querySelector(".multi-ready-"+player).classList.remove("display-none"):document.querySelector(".multi-ready-"+player).classList.add("display-none")
+				document.global.socket.gameInfo.player[player].ready? document.querySelector(".multi-ready."+player).classList.remove("display-none"):document.querySelector(".multi-ready."+player).classList.add("display-none")
 			})
 			if ((playerArray.every(player=>{
 				return document.global.socket.gameInfo.player[player].ready === 1
@@ -995,10 +995,9 @@ function processUI() {
 				if (!target) {
 					const player = document.createElement('p');
 					const ready = document.createElement('span');
-					ready.textContent = "ready";
+					ready.textContent = "READY";
 					ready.classList.add("ready");
 					ready.classList.add("multi-ready-"+document.global.socket.gameInfo.player[playerArray[i]].name);
-					
 					ready.classList.add("display-none");
 					player.textContent = document.global.socket.gameInfo.player[playerArray[i]].name;
 					player.classList.add("multi-create-"+document.global.socket.gameInfo.player[playerArray[i]].name)

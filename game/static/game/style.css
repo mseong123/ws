@@ -268,7 +268,7 @@ hr {
 	border:1px solid rgb(143,143,143);
 }
 
-#single-duration, #two-duration, #tournament-duration {
+#single-duration, #two-duration, #tournament-duration, #multi-create-duration {
 	width:77px;
 	height:24px;
 	background-color:transparent;
@@ -286,7 +286,7 @@ hr {
 	margin:0.1rem 0;
 }
 
-.single-ludicrious, .two-ludicrious, .tournament-ludicrious {
+.single-ludicrious, .two-ludicrious, .tournament-ludicrious, .multi-create-ludicrious {
 	color:rgb(2,238,139);
 }
 .single-start, .two-start, .tournament-start, {
@@ -530,20 +530,34 @@ hr {
 .multi-ready-game:disabled, .multi-ready-game:disabled:hover, .multi-ready-game:disabled:focus {
 	cursor:default;
 	color:rgb(177,177,177);
+}
 
+.multi-ready {
+	margin-left:0.25rem;
+	border-radius:0.25rem;
+	font-size: 0.7rem;
+	padding:0 0.25rem;
+	color:white;
 }
 
 .multi-create-display-player-versus-container {
 	display:grid;
-	grid-template-columns: auto auto auto;
+	grid-template-columns: 3fr 1fr 3fr;
+	
 	
 }
-.multi-create-display-player-versus-one {
-	border:1px solid black;
+.multi-create-display-player-versus-one, .multi-create-display-player-versus-two  {
+	background-color:rgb(28,28,28);
+	overflow-y:auto;
+	max-height:40px;
+	border-radius:0.25rem;
+	padding:0 0.25rem;
 }
 
-.multi-create-display-player-versus-two {
-	border:1px solid black;
+.multi-create-options {
+	display:grid;
+	grid-template-columns:auto auto;
+	grid-column-gap:0.5rem;
 }
 
 .multi-lobby-menu h4{
@@ -613,6 +627,10 @@ hr {
 
 .multi-game-spectate:disabled {
 	display:none;
+}
+
+.multi-create-option-menu h4 {
+	margin:0.25rem 0;
 }
 
 
