@@ -539,14 +539,15 @@ function processUI() {
 		document.querySelector(".menu-game").classList.remove("display-none");
 	else
 		document.querySelector(".menu-game").classList.add("display-none");
-	if (document.global.ui.chat) {
-		document.querySelector(".chat-container").classList.add("display-block");
-		document.querySelector(".canvas-container").classList.add("display-none");
+	if (document.global.ui.auth) {
+		document.querySelector(".nav-local").classList.add("display-none");
+		document.querySelector(".nav-multi").classList.remove("display-none");
 	}
 	else {
-		document.querySelector(".chat-container").classList.remove("display-block");
-		document.querySelector(".canvas-container").classList.remove("display-none");
+		document.querySelector(".nav-local").classList.remove("display-none");
+		document.querySelector(".nav-multi").classList.add("display-none");
 	}
+		
 	document.global.ui.mainMenu?
 		document.querySelector(".main-menu").classList.add("display-block"):document.querySelector(".main-menu").classList.remove("display-block");
 	document.global.ui.login?
@@ -637,7 +638,7 @@ function processUI() {
 		document.querySelector(".nav-logout").classList.add("display-none");
 		document.querySelector(".nav-login").classList.remove("display-none");
 	}
-	
+	document.global.ui.authWarning? document.querySelector(".login-warning").classList.remove("display-none") : document.querySelector(".login-warning").classList.add("display-none");
 	
 	for (let i = 0; i < document.global.gameplay.localSingleInfo.player.length; i++) {
 		const parent = document.querySelector(".single-alias-display-inside");
@@ -843,7 +844,7 @@ function processUI() {
 			gameContainer.classList.add(document.global.socket.gameLobbyInfo[i].mainClient);
 			gameOptionsContainer.classList.add('multi-lobby-game-container-options');
 			gameHost.classList.add("multi-lobby-game-header")
-			gameHost.textContent = "Host: " + document.global.socket.gameLobbyInfo[i].mainClient;
+			gameHost.textContent = document.global.socket.gameLobbyInfo[i].mainClient;
 			playerNum.classList.add("multi-game-player");
 			playerNum.classList.add(document.global.socket.gameLobbyInfo[i].mainClient);
 			playerNum.textContent = "Players: " + document.global.socket.gameLobbyInfo[i].player.length + " / " + document.global.paddle.maxPaddle;

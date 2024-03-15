@@ -241,6 +241,7 @@ function initGlobal() {
 	document.global.ui.multiLobby = 0;
 	document.global.ui.multiCreate = 0;
 	document.global.ui.auth = 0;
+	document.global.ui.authWarning = 0;
 	
 
 	//fetch

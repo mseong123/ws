@@ -5,13 +5,12 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" href="{% static 'game/canvas.css' %}">
 	<link rel="stylesheet" href="{% static 'game/style.css' %}">
 	
 	<body class="inter-pong">
-		<div class="touchX"></div>
-		<div class="touchY"></div>
 		<div class="main-container">
 			<div class="canvas-container">
 				<h2 class="banner">
@@ -37,30 +36,31 @@
 						<div class="login-menu display-none">
 							<button type="button" class="menu-back login-back"><i class="fa fa-caret-left"></i></button>
 							<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
-							<h4>LOGIN</h4>
 							<form class="login">
 								<div>
-									<label for="username">Enter Username</label>
+									<label for="username">Username:</label>
 									<input type="text" id="username" placeholder="username" required>
-									<label for="password" >Enter Password</label>
-									<input type="text" value="lameass123" id="password" placeholder="password" required>
-									<button type="submit" class="login-submit"><i class="fa fa-caret-right"></i></button>
 								</div>
+								<div>
+									<label for="password" >Password:</label>
+									<input type="text" value="lameass123" id="password" placeholder="password" required>
+								</div>
+								<small class="login-warning display-none">Incorrect username or password</small>
+								<button type="submit" class="login-submit"><i class="fa fa-square-caret-right"></i></button>
+								
 							</form>
 						</div>
 						<!-- local menu -->
 						<div class="local-menu display-none">
 							<button type="button" class="menu-back local-back"><i class="fa fa-caret-left"></i></button>
 							<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
-							<h4><i class="fas fa-location-dot"></i>LOCAL GAME</h4>
-							<button type="button" class="nav nav-single">Single Player (vs A.I.) &nbsp;<i class="fa fa-caret-right"></i></button>
-							<button type="button" class="nav nav-two">Two Player &nbsp;<i class="fa fa-caret-right"></i></button>
+							<button type="button" class="nav nav-single">Versus A.I. &nbsp;<i class="fa fa-caret-right"></i></button>
+							<button type="button" class="nav nav-two">Local Versus &nbsp;<i class="fa fa-caret-right"></i></button>
 							<button type="button" class="nav nav-tournament">Local Tournament &nbsp;<i class="fa fa-caret-right"></i></button>
 						</div>
 						<div class="single-menu display-none">
 								<button type="button" class="menu-back single-back"><i class="fa fa-caret-left"></i></button>
 								<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
-								<h4>SINGLE PLAYER (V.S. A.I.)</h4>
 								<form class="single-alias">
 									<div class="single-alias-display">
 										<p>Player(s): &nbsp;</p>
@@ -95,7 +95,6 @@
 						<div class="single-menu display-none">
 								<button type="button" class="menu-back single-back"><i class="fa fa-square-caret-left"></i></button>
 								<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
-								<h4>SINGLE PLAYER (V.S. A.I.)</h4>
 								<form class="single-alias">
 									<div class="single-alias-display">
 										<p>Player(s): &nbsp;</p>
@@ -130,7 +129,6 @@
 						<div class="two-menu display-none">
 							<button type="button" class="menu-back two-back"><i class="fa fa-caret-left"></i></button>
 							<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
-							<h4>TWO PLAYER</h4>
 							<form class="two-alias">
 								<div class="two-alias-display">
 									<p>Player(s): &nbsp;</p>
@@ -165,7 +163,6 @@
 					<div class="tournament-menu display-none">
 						<button type="button" class="menu-back tournament-back"><i class="fa fa-caret-left"></i></button>
 						<button type="button" class="menu-home"><i class="fa fa-home"></i></button>
-						<h4>LOCAL TOURNAMENT</h4>
 						<form class="tournament-alias">
 							<div class="tournament-alias-display">
 								<p>Player(s): &nbsp;</p>
@@ -199,12 +196,14 @@
 					<!-- multiplayer lobby menu -->
 					<div class="multi-lobby-menu display-none">
 						<button type="button" class="menu-back multi-lobby-back"><i class="fa fa-caret-left"></i></button>
-						<h4>MULTIPLAYER LOBBY</h4>
+						<h4>GAME LOBBY</h4>
 						<div class="multi-lobby">
 							<div class="multi-lobby-display">
 							</div>
-							<button type="button" class="multi-create-versus">Create Versus</button>
-							<button type="button" class="multi-create-tournament">Create Tournament</button>
+							<div>
+								<button type="button" class="multi-create-versus">Versus</button>
+								<button type="button" class="multi-create-tournament">Tournament</button>
+							</div>
 						</div>
 					</div>
 					<!-- multiplayer game menu -->
@@ -249,12 +248,6 @@
 							<button type="button" class="multi-matchFix display-none">Match Up</button>
 							<button type="button" class="multi-start-game display-none">Start Game</button>
 						</div>
-					<!-- chat menu -->
-					<div class="chat-menu">
-						<hr class="chat-divider"></hr>
-						<button type="button" class="nav nav-chat"><i class="fas fa-comment"></i>Live Chat &nbsp;<i class="fa fa-caret-right"></i></button>
-							
-					</div>
 					</div>
 				</h2>
 				<div class="canvas-background canvas-background-1"></div>
@@ -345,7 +338,7 @@
 					</button>
 			
 			</div>
-			<div class="chat-container display-none">
+			<div class="chat-container">
 				<div class="chat-nav-container">
 					<button type="button" class="toggle-chat">
 							<span class="icon-bar"></span>
@@ -370,6 +363,7 @@
 		</div>
 		
 	</body>
+	
 	<script type="module" src="{% static 'game/init.js' %}"></script>
 	<script type="module" src="{% static 'game/render.js' %}"></script>
 	<script type="module" src="{% static 'game/gameplay.js' %}"></script>

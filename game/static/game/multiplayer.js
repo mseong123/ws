@@ -383,6 +383,7 @@ export function keyBindingMultiplayer() {
 	logout.addEventListener("click", (e)=>{
 		fetch_logout().then(data=>{
 			document.global.ui.auth = 0;
+			document.global.gameplay.username = "";
 		})
 	})
 	const loginBack = document.querySelector(".login-back");
@@ -392,6 +393,7 @@ export function keyBindingMultiplayer() {
 	})
 	const loginSubmit = document.querySelector(".login");
 	loginSubmit.addEventListener("submit", (e)=>{
+		document.global.ui.authWarning = 0;
 		e.preventDefault();
 		fetch_login({username:document.getElementById("username").value, password:document.getElementById("password").value}).then(data=>{
 			if (data.authenticated) {
@@ -401,8 +403,11 @@ export function keyBindingMultiplayer() {
 				document.global.ui.login = 0;
 				document.global.ui.mainMenu = 1;
 			}
-			else
+			else {
+				document.global.gameplay.username = "";
 				document.global.ui.auth = 0;
+				document.global.ui.authWarning = 1;
+			}
 		});
 	})
 	const multiCreateVersus = document.querySelector(".multi-create-versus");
