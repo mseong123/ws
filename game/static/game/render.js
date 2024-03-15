@@ -830,22 +830,43 @@ function processUI() {
 	else if (!document.global.gameplay.gameSummary && !document.global.gameplay.gameEnd)
 		document.querySelector(".game-summary-container").classList.add("display-none");
 	for (let i = 0; i < document.global.socket.gameLobbyInfo.length; i++) {
-		const target = document.querySelector(".multi-join"+"."+document.global.socket.gameLobbyInfo[i].mainClient)
+		const target = document.querySelector(".multi-lobby-game-container"+"."+document.global.socket.gameLobbyInfo[i].mainClient)
 		if (!target) {
-			const user = document.createElement('button');
+			const gameContainer = document.createElement('div');
+			const gameOptionsContainer = document.createElement('div');
+			const gameHost = document.createElement('h4');
+			const playerNum = document.createElement('p');
+			const status = document.createElement('p');
+			const join = document.createElement('button');
+			const spectate = document.createElement('button');
 			
-			user.setAttribute("type","button")
-			user.textContent = document.global.socket.gameLobbyInfo[i].mainClient;
-			user.classList.add("multi-join")
-			user.classList.add(document.global.socket.gameLobbyInfo[i].mainClient)
-			user.addEventListener("click", (e)=>{
+			gameContainer.classList.add('multi-lobby-game-container');
+			gameContainer.classList.add(document.global.socket.gameLobbyInfo[i].mainClient);
+			gameOptionsContainer.classList.add('multi-lobby-game-container-options');
+			gameHost.classList.add("multi-lobby-game-header")
+			gameHost.textContent = "Host: " + document.global.socket.gameLobbyInfo[i].mainClient;
+			playerNum.classList.add("multi-game-player");
+			playerNum.classList.add(document.global.socket.gameLobbyInfo[i].mainClient);
+			playerNum.textContent = "Players: " + document.global.socket.gameLobbyInfo[i].player.length + " / " + document.global.paddle.maxPaddle;
+			status.classList.add("multi-game-status");
+			status.classList.add(document.global.socket.gameLobbyInfo[i].mainClient);
+			status.textContent = "Not Live";
+			join.setAttribute("type","button")
+			join.classList.add("multi-game-join")
+			join.classList.add(document.global.socket.gameLobbyInfo[i].mainClient)
+			join.textContent = "JOIN";
+			spectate.setAttribute("type","button")
+			spectate.classList.add("multi-game-spectate")
+			spectate.classList.add(document.global.socket.gameLobbyInfo[i].mainClient)
+			spectate.textContent = "SPECTATE";
+			join.addEventListener("click", (e)=>{
 				if (document.global.gameplay.username !== e.target.classList[1]) {
 					let currentGame;
 					document.global.socket.gameLobbyInfo.forEach(game=>{
 						if(game.mainClient === e.target.classList[1])
 							currentGame = game;
 					})
-					if (currentGame.player.length < document.global.paddle.maxPaddle && !currentGame.player.includes(document.global.gameplay.username)) {
+					if (currentGame.player.length < document.global.paddle.maxPaddle && !currentGame.player.includes(document.global.gameplay.username) && !currentGame.gameStart) {
 						document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"join", mainClient:e.target.classList[1]}))
 						createGameSocket(e.target.classList[1])
 						document.global.socket.gameSocket.onopen = function() {
@@ -857,10 +878,31 @@ function processUI() {
 							}
 					}
 				}
-				
-	
 			})
-			document.querySelector('.multi-lobby-display').appendChild(user);
+			spectate.addEventListener("click", (e)=>{
+				
+			})
+			gameOptionsContainer.appendChild(playerNum);
+			gameOptionsContainer.appendChild(status);
+			gameOptionsContainer.appendChild(join);
+			gameOptionsContainer.appendChild(spectate);
+			gameContainer.appendChild(gameHost)
+			gameContainer.appendChild(gameOptionsContainer)
+			document.querySelector('.multi-lobby-display').appendChild(gameContainer);
+		}
+		else {
+			document.global.socket.gameLobbyInfo[i].player.length < document.global.paddle.maxPaddle? document.querySelector(".multi-game-join." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = false :document.querySelector(".multi-game-join." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = true;
+			if (document.global.socket.gameLobbyInfo[i].gameStart) {
+				document.querySelector(".multi-game-spectate." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = false;
+				document.querySelector(".multi-game-status." + document.global.socket.gameLobbyInfo[i].mainClient).textContent = "Live";
+			}
+			else {
+				document.querySelector(".multi-game-spectate." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = true;
+				document.querySelector(".multi-game-status." + document.global.socket.gameLobbyInfo[i].mainClient).textContent = "Not Live";
+			}
+			document.querySelector(".multi-game-player." + document.global.socket.gameLobbyInfo[i].mainClient).textContent = "Players: " + document.global.socket.gameLobbyInfo[i].player.length + " / " + document.global.paddle.maxPaddle;
+				
+
 		}
 	}
 	const multiLobbyDisplay = document.querySelector(".multi-lobby-display")

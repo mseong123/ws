@@ -33,7 +33,7 @@ class GameLobbyConsumer(WebsocketConsumer):
 	def receive(self, text_data):
 		data_json = json.loads(text_data)
 		if data_json["mode"] == 'create':
-			GameLobbyConsumer.gameLobbyInfo.append({"mainClient":str(self.scope["user"]), "player":[str(self.scope["user"])], "gameMode":data_json["gameMode"]})
+			GameLobbyConsumer.gameLobbyInfo.append({"mainClient":str(self.scope["user"]), "player":[str(self.scope["user"])], "gameMode":data_json["gameMode"], "gameStart":0})
 		elif data_json["mode"] == 'leave':
 			GameLobbyConsumer.gameLobbyInfo = [
 				game for game in GameLobbyConsumer.gameLobbyInfo if game.get('mainClient') != str(self.scope['user'])
@@ -45,6 +45,10 @@ class GameLobbyConsumer(WebsocketConsumer):
 			for game in GameLobbyConsumer.gameLobbyInfo:
 				if game['mainClient'] == data_json['mainClient']:
 					game['player'].append(str(self.scope['user']))
+		elif data_json["mode"] == 'gameStart':
+			for game in GameLobbyConsumer.gameLobbyInfo:
+				if game['mainClient'] == data_json['mainClient']:
+					game['gameStart'] = 1
 		# Send message to room group
 		async_to_sync(self.channel_layer.group_send)(
 			self.room_group_name, {"type": "gamelobby_message"}
@@ -65,8 +69,8 @@ class GameConsumer(WebsocketConsumer):
 			self.accept()
 			async_to_sync(self.channel_layer.group_add)(
 				self.room_group_name, self.channel_name)
-			async_to_sync(self.channel_layer.group_send)(
-			self.room_group_name, {"type": "game_message", "message":"gameOption"})
+			if self.room_group_name != str(self.scope['user']):
+				async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameOption"})
 		
 	def disconnect(self, close_code):
 		if GameConsumer.gameInfo.get(str(self.scope["user"])) is not None:

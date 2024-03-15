@@ -85,6 +85,9 @@ function createGameLobbyWebSocket() {
 		document.global.socket.gameLobbySocket = null;
 		console.log('Game socket closed');
 	};
+	document.global.socket.gameLobbySocket.onerror = function(event) {
+		console.log('WebSocket Game Lobby Error:', event);
+	};
 }
 
 function multiGameStart() {
@@ -317,6 +320,9 @@ export function createGameSocket(mainClient) {
 	document.global.socket.gameSocket.onclose = function(e) {
 		document.global.socket.gameSocket = null;
 	};
+	document.global.socket.gameSocket.onerror = function(event) {
+		console.error('WebSocket GameSocket Error:', event);
+	};
 }
 
 
@@ -335,7 +341,8 @@ export function keyBindingMultiplayer() {
 	multiLobbyBack.addEventListener("click", (e)=>{
 		document.global.ui.mainMenu = 1;
 		document.global.ui.multiLobby = 0;
-		document.global.socket.gameLobbySocket.close();
+		if (document.global.socket.gameLobbySocket)
+			document.global.socket.gameLobbySocket.close();
 	})
 	const multiCreateLeave = document.querySelector(".multi-leave-game");
 	multiCreateLeave.addEventListener("click", (e)=>{
@@ -480,13 +487,12 @@ export function keyBindingMultiplayer() {
 	const multiStartGame = document.querySelector(".multi-start-game");
 	multiStartGame.addEventListener("click", (e) => {
 		const playerArray = Object.keys(document.global.socket.gameInfo.player)
-		// if (playerArray.every(player=>{
-		// 	return document.global.socket.gameInfo.player[player].ready === 1
-		// }) && document.global.socket.gameInfo.playerGame[0].player.length>0 && document.global.socket.gameInfo.playerGame[1].player.length>0)
 		if (playerArray.every(player=>{
 			return document.global.socket.gameInfo.player[player].ready === 1
-		}))
+		}) && document.global.socket.gameInfo.playerGame[0].player.length>0 && document.global.socket.gameInfo.playerGame[1].player.length>0) {
+			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"gameStart", mainClient:document.global.socket.gameInfo.mainClient}))
 			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
+		}
 		
 	})
 	const multiMatchFix = document.querySelector(".multi-matchFix");

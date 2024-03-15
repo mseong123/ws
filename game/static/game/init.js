@@ -75,7 +75,7 @@ function initGlobal() {
 	document.global.paddle.paddlesProperty = [];
 	document.global.paddle.color = [colorSpace, colorOcean, colorAlien, colorDesert];
 	document.global.paddle.opacity = 0.9;
-	document.global.paddle.maxPaddle = 8;
+	document.global.paddle.maxPaddle = 2;
 	document.global.paddle.distanceFromEdgeModifier= 2;
 	document.global.paddle.hitBackModifier = 5;
 	document.global.paddle.defaultWidth = clientWidth / document.global.arena.widthDivision / 5; //5

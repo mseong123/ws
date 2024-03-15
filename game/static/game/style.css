@@ -507,6 +507,25 @@ hr {
 	border:1px solid black;
 }
 
+.multi-lobby-game-container {
+	border:1px solid white;
+}
+.multi-lobby-game-container-options {
+	display:grid;
+	grid-template-columns:auto auto auto auto;
+}
+
+.multi-lobby-game-header {
+	margin:0.25rem 0;
+}
+
+.multi-game-join:disabled {
+	display:none;
+}
+
+.multi-game-spectate:disabled {
+	display:none;
+}
 
 
 @media (min-width:577px) {
