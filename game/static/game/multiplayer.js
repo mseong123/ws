@@ -90,7 +90,7 @@ function createGameLobbyWebSocket() {
 	};
 }
 
-function multiGameStart() {
+export function multiGameStart() {
 	document.global.gameplay.local = 0;
 	document.global.powerUp.enable = document.global.socket.gameInfo.powerUp;
 	document.querySelector(".game-summary-header-type").textContent = "Multiplayer " + document.global.socket.gameInfo.gameMode.toUpperCase();
@@ -524,8 +524,10 @@ export function keyBindingMultiplayer() {
 		const playerArray = Object.keys(document.global.socket.gameInfo.player)
 		if (playerArray.every(player=>{
 			return document.global.socket.gameInfo.player[player].ready === 1
-		}))
+		})) {
 			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
+			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"gameStart", mainClient:document.global.socket.gameInfo.mainClient}))
+		}
 		
 	})
 	const multiHostLeftLeave = document.querySelector(".multi-host-left-leave-button");

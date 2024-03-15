@@ -1,6 +1,6 @@
 import * as THREE from 'https://threejs.org/build/three.module.js';
 import {processGame,movePaddle,keyBinding,resetPowerUp} from './gameplay.js';
-import {keyBindingMultiplayer,createGameSocket, processSendLiveGameData} from './multiplayer.js';
+import {keyBindingMultiplayer,createGameSocket, processSendLiveGameData, multiGameStart} from './multiplayer.js';
 import {createPowerUp,createFirstHalfCircleGeometry,createSecondHalfCircleGeometry} from './powerup.js';
 import {init} from './init.js'
 
@@ -839,7 +839,6 @@ function processUI() {
 			const status = document.createElement('p');
 			const join = document.createElement('button');
 			const spectate = document.createElement('button');
-			
 			gameContainer.classList.add('multi-lobby-game-container');
 			gameContainer.classList.add(document.global.socket.gameLobbyInfo[i].mainClient);
 			gameOptionsContainer.classList.add('multi-lobby-game-container-options');
@@ -880,7 +879,11 @@ function processUI() {
 				}
 			})
 			spectate.addEventListener("click", (e)=>{
-				
+				createGameSocket(e.target.classList[1])
+				document.global.socket.gameSocket.onopen = function() {
+					document.global.socket.spectate = 1;
+					multiGameStart();
+				}
 			})
 			gameOptionsContainer.appendChild(playerNum);
 			gameOptionsContainer.appendChild(status);
@@ -1052,7 +1055,7 @@ function processUI() {
 			document.querySelector(".multi-create-display-player-tournament").classList.remove("display-none");
 			document.querySelector(".multi-create-change").classList.add("display-none");
 		}
-
+		document.global.socket.spectate? document.querySelector(".nav-pause").classList.add("display-none"):document.querySelector(".nav-pause").classList.remove("display-none");
 	}
 	
 	
@@ -1333,7 +1336,7 @@ function processCountDown(frameTimer) {
 }
 
 function sendMultiData() {
-	if (document.global.socket.gameInfo.mainClient && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd && document.global.socket.gameSocket) {
+	if (document.global.socket.gameInfo.mainClient && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd && document.global.socket.gameSocket && !document.global.socket.spectate) {
 		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
 			if (document.global.socket.gameInfo.gameMode === "versus") {
 				let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);

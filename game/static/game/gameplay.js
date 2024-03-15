@@ -60,8 +60,11 @@ function canvasMouseMove(e) {
 	let tournamentPaddleIndex;
 	if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
 		versusPaddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
-		if (versusPaddleIndex === -1)
-			versusPaddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
+		if (versusPaddleIndex === -1) {
+			versusPaddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username)
+			if (versusPaddleIndex !== -1)
+				versusPaddleIndex += document.global.socket.gameInfo.playerGame[0].player.length
+		}
 	}
 	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
 		if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias === document.global.gameplay.username)
@@ -74,7 +77,7 @@ function canvasMouseMove(e) {
 
 		
 	//large paddle power up modification
-	if ((document.global.gameplay.local && paddlesProperty[0].largePaddle) || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament" && tournamentPaddleIndex !== -1  && paddlesProperty[tournamentPaddleIndex].largePaddle || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus" && paddlesProperty[versusPaddleIndex].largePaddle) { 
+	if ((document.global.gameplay.local && paddlesProperty[0].largePaddle) || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament" && tournamentPaddleIndex !== -1  && paddlesProperty[tournamentPaddleIndex].largePaddle || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus" && versusPaddleIndex !== -1 && paddlesProperty[versusPaddleIndex].largePaddle) { 
 		paddleWidth = paddleWidth * document.global.powerUp.largePaddle.multiplier;
 		paddleHeight = paddleHeight * document.global.powerUp.largePaddle.multiplier;
 	}
@@ -106,7 +109,7 @@ function canvasMouseMove(e) {
 				paddlesProperty[0].positionX = positionX;
 		}
 		//For multi versus, mouse is attached to player num
-		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
+		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus" && versusPaddleIndex !== -1) {
 			if ((document.global.arena3D.rotation.x - Math.PI / 2) % (Math.PI * 2) > 0 && (document.global.arena3D.rotation.x - Math.PI/2) % (Math.PI * 2) < Math.PI)
 				paddlesProperty[versusPaddleIndex].positionY = -positionY;
 			else
@@ -150,8 +153,11 @@ function canvasTouchMove(e) {
 	let tournamentPaddleIndex;
 	if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
 		versusPaddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
-		if (versusPaddleIndex === -1)
-			versusPaddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
+		if (versusPaddleIndex === -1) {
+			versusPaddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username);
+			if (versusPaddleIndex !== -1)
+				versusPaddleIndex += document.global.socket.gameInfo.playerGame[0].player.length
+		}
 	}
 	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
 		if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias === document.global.gameplay.username)
@@ -197,7 +203,7 @@ function canvasTouchMove(e) {
 				paddlesProperty[0].positionX = positionX;
 		}
 		//For multi versus, mouse is attached to player num
-		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
+		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus" && versusPaddleIndex !== -1) {
 			if ((document.global.arena3D.rotation.x - Math.PI / 2) % (Math.PI * 2) > 0 && (document.global.arena3D.rotation.x - Math.PI/2) % (Math.PI * 2) < Math.PI)
 				paddlesProperty[versusPaddleIndex].positionX = -positionX;
 			else
@@ -302,6 +308,7 @@ export function resetGame() {
 	document.global.gameplay.initRotateY = 1;
 	document.global.gameplay.initRotateX = 0;
 	document.global.powerUp.enable = 1;
+	document.global.powerUp.shake.enable = 0;
 	document.global.arena3D.rotation.x = 0;
 	document.global.arena3D.rotation.y = 0;
 	document.global.gameplay.ludicrious = 0;
@@ -312,6 +319,7 @@ export function resetGame() {
 	document.global.ui.tournament = 0;
 	document.global.ui.multiLobby = 0;
 	document.global.ui.multiCreate = 0;
+	document.global.socket.spectate = 0;
 	resetPaddle();
 	resetPowerUp();
 	document.global.sphere.sphereMesh.forEach(sphereMesh=>{
@@ -486,7 +494,7 @@ export function keyBinding() {
 	canvas.addEventListener("keydown", canvasKeydown);
 	canvas.addEventListener("keyup", canvasKeyup);
 	document.addEventListener("keydown", (e)=>{
-		if (e.keyCode === 27 && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
+		if (e.keyCode === 27 && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd && !document.global.socket.spectate) {
 			document.global.gameplay.pause? document.global.gameplay.pause = 0 :document.global.gameplay.pause = 1;
 			if (!document.global.gameplay.local)
 				document.global.socket.gameSocket.send(JSON.stringify({mode:"pause", pause:document.global.gameplay.pause}))
@@ -711,7 +719,7 @@ export function keyBinding() {
 	})
 	const pause = document.querySelector(".pause");
 	pause.addEventListener("click", (e)=>{
-		if (!document.global.gameplay.gameEnd) {
+		if (!document.global.gameplay.gameEnd && !document.global.socket.spectate) {
 			document.global.gameplay.pause = 0;
 			if (!document.global.gameplay.local)
 				document.global.socket.gameSocket.send(JSON.stringify({mode:"pause", pause:document.global.gameplay.pause}))
@@ -1186,9 +1194,13 @@ export function movePaddle() {
 	}
 	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
 		let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
-		if (paddleIndex === -1)
-			paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
-		paddleOne = document.global.paddle.paddlesProperty[paddleIndex];
+		if (paddleIndex === -1) {
+			paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username);
+			if (paddleIndex !== -1)
+				paddleIndex += document.global.socket.gameInfo.playerGame[0].player.length;
+		}
+		if (paddleIndex !== -1)
+			paddleOne = document.global.paddle.paddlesProperty[paddleIndex];
 	}
 	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
 		let tournamentPaddleIndex;

@@ -47,13 +47,11 @@ function initGlobal() {
 	document.global.sphere.velocityTopLimit = 3;
 	document.global.sphere.velocityBottomLimit = 1;
 	document.global.sphere.color = "#686868";
-	document.global.sphere.velocityDivision = 200;
+	document.global.sphere.velocityDivision = 300;
 	document.global.sphere.radius = clientWidth / document.global.sphere.radiusDivision;
 	document.global.sphere.circleRadius = document.global.sphere.radius * 2;
-	// document.global.sphere.velocityX = clientWidth / document.global.sphere.velocityDivision;
-	// document.global.sphere.velocityY = clientWidth / document.global.sphere.velocityDivision;
-	document.global.sphere.velocityX = 0;
-	document.global.sphere.velocityY = 0;
+	document.global.sphere.velocityX = clientWidth / document.global.sphere.velocityDivision;
+	document.global.sphere.velocityY = clientWidth / document.global.sphere.velocityDivision;
 	document.global.sphere.velocityZ = clientWidth / document.global.sphere.velocityDivision;
 
 	//camera info
@@ -269,6 +267,7 @@ function initGlobal() {
 	};
 	document.global.socket.ready = 0;
 	document.global.socket.matchFix = 0;
+	document.global.socket.spectate = 0;
 	
 }
 
