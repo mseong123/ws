@@ -357,8 +357,8 @@ export function keyBindingMultiplayer() {
 			playerGame:[],
 			currentRound:0,
 			round:0,
-			ludicrious:1,
-			powerUp:1,
+			ludicrious:document.global.gameplay.defaultLudicrious,
+			powerUp:document.global.gameplay.defaultPowerUp,
 			duration:document.global.gameplay.defaultDuration,
 			durationCount:document.global.gameplay.defaultDuration,
 		};
@@ -540,8 +540,8 @@ export function keyBindingMultiplayer() {
 			playerGame:[],
 			currentRound:0,
 			round:0,
-			ludicrious:0,
-			powerUp:1,
+			ludicrious:document.global.gameplay.defaultLudicrious,
+			powerUp:document.global.gameplay.defaultPowerUp,
 			duration:document.global.gameplay.defaultDuration,
 			durationCount:document.global.gameplay.defaultDuration,
 		};

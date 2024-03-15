@@ -153,6 +153,8 @@ function initGlobal() {
 	document.global.gameplay.playerIndex = []; 
 	document.global.gameplay.immortality = 0; //for gameplay debugging purpose
 	document.global.gameplay.cheat = 1; // for show purpose
+	document.global.gameplay.defaultLudicrious = 0;
+	document.global.gameplay.defaultPowerUp = 1;
 	document.global.gameplay.ludicrious = 0;
 	document.global.gameplay.ludicriousYminuteUpper = 1;
 	document.global.gameplay.ludicriousYminuteLower = 0;
@@ -181,15 +183,15 @@ function initGlobal() {
 	document.global.gameplay.local = 1;
 	document.global.gameplay.localSingleInfo = { 
 		player:[{alias:"Player", score:0, winner:false}],
-		ludicrious:1,
-		powerUp:1,
+		ludicrious:document.global.gameplay.defaultLudicrious,
+		powerUp:document.global.gameplay.defaultPowerUp,
 		duration:document.global.gameplay.defaultDuration,
 		durationCount:document.global.gameplay.defaultDuration,
 	};
 	document.global.gameplay.localTwoInfo = { 
 		player:[{alias:"Player-One", score:0, winner:false}, {alias:"Player-Two", score:0, winner:false}],
-		ludicrious:1,
-		powerUp:1,
+		ludicrious:document.global.gameplay.defaultLudicrious,
+		powerUp:document.global.gameplay.defaultPowerUp,
 		duration:document.global.gameplay.defaultDuration,
 		durationCount:document.global.gameplay.defaultDuration,
 	};
@@ -198,8 +200,8 @@ function initGlobal() {
 		playerGame:[],
 		currentRound:0,
 		round:0,
-		ludicrious:1,
-		powerUp:1,
+		ludicrious:document.global.gameplay.defaultLudicrious,
+		powerUp:document.global.gameplay.defaultPowerUp,
 		duration:document.global.gameplay.defaultDuration,
 		durationCount:document.global.gameplay.defaultDuration,
 	};
@@ -259,8 +261,8 @@ function initGlobal() {
 		playerGame:[],
 		currentRound:0,
 		round:0,
-		ludicrious:0,
-		powerUp:1,
+		ludicrious:document.global.gameplay.defaultLudicrious,
+		powerUp:document.global.gameplay.defaultPowerUp,
 		teamUp:0,
 		duration:document.global.gameplay.defaultDuration,
 		durationCount:document.global.gameplay.defaultDuration,
