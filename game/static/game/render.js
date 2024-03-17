@@ -837,6 +837,7 @@ function processUI() {
 		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username && document.global.socket.gameInfo.currentRound === document.global.socket.gameInfo.round - 1)
 			document.querySelector(".reset-game").classList.remove("display-none");
 		document.querySelector(".toggle-cheat").classList.add("display-none");
+		document.querySelector(".cheat-count").classList.add("display-none");
 	}
 	else { 
 		//for starting screen before gameStart
@@ -924,10 +925,12 @@ function processUI() {
 			document.global.socket.gameLobbyInfo[i].player.length < document.global.paddle.maxPaddle? document.querySelector(".multi-game-join." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = false :document.querySelector(".multi-game-join." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = true;
 			if (document.global.socket.gameLobbyInfo[i].gameStart) {
 				document.querySelector(".multi-game-spectate." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = false;
+				document.querySelector(".multi-game-join." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = true;
 				document.querySelector(".multi-game-status." + document.global.socket.gameLobbyInfo[i].mainClient).textContent = "Live";
 			}
 			else {
 				document.querySelector(".multi-game-spectate." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = true;
+				document.querySelector(".multi-game-join." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = false;
 				document.querySelector(".multi-game-status." + document.global.socket.gameLobbyInfo[i].mainClient).textContent = "Not Live";
 			}
 			document.querySelector(".multi-game-player." + document.global.socket.gameLobbyInfo[i].mainClient).textContent = "Players: " + document.global.socket.gameLobbyInfo[i].player.length + " / " + document.global.paddle.maxPaddle;

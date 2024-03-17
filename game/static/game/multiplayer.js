@@ -535,6 +535,7 @@ export function keyBindingMultiplayer() {
 			return document.global.socket.gameInfo.player[player].ready === 1
 		})) {
 			matchFixMulti();
+			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"gameStart", mainClient:document.global.socket.gameInfo.mainClient}))
 			playerArray.forEach(player=>{
 				document.global.socket.gameInfo.player[player].ready = 0;
 			});
