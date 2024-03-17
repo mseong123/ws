@@ -1,4 +1,4 @@
-import {gameStart, matchFixMulti, adjustPaddles, resetGame} from './gameplay.js'
+import {gameStart, matchFixMulti, adjustPaddles, resetGame, powerUpCollisionEffect} from './gameplay.js'
 import {updateMatchFix, populateWinner} from './render.js'
 
 
@@ -94,6 +94,7 @@ export function multiGameStart() {
 	document.global.gameplay.local = 0;
 	document.global.powerUp.enable = document.global.socket.gameInfo.powerUp;
 	document.querySelector(".game-summary-header-type").textContent = "Multiplayer " + document.global.socket.gameInfo.gameMode.toUpperCase();
+
 	if (document.global.socket.gameInfo.gameMode === "tournament") {
 		document.global.socket.matchFix = 0;
 		document.querySelector(".multi-tournament-matchFix-display").innerHTML = '';
@@ -248,6 +249,33 @@ export function createGameSocket(mainClient) {
 				//paddles invisibility reset
 				paddleProperty.invisibility = 0;
 			});
+		}
+		else if (data.mode === "cheat" && document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+			if (document.global.socket.gameInfo.gameMode === "versus") {
+				let index;
+				if (document.global.socket.gameInfo.playerGame[0].player.indexOf(data.player) !== -1)
+					index = 0;
+				else
+					index = 1;
+				if (document.global.socket.gameInfo.playerGame[index].cheatCount > 0 && document.global.powerUp.meshProperty.some(meshProperty=>meshProperty.visible)) {
+					document.global.socket.gameInfo.playerGame[index].cheatCount--; 
+					powerUpCollisionEffect(document.global.sphere.sphereMeshProperty[0])
+				}
+			}
+			else if (document.global.socket.gameInfo.gameMode === "tournament") {
+				let tournamentPlayerIndex;
+				if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias === data.player)
+					tournamentPlayerIndex = 0;
+				else if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias === data.player)
+					tournamentPlayerIndex = 1;
+				else
+					tournamentPlayerIndex = -1;
+				if (tournamentPlayerIndex !== -1 && document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][tournamentPlayerIndex].cheatCount > 0 && document.global.powerUp.meshProperty.some(meshProperty=>meshProperty.visible)) {
+					document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][tournamentPlayerIndex].cheatCount--; 
+					powerUpCollisionEffect(document.global.sphere.sphereMeshProperty[0])
+				}
+			}
+			
 		}
 		else if (data.mode === "pause") {
 			document.global.gameplay.pause = data.pause;
@@ -422,7 +450,7 @@ export function keyBindingMultiplayer() {
 				document.global.ui.multiLobby = 0;
 				document.global.socket.gameInfo.mainClient = document.global.gameplay.username;
 				document.global.socket.gameInfo.gameMode = "versus";
-				document.global.socket.gameInfo.playerGame = [{teamName:"TeamOne", score:0, player:[], winner:false},{teamName:"TeamTwo", score:0, player:[], winner:false}];
+				document.global.socket.gameInfo.playerGame = [{teamName:"TeamOne", score:0, player:[], winner:false, cheatCount:document.global.gameplay.defaultCheatCount},{teamName:"TeamTwo", score:0, player:[], winner:false, cheatCount:document.global.gameplay.defaultCheatCount}];
 				document.global.socket.gameSocket.send(JSON.stringify({
 					mode:"create",
 					gameInfo:document.global.socket.gameInfo

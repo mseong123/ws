@@ -155,6 +155,7 @@ function initGlobal() {
 	document.global.gameplay.cheat = 1; // for show purpose
 	document.global.gameplay.defaultLudicrious = 0;
 	document.global.gameplay.defaultPowerUp = 1;
+	document.global.gameplay.defaultCheatCount = 3;
 	document.global.gameplay.ludicrious = 0;
 	document.global.gameplay.ludicriousYminuteUpper = 1;
 	document.global.gameplay.ludicriousYminuteLower = 0;
@@ -262,6 +263,7 @@ function initGlobal() {
 		playerGame:[],
 		currentRound:0,
 		round:0,
+		cheatCount:0,
 		ludicrious:document.global.gameplay.defaultLudicrious,
 		powerUp:document.global.gameplay.defaultPowerUp,
 		teamUp:0,

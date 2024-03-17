@@ -109,6 +109,8 @@ class GameConsumer(WebsocketConsumer):
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameOption"})
 		elif data_json.get("mode") is not None and data_json["mode"] == 'spectate':
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameOption"})
+		elif data_json.get("mode") is not None and data_json["mode"] == 'cheat':
+			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"cheat", "player":data_json["player"]})
 		elif data_json.get("mode") is not None and data_json["mode"] == 'updateLudicrious':
 			GameConsumer.gameInfo[self.room_group_name]['ludicrious'] = data_json['ludicrious']
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameOption"})
@@ -176,6 +178,11 @@ class GameConsumer(WebsocketConsumer):
 			self.send(text_data=json.dumps({
 				"mode": "pause",
 				"pause":event["pause"]
+				}))
+		elif event["message"] == "cheat":
+			self.send(text_data=json.dumps({
+				"mode": "cheat",
+				"player": event["player"]
 				}))
 		elif event["message"] == "enableLargePaddle":
 			self.send(text_data=json.dumps({

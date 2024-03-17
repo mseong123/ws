@@ -274,6 +274,7 @@ export function gameStart() {
 	//enable powerup based on game option
 	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.username === document.global.socket.gameInfo.mainClient)
 		resetPowerUp();
+	//set orientation of screen based on player
 	if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
 		if (document.global.socket.gameInfo.playerGame[1].player.includes(document.global.gameplay.username))
 			document.global.arena3D.rotation.y = Math.PI;
@@ -387,6 +388,7 @@ export function resetGame() {
 			playerGame:[],
 			currentRound:0,
 			round:0,
+			cheatCount:document.global.gameplay.defaultCheatCount,
 			ludicrious:document.global.gameplay.defaultLudicrious,
 			powerUp:document.global.gameplay.defaultPowerUp,
 			duration:document.global.gameplay.defaultDuration,
@@ -473,7 +475,8 @@ export function matchFixMulti() {
 			const player = {
 				alias:'',
 				score:0,
-				winner:false
+				winner:false,
+				cheatCount:document.global.gameplay.defaultCheatCount
 			};
 			if (randomNumArray[k] !== undefined)
 				player.alias = players[randomNumArray[k]];
@@ -546,8 +549,12 @@ export function keyBinding() {
 	})
 	const toggleCheat = document.querySelector(".toggle-cheat");
 	toggleCheat.addEventListener("click", (e)=>{
-		if (document.global.powerUp.meshProperty.some(meshProperty=>meshProperty.visible))
-			powerUpCollisionEffect(document.global.sphere.sphereMeshProperty[0])
+		if (document.global.powerUp.meshProperty.some(meshProperty=>meshProperty.visible)) {
+			if (document.global.gameplay.local)
+				powerUpCollisionEffect(document.global.sphere.sphereMeshProperty[0])
+			else if (!document.global.gameplay.local)
+				document.global.socket.gameSocket.send(JSON.stringify({mode:"cheat", player:document.global.gameplay.username}));
+		}
 	})
 	const navChat = document.querySelectorAll(".nav-chat");
 	navChat.forEach(navchat=>navchat.addEventListener("click", (e)=>{
@@ -938,7 +945,7 @@ export function adjustPaddles(paddlesProperty) {
 		paddlesProperty.positionY = -halfArenaHeight + paddlesProperty.height / 2;
 }
 
-function powerUpCollisionEffect(sphereMeshProperty) {
+export function powerUpCollisionEffect(sphereMeshProperty) {
 	let index;
 	
 	//set visibility of powerup sphere to false;
