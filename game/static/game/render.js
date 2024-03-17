@@ -533,10 +533,6 @@ function processUI() {
 		document.querySelector(".menu-canvas").classList.remove("display-none");
 	else
 		document.querySelector(".menu-canvas").classList.add("display-none");
-	if (document.global.ui.toggleChat)
-		document.querySelector(".menu-chat").classList.remove("display-none");
-	else
-		document.querySelector(".menu-chat").classList.add("display-none");
 	if (document.global.ui.toggleGame)
 		document.querySelector(".menu-game").classList.remove("display-none");
 	else

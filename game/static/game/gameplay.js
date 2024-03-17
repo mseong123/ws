@@ -520,11 +520,6 @@ export function keyBinding() {
 			if (Array.from(menuCanvasChild).every(child=>e.target !== child) && e.target !== document.querySelector(".menu-canvas"))
 				document.global.ui.toggleCanvas = 0;
 		}
-		if (!e.target.classList.contains("toggle-chat")) {
-			const menuChatChild = document.querySelector(".menu-chat").querySelectorAll("*");
-			if (Array.from(menuChatChild).every(child=>e.target !== child) && e.target !== document.querySelector(".menu-chat"))
-				document.global.ui.toggleChat = 0;
-		}
 		if (!e.target.classList.contains("toggle-game")) {
 			const menuGameChild = document.querySelector(".menu-game").querySelectorAll("*");
 			if (Array.from(menuGameChild).every(child=>e.target !== child) && e.target !== document.querySelector(".menu-game"))
@@ -537,6 +532,7 @@ export function keyBinding() {
 		document.global.ui.toggleCanvas? document.global.ui.toggleCanvas = 0:document.global.ui.toggleCanvas = 1;
 		e.stopPropagation();
 	})
+
 	const toggleChat = document.querySelector(".toggle-chat");
 	toggleChat.addEventListener("click", (e)=>{
 		document.global.ui.toggleChat? document.global.ui.toggleChat = 0:document.global.ui.toggleChat = 1;
@@ -556,14 +552,7 @@ export function keyBinding() {
 				document.global.socket.gameSocket.send(JSON.stringify({mode:"cheat", player:document.global.gameplay.username}));
 		}
 	})
-	const navChat = document.querySelectorAll(".nav-chat");
-	navChat.forEach(navchat=>navchat.addEventListener("click", (e)=>{
-		document.global.ui.chat? document.global.ui.chat = 0:document.global.ui.chat = 1;
-	}))
-	const navCanvas = document.querySelector(".nav-canvas");
-	navCanvas.addEventListener("click", (e)=>{
-		document.global.ui.chat? document.global.ui.chat = 0:document.global.ui.chat = 1;
-	})
+	
 	const local = document.querySelector(".nav-local");
 	local.addEventListener("click", (e)=>{
 		document.global.ui.mainMenu = 0;

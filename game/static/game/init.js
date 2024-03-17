@@ -56,7 +56,7 @@ function initGlobal() {
 
 	//camera info
 	document.global.camera = {};
-	document.global.camera.fov = 60;
+	document.global.camera.fov = 62;
 	document.global.camera.near = 0.1;
 	document.global.camera.far = 3000;
 	document.global.camera.positionZ = clientWidth / document.global.arena.aspect;
@@ -232,7 +232,6 @@ function initGlobal() {
 	document.global.ui.toggleCanvas = 0;
 	document.global.ui.toggleChat = 0;
 	document.global.ui.toggleGame = 0;
-	document.global.ui.chat = 0;
 	document.global.ui.mainMenu = 1;
 	document.global.ui.login = 0;
 	document.global.ui.local = 0;

@@ -47,11 +47,7 @@ button:hover, button:focus {
 	margin-top:1.5rem;
 }
 
-.icon {
-	font-size: 2rem;
-	margin-right:0.5rem;
-	vertical-align:text-bottom;
-}
+
 
 .underline {
 	text-decoration:underline;
@@ -116,7 +112,7 @@ button:hover, button:focus {
 }
 
 .menu-game {
-	font-size: 0.75rem;
+	font-size: 0.9rem;
 	margin-top:0.5rem;
 	position:absolute;
 	color:rgb(177,177,177);
@@ -125,6 +121,10 @@ button:hover, button:focus {
 	right:0;
 	border-radius:0.25rem;
 	padding:0.5rem;
+}
+
+.menu-game button {
+	font-size: 0.9rem;
 }
 
 hr {
@@ -172,10 +172,6 @@ hr {
 
 .display-block {
 	display:block !important;
-}
-
-.nav-chat, .nav-canvas {
-	color:rgb(2,238,139) !important;
 }
 
 .chat-container {
@@ -306,7 +302,7 @@ hr {
 	top:0;
 	color:white;
 	font-size: 1rem;
-	padding:1rem 1.5rem;
+	padding:0.75rem 0.75rem;
 	z-index: 0;
 	display: grid;
 	grid-template-columns: auto auto auto;
@@ -315,7 +311,7 @@ hr {
 
 .scoreboard-one p, .scoreboard-two p{
 	display:inline-block;
-	margin:0 1rem;
+	margin:0 0.25rem;
 }
 
 .scoreboard-one .scoreboard-one-score, .scoreboard-two .scoreboard-two-score {
@@ -366,7 +362,7 @@ hr {
 .timer {
 	border-radius:0.25rem;
 	border:1px solid white;
-	padding:0.25rem 0.5rem; 
+	padding:0.1rem 0.5rem; 
 }
 
 .timer-ludicrious {
