@@ -430,6 +430,7 @@ export function keyBindingMultiplayer() {
 				document.global.ui.toggleCanvas = 0;
 				document.global.ui.login = 0;
 				document.global.ui.mainMenu = 1;
+				document.global.ui.toggleCanvas = 1;
 			}
 			else {
 				document.global.gameplay.username = "";
@@ -531,7 +532,7 @@ export function keyBindingMultiplayer() {
 	const multiMatchFix = document.querySelector(".multi-matchFix");
 	multiMatchFix.addEventListener("click", (e) => {
 		const playerArray = Object.keys(document.global.socket.gameInfo.player)
-		if (document.global.socket.gameInfo.gameMode === "tournament" && playerArray.every(player=>{
+		if (document.global.socket.gameInfo.gameMode === "tournament" && Object.keys(document.global.socket.gameInfo.player).length > 1 && playerArray.every(player=>{
 			return document.global.socket.gameInfo.player[player].ready === 1
 		})) {
 			matchFixMulti();
