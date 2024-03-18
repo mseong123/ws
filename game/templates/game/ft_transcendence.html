@@ -8,10 +8,30 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" href="{% static 'game/canvas.css' %}">
-	<link rel="stylesheet" href="{% static 'game/style.css' %}">
+	<link rel="stylesheet" href="{% static 'game/profile.css' %}">
+	<link rel="stylesheet" href="{% static 'game/chat.css' %}">
 	
 	<body class="inter-pong">
 		<div class="main-container">
+			<div class="profile-nav">
+				<h4 class="profile-header-portrait">PROFILE<button type="button" class="profile-expand-portrait"><i class="fa fa-expand"></i></button></h4>
+				<button type="button" class="profile-expand-landscape"><i class="fa fa-address-card fa-2x "></i></button>
+			</div>
+			<div class="profile-container">
+				<div class="profile">kjasdjkjads</div>
+				<div class="profile">kjasdjkjads</div>
+				<div class="profile">kjasdjkjads</div>
+				<div class="profile">kjasdjkjads</div>
+				<div class="profile">kjasdjkjads</div>
+				<div class="profile">kjasdjkjads</div>
+				<div class="profile">kjasdjkjads</div>
+				<div class="profile">kjasdjkjads</div>
+				<div class="profile">kjasdjkjads</div>
+				<div class="profile">kjasdjkjads</div>
+				<div class="profile">kjasdjkjads</div>
+				<div class="profile">kjasdjkjads</div>
+				<div class="profile">kjasdjkjads</div>
+			</div>
 			<div class="canvas-container">
 				<h2 class="banner">
 					<i class="fas fa-ping-pong-paddle-ball"></i>
@@ -336,15 +356,8 @@
 			
 			</div>
 			<div class="chat-container">
-				<div class="chat-nav-container">
-					<button type="button" class="toggle-chat">
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-					</button>
-				</div>
 				<div class="chat-icon">
-					<i class="fas fa-comment fa-10x fa-fw"></i>
+					<i class="fas fa-comment fa-4x fa-fw"></i>
 				</div>
 				
 			</div>
@@ -356,5 +369,7 @@
 	<script type="module" src="{% static 'game/render.js' %}"></script>
 	<script type="module" src="{% static 'game/gameplay.js' %}"></script>
 	<script type="module" src="{% static 'game/multiplayer.js' %}"></script>
+	<script type="module" src="{% static 'game/profile.js' %}"></script>
+	<script type="module" src="{% static 'game/chat.js' %}"></script>
 	
 </html>

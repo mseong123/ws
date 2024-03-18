@@ -1,0 +1,47 @@
+.profile-header-portrait {
+	padding:0.25rem 1rem;
+	margin:0;
+	flex:1 0 auto;
+}
+
+.profile-container {
+	flex:1 0 auto;
+	overflow:auto;
+	max-height:120px;
+}
+.profile {
+	padding:0.25rem 1rem;
+	margin:0;
+}
+
+.profile-expand-landscape {
+	margin-top:1rem;
+	padding:0;
+	border:0;
+	background-color:transparent;
+	display:none;
+}
+
+.profile-expand-portrait {
+	margin-left:0.25rem;
+	border:0;
+	background-color:transparent;
+}
+
+@media (min-width:577px) {
+	.profile-header-portrait {
+		display:none;
+	}
+	.profile-expand-landscape {
+		display:block;
+	}
+	.profile-container {
+		max-height:100vh;
+		width:initial;
+	}
+	.profile {
+		padding:1rem 0.25rem;
+		margin:0;
+	}
+}
+

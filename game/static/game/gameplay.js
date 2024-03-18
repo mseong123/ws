@@ -533,11 +533,6 @@ export function keyBinding() {
 		e.stopPropagation();
 	})
 
-	const toggleChat = document.querySelector(".toggle-chat");
-	toggleChat.addEventListener("click", (e)=>{
-		document.global.ui.toggleChat? document.global.ui.toggleChat = 0:document.global.ui.toggleChat = 1;
-		e.stopPropagation();
-	})
 	const toggleGame = document.querySelector(".toggle-game");
 	toggleGame.addEventListener("click", (e)=>{
 		document.global.ui.toggleGame? document.global.ui.toggleGame = 0:document.global.ui.toggleGame = 1;

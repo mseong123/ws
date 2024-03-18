@@ -1,12 +1,17 @@
 function windowResize(e) {
 	const canvas = document.querySelector(".canvas-container");
-	canvas.style.height = (canvas.clientWidth / document.global.arena.aspect) + 'px';
+	const mainContainer = document.querySelector(".main-container");
+	if (mainContainer.clientWidth >= 577 && mainContainer.clientWidth <= 1000) {
+		canvas.style.height = mainContainer.clientHeight;
+		canvas.style.width = (canvas.clientHeight * document.global.arena.aspect) + 'px';
+	}
+	else 
+		canvas.style.height = (canvas.clientWidth / document.global.arena.aspect) + 'px';
 	//for each individual client
 	document.global.directionalLight.positionX = canvas.clientWidth;
 	document.global.directionalLight.positionY = canvas.clientWidth;
-	//for canvas/chat responsive effect when screenwidth changes
-	if (window.innerWidth >= 769) 
-		document.global.ui.chat = 0;
+	
+	
 
 	//for local  or multiplayer mainClient
 	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.username === document.global.socket.gameInfo.mainClient) {
@@ -232,6 +237,7 @@ function initGlobal() {
 	document.global.ui.toggleCanvas = 0;
 	document.global.ui.toggleChat = 0;
 	document.global.ui.toggleGame = 0;
+	document.global.ui.chat = 1;
 	document.global.ui.mainMenu = 1;
 	document.global.ui.login = 0;
 	document.global.ui.local = 0;
@@ -242,6 +248,7 @@ function initGlobal() {
 	document.global.ui.multiCreate = 0;
 	document.global.ui.auth = 0;
 	document.global.ui.authWarning = 0;
+	document.global.ui.profile = 0;
 	
 
 	//fetch

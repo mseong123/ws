@@ -1,6 +1,7 @@
 import * as THREE from 'https://threejs.org/build/three.module.js';
 import {processGame,movePaddle,keyBinding,resetPowerUp} from './gameplay.js';
 import {keyBindingMultiplayer,createGameSocket, processSendLiveGameData, multiGameStart} from './multiplayer.js';
+import {keyBindingProfile} from './profile.js';
 import {createPowerUp,createFirstHalfCircleGeometry,createSecondHalfCircleGeometry} from './powerup.js';
 import {init} from './init.js'
 
@@ -1095,6 +1096,8 @@ function processUI() {
 		}
 		document.global.socket.spectate? document.querySelector(".nav-pause").classList.add("display-none"):document.querySelector(".nav-pause").classList.remove("display-none");
 	}
+	document.global.ui.profile? document.querySelector(".profile-container").classList.remove("display-none"):document.querySelector(".profile-container").classList.add("display-none")
+	document.global.ui.chat? document.querySelector(".chat-container").classList.remove("display-none"):document.querySelector(".chat-container").classList.add("display-none")
 }
 
 function arenaRotateY() {
@@ -1487,6 +1490,7 @@ export function main() {
 	document.querySelector(".canvas-background-2").classList.add(document.global.gameplay.backgroundClass[document.global.gameplay.backgroundIndex]);
 	keyBinding();
 	keyBindingMultiplayer();
+	keyBindingProfile();
 	
 	const canvas = document.querySelector( '.canvas' );
 	const renderer = new THREE.WebGLRenderer( { antialias: true, canvas } );

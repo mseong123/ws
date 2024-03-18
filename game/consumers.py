@@ -23,6 +23,7 @@ class GameLobbyConsumer(WebsocketConsumer):
 			if 'player' in game:
 				game['player'] = [player for player in game['player'] if player != str(self.scope["user"])]
 		# Leave room group
+		
 		async_to_sync(self.channel_layer.group_discard)(
 			self.room_group_name, self.channel_name)
 		async_to_sync(self.channel_layer.group_send)(
