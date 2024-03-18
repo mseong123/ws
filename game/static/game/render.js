@@ -253,16 +253,19 @@ function updateGameSummary() {
 			AIscore.classList.add("AI-score")
 			const roundDiv = document.createElement("div");
 			const singleDiv = document.createElement("div");
+			const separatorDiv = document.createElement("div");
 			const AIDiv = document.createElement("div");
 			roundDiv.appendChild(roundSpan);
 			singleDiv.appendChild(singleName);
 			singleDiv.appendChild(singleScore);
+			separatorDiv.classList.add("separator")
 			AIDiv.appendChild(AIname)
 			AIDiv.appendChild(AIscore);
 			const containerDiv = document.createElement("div");
 			containerDiv.classList.add("game-summary-items");
 			containerDiv.appendChild(roundDiv);
 			containerDiv.appendChild(singleDiv);
+			containerDiv.appendChild(separatorDiv);
 			containerDiv.appendChild(AIDiv);
 			parent.appendChild(containerDiv);
 		}
@@ -273,7 +276,7 @@ function updateGameSummary() {
 		if (document.global.gameplay.localSingleInfo.player[0].winner)
 			document.querySelector(".game-summary-display").children[0].children[1].classList.add("won");
 		else if (document.global.gameplay.computerWinner)
-			document.querySelector(".game-summary-display").children[0].children[2].classList.add("won");
+			document.querySelector(".game-summary-display").children[0].children[3].classList.add("won");
 		
 	}
 	else if (document.global.gameplay.local && document.global.gameplay.two) {
@@ -292,16 +295,19 @@ function updateGameSummary() {
 			twoSecondScore.classList.add("two-" + document.global.gameplay.localTwoInfo.player[1].alias + "-score")
 			const roundDiv = document.createElement("div");
 			const twoFirstDiv = document.createElement("div");
+			const separatorDiv = document.createElement("div");
 			const twoSecondDiv = document.createElement("div");
 			roundDiv.append(roundSpan);
 			twoFirstDiv.appendChild(twoFirstName);
 			twoFirstDiv.appendChild(twoFirstScore);
+			separatorDiv.classList.add("separator")
 			twoSecondDiv.appendChild(twoSecondName)
 			twoSecondDiv.appendChild(twoSecondScore);
 			const containerDiv = document.createElement("div");
 			containerDiv.classList.add("game-summary-items")
 			containerDiv.appendChild(roundDiv);
 			containerDiv.appendChild(twoFirstDiv);
+			containerDiv.appendChild(separatorDiv);
 			containerDiv.appendChild(twoSecondDiv);
 			parent.appendChild(containerDiv);
 		}
@@ -312,7 +318,7 @@ function updateGameSummary() {
 		if (document.global.gameplay.localTwoInfo.player[0].winner)
 			document.querySelector(".game-summary-display").children[0].children[1].classList.add("won");
 		else if (document.global.gameplay.localTwoInfo.player[1].winner)
-			document.querySelector(".game-summary-display").children[0].children[2].classList.add("won");
+			document.querySelector(".game-summary-display").children[0].children[3].classList.add("won");
 	}
 	else if (document.global.gameplay.local && document.global.gameplay.tournament) {
 		if (parent.children.length === 0) {
@@ -331,16 +337,19 @@ function updateGameSummary() {
 				secondScore.setAttribute("data-player", "tournament-" + playerGame[1].alias + '-' + idx + "-score")
 				const roundDiv = document.createElement("div");
 				const firstDiv = document.createElement("div");
+				const separatorDiv = document.createElement("div");
 				const secondDiv = document.createElement("div");
 				roundDiv.append(roundSpan);
 				firstDiv.appendChild(firstName);
 				firstDiv.appendChild(firstScore);
+				separatorDiv.classList.add("separator")
 				secondDiv.appendChild(secondName)
 				secondDiv.appendChild(secondScore);
 				const containerDiv = document.createElement("div");
 				containerDiv.classList.add("game-summary-items")
 				containerDiv.appendChild(roundDiv);
 				containerDiv.appendChild(firstDiv);
+				containerDiv.appendChild(separatorDiv);
 				containerDiv.appendChild(secondDiv);
 				parent.appendChild(containerDiv);
 			})
@@ -348,15 +357,15 @@ function updateGameSummary() {
 		else {
 			document.global.gameplay.localTournamentInfo.playerGame.forEach((playerGame,idx)=>{
 				parent.children[idx].children[1].children[0].textContent = playerGame[0].alias;
-				parent.children[idx].children[2].children[0].textContent = playerGame[1].alias;
+				parent.children[idx].children[3].children[0].textContent = playerGame[1].alias;
 				parent.children[idx].children[1].children[1].setAttribute("data-player","tournament-" + playerGame[0].alias + '-' + idx + "-score")
-				parent.children[idx].children[2].children[1].setAttribute("data-player","tournament-" + playerGame[1].alias + '-' + idx + "-score")
+				parent.children[idx].children[3].children[1].setAttribute("data-player","tournament-" + playerGame[1].alias + '-' + idx + "-score")
 				if (playerGame[0].winner) {
 					document.querySelector(".game-summary-display").children[idx].children[1].classList.add("won");
 				}
 					
 				else if (playerGame[1].winner)
-					document.querySelector(".game-summary-display").children[idx].children[2].classList.add("won");
+					document.querySelector(".game-summary-display").children[idx].children[3].classList.add("won");
 			})
 			document.querySelector('[data-player='+'"tournament-' + document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].alias + "-" +document.global.gameplay.localTournamentInfo.currentRound + '-score"]').textContent = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].score;
 			document.querySelector('[data-player='+'"tournament-' + document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].alias + "-" +document.global.gameplay.localTournamentInfo.currentRound + '-score"]').textContent = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].score;
@@ -430,16 +439,19 @@ function updateGameSummary() {
 				secondScore.setAttribute("data-player", "multi-tournament-" + playerGame[1].alias + '-' + idx + "-score")
 				const roundDiv = document.createElement("div");
 				const firstDiv = document.createElement("div");
+				const separatorDiv = document.createElement("div");
 				const secondDiv = document.createElement("div");
 				roundDiv.append(roundSpan);
 				firstDiv.appendChild(firstName);
 				firstDiv.appendChild(firstScore);
+				separatorDiv.classList.add("separator")
 				secondDiv.appendChild(secondName)
 				secondDiv.appendChild(secondScore);
 				const containerDiv = document.createElement("div");
 				containerDiv.classList.add("game-summary-items")
 				containerDiv.appendChild(roundDiv);
 				containerDiv.appendChild(firstDiv);
+				containerDiv.appendChild(separatorDiv);
 				containerDiv.appendChild(secondDiv);
 				parent.appendChild(containerDiv);
 			})
@@ -447,14 +459,14 @@ function updateGameSummary() {
 		else {
 			document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
 				parent.children[idx].children[1].children[0].textContent = playerGame[0].alias;
-				parent.children[idx].children[2].children[0].textContent = playerGame[1].alias;
+				parent.children[idx].children[3].children[0].textContent = playerGame[1].alias;
 				parent.children[idx].children[1].children[1].setAttribute("data-player","multi-tournament-" + playerGame[0].alias + '-' + idx + "-score")
-				parent.children[idx].children[2].children[1].setAttribute("data-player","multi-tournament-" + playerGame[1].alias + '-' + idx + "-score")
+				parent.children[idx].children[3].children[1].setAttribute("data-player","multi-tournament-" + playerGame[1].alias + '-' + idx + "-score")
 				if (playerGame[0].winner) {
 					document.querySelector(".game-summary-display").children[idx].children[1].classList.add("won");
 				}
 				else if (playerGame[1].winner)
-					document.querySelector(".game-summary-display").children[idx].children[2].classList.add("won");
+					document.querySelector(".game-summary-display").children[idx].children[3].classList.add("won");
 				})
 			document.querySelector('[data-player='+'"multi-tournament-' + document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias + "-" +document.global.socket.gameInfo.currentRound + '-score"]').textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].score;
 			document.querySelector('[data-player='+'"multi-tournament-' + document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias + "-" +document.global.socket.gameInfo.currentRound + '-score"]').textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].score;
@@ -488,16 +500,19 @@ export function updateMatchFix() {
 				secondReady.setAttribute("data-player", "multi-matchFix-" + playerGame[1].alias + "-ready")
 				const roundDiv = document.createElement("div");
 				const firstDiv = document.createElement("div");
+				const separatorDiv = document.createElement("div");
 				const secondDiv = document.createElement("div");
 				roundDiv.append(roundSpan);
 				firstDiv.appendChild(firstName);
 				firstDiv.appendChild(firstReady);
+				separatorDiv.classList.add("separator")
 				secondDiv.appendChild(secondName)
 				secondDiv.appendChild(secondReady);
 				const containerDiv = document.createElement("div");
 				containerDiv.classList.add("multi-tournament-matchFix-items")
 				containerDiv.appendChild(roundDiv);
 				containerDiv.appendChild(firstDiv);
+				containerDiv.appendChild(separatorDiv);
 				containerDiv.appendChild(secondDiv);
 				parent.appendChild(containerDiv);
 			})
@@ -1015,6 +1030,8 @@ function processUI() {
 				document.querySelector(".multi-start-game").classList.add("ready")
 			else 
 				document.querySelector(".multi-start-game").classList.remove("ready")
+			document.getElementById("multi-teamname-one").value = document.global.socket.gameInfo.playerGame[0].teamName;
+			document.getElementById("multi-teamname-two").value = document.global.socket.gameInfo.playerGame[1].teamName;
 		}
 		else {
 			const playerArray = Object.keys(document.global.socket.gameInfo.player)
@@ -1071,16 +1088,12 @@ function processUI() {
 			document.querySelector(".multi-ready-game").classList.remove("ready")
 			
 		if (document.global.socket.gameInfo.gameMode === "versus") {
-			document.querySelector(".multi-create-display-player-versus-one").classList.remove("display-none");
-			document.querySelector(".multi-create-display-player-versus-two").classList.remove("display-none");
+			document.querySelector(".multi-create-display-player-versus-container").classList.remove("display-none");
 			document.querySelector(".multi-create-display-player-tournament").classList.add("display-none");
-			document.querySelector(".multi-create-change").classList.remove("display-none");
 		}
 		else {
-			document.querySelector(".multi-create-display-player-versus-one").classList.add("display-none");
-			document.querySelector(".multi-create-display-player-versus-two").classList.add("display-none");
+			document.querySelector(".multi-create-display-player-versus-container").classList.add("display-none");
 			document.querySelector(".multi-create-display-player-tournament").classList.remove("display-none");
-			document.querySelector(".multi-create-change").classList.add("display-none");
 		}
 		document.global.socket.spectate? document.querySelector(".nav-pause").classList.add("display-none"):document.querySelector(".nav-pause").classList.remove("display-none");
 	}

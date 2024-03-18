@@ -676,7 +676,7 @@ export function keyBinding() {
 			document.global.gameplay.single = 1;
 			document.global.gameplay.localSingleInfo.durationCount = document.global.gameplay.localSingleInfo.duration;
 			document.global.powerUp.enable = document.global.gameplay.localSingleInfo.powerUp;
-			document.querySelector(".game-summary-header-type").textContent = "Single vs A.I."
+			document.querySelector(".game-summary-header-type").textContent = "Versus A.I."
 			gameStart()
 		}
 	})
@@ -687,7 +687,7 @@ export function keyBinding() {
 			document.global.gameplay.two = 1;
 			document.global.gameplay.localTwoInfo.durationCount = document.global.gameplay.localTwoInfo.duration;
 			document.global.powerUp.enable = document.global.gameplay.localTwoInfo.powerUp;
-			document.querySelector(".game-summary-header-type").textContent = "Two Players"
+			document.querySelector(".game-summary-header-type").textContent = "Versus"
 			gameStart()
 		}
 	})
@@ -698,7 +698,7 @@ export function keyBinding() {
 			document.global.gameplay.tournament = 1;
 			document.global.gameplay.localTournamentInfo.durationCount = document.global.gameplay.localTournamentInfo.duration;
 			document.global.powerUp.enable = document.global.gameplay.localTournamentInfo.powerUp;
-			document.querySelector(".game-summary-header-type").textContent = "Local Tournament"
+			document.querySelector(".game-summary-header-type").textContent = "Tournament"
 			matchFix();
 			gameStart();
 		}

@@ -60,11 +60,15 @@ button:hover, button:focus {
 	border-radius: 4px;
   }
 
+  .toggle-cheat {
+	  padding:0;
+  }
+
 .toggle-cheat {
 	background-color:red;
 	width:32px;
 	height:26px;
-	color:white;	
+	color:white;
 }
 
 .toggle-cheat i {
@@ -332,7 +336,7 @@ hr {
 	color:white;
 }
 
-.pause-header{
+.pause-header, .game-end-display-header{
 	border:1px solid white;
 	border-radius:0.25rem;
 	padding:0.25rem;
@@ -428,16 +432,20 @@ hr {
 	display:grid;
 	
 	grid-template-areas:
-		"round round"
-		"player-1 player-2";
+		"round round round"
+		"player-1 separator player-2";
 	border:1px solid white;
+	grid-row-gap:0.1rem;
 	border-radius:0.25rem;
 	padding:0.25rem;
 	margin:0.25rem 0.25rem;
+}
+
+.separator {
+	grid-area:separator;
 }
 
 .game-summary-versus-items {
-
 	border:1px solid white;
 	border-radius:0.25rem;
 	padding:0.25rem;
@@ -448,14 +456,7 @@ hr {
 	display:grid;
 	grid-template-columns:auto auto;
 	justify-content:space-between;
-	margin:0.5rem 0;
-}
-
-.game-summary-versus-header {
-	display:grid;
-	grid-template-columns:auto auto;
-	justify-content:space-between;
-	margin:0.5rem 0;
+	margin:0.1rem 0;
 }
 
 .game-summary-versus-player {
@@ -473,8 +474,10 @@ hr {
 }
 
 .game-summary-items div span, .multi-tournament-matchFix-items div span{
-	margin:0 0.1rem;
+	margin:0 0.5rem;
 }
+
+
 .game-summary-items div:nth-child(1), .multi-tournament-matchFix-items div:nth-child(1){
 	border-radius:0.25rem;
 	background-color:rgb(177,177,177);
@@ -485,9 +488,9 @@ hr {
 .game-summary-items div:nth-child(2), .multi-tournament-matchFix-items div:nth-child(2) {
 	grid-area:player-1;
 }
-.game-summary-items div:nth-child(3), .multi-tournament-matchFix-items div:nth-child(3){
+.game-summary-items div:nth-child(4), .multi-tournament-matchFix-items div:nth-child(4){
 	grid-area:player-2;
-	text-align:end;
+	text-align:center;
 }
 
 .reset-game, .multi-tournament-matchFix-buttons {
@@ -512,15 +515,10 @@ hr {
 
 .game-end-display-container {
 	display:grid;
-	grid-template-columns: 50%;
+	
 	justify-content:center;
 }
 
-.game-end-display {
-	border:1px solid rgb(2,238,139);
-	border-radius:0.25rem;
-	text-align:center;
-}
 
 .ready {
 	background-color:rgb(2,238,139) !important;
@@ -529,6 +527,10 @@ hr {
 
 .live {
 	color:rgb(2,238,139);
+}
+
+.small {
+	font-size: 0.25rem
 }
 
 .multi-create-menu .multi-leave-game {
@@ -544,8 +546,6 @@ hr {
 }
 
 
-
-
 .multi-ready-versus, .multi-ready-tournament, .multi-ready-matchFix  {
 	margin-left:0.25rem;
 	border-radius:0.25rem;
@@ -554,11 +554,18 @@ hr {
 	color:white;
 }
 
+#multi-teamname-one, #multi-teamname-two {
+	max-width:110px;
+	height:18px;
+	background-color:transparent;
+	border:0;
+	color:rgb(143,143,143);
+	font-size: 0.9rem;
+}
+
 .multi-create-display-player-versus-container {
 	display:grid;
 	grid-template-columns: 3fr 1fr 3fr;
-	
-	
 }
 .multi-create-display-player-versus-one, .multi-create-display-player-versus-two, .multi-create-display-player-tournament  {
 	background-color:rgb(28,28,28);
@@ -766,7 +773,7 @@ hr {
 	.toggle-cheat {
 		top:146px;
 	}
-	.pause-header{
+	.pause-header, .game-end-display-header{
 		padding:0.75rem;
 		font-size: 1.75rem;
 	}
@@ -780,7 +787,7 @@ hr {
 		font-size: 1.25rem;
 	}
 	.game-summary-items div span{
-		margin:0 0.5rem;
+		margin:0 0.75rem;
 	}
 	.reset-game-button {
 		font-size: 1rem;

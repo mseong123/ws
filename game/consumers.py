@@ -114,6 +114,9 @@ class GameConsumer(WebsocketConsumer):
 		elif data_json.get("mode") is not None and data_json["mode"] == 'updateLudicrious':
 			GameConsumer.gameInfo[self.room_group_name]['ludicrious'] = data_json['ludicrious']
 			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameOption"})
+		elif data_json.get("mode") is not None and data_json["mode"] == 'updateTeamName':
+			GameConsumer.gameInfo[self.room_group_name]['playerGame'] = data_json['playerGame']
+			async_to_sync(self.channel_layer.group_send)(self.room_group_name, {"type": "game_message", "message":"gameOption"})
 		elif data_json.get("mode") is not None and data_json.get("mode") == 'updateDuration':
 			GameConsumer.gameInfo[self.room_group_name]['duration'] = data_json['duration']
 			GameConsumer.gameInfo[self.room_group_name]['durationCount'] = data_json['duration']

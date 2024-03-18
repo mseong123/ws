@@ -451,13 +451,29 @@ export function keyBindingMultiplayer() {
 				document.global.ui.multiLobby = 0;
 				document.global.socket.gameInfo.mainClient = document.global.gameplay.username;
 				document.global.socket.gameInfo.gameMode = "versus";
-				document.global.socket.gameInfo.playerGame = [{teamName:"TeamOne", score:0, player:[], winner:false, cheatCount:document.global.gameplay.defaultCheatCount},{teamName:"TeamTwo", score:0, player:[], winner:false, cheatCount:document.global.gameplay.defaultCheatCount}];
+				document.global.socket.gameInfo.playerGame = [{teamName:"Team One", score:0, player:[], winner:false, cheatCount:document.global.gameplay.defaultCheatCount},{teamName:"Team Two", score:0, player:[], winner:false, cheatCount:document.global.gameplay.defaultCheatCount}];
 				document.global.socket.gameSocket.send(JSON.stringify({
 					mode:"create",
 					gameInfo:document.global.socket.gameInfo
 				}))
 			}
 		}
+	})
+	const multiTeamNameOne = document.getElementById("multi-teamname-one");
+	multiTeamNameOne.addEventListener("input", (e)=>{
+		document.global.socket.gameInfo.playerGame[0].teamName = e.target.value;
+		document.global.socket.gameSocket.send(JSON.stringify({
+			mode:"updateTeamName",
+			playerGame:document.global.socket.gameInfo.playerGame
+		}))
+	})
+	const multiTeamNameTwo = document.getElementById("multi-teamname-two");
+	multiTeamNameTwo.addEventListener("input", (e)=>{
+		document.global.socket.gameInfo.playerGame[1].teamName = e.target.value;
+		document.global.socket.gameSocket.send(JSON.stringify({
+			mode:"updateTeamName",
+			playerGame:document.global.socket.gameInfo.playerGame
+		}))
 	})
 	const multiCreateTournament = document.querySelector(".multi-create-tournament");
 	multiCreateTournament.addEventListener("click", (e)=>{
