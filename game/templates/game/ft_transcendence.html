@@ -211,13 +211,15 @@
 							<div class="multi-create-option-menu">
 								<h4 class="multi-create-mainClient"></h4>
 								<div class="multi-create-display-player-versus-container display-none">
-									<label for="multi-teamname-one">
-										<input type="text" id="multi-teamname-one"><i class="fa fa-caret-left"></i>
-									</label>
+									<form class="multi-teamname-submit-one">
+										<input type="text" id="multi-teamname-one" required pattern="^[A-Za-z][A-Za-z0-9]*$">
+										<button type="submit" class="multi-teamname-button-one"><i class="fa fa-caret-left"></i></button>
+									</form>
 									<div></div>
-									<label for="multi-teamname-two">
-										<input type="text" id="multi-teamname-two"><i class="fa fa-caret-left"></i>
-									</label>
+									<form class="multi-teamname-submit-two">
+										<input type="text" id="multi-teamname-two" required pattern="^[A-Za-z][A-Za-z0-9]*$">
+										<button type="submit" class="multi-teamname-button-two"><i class="fa fa-caret-left"></i></button>
+									</form>
 									<div class="multi-create-display-player-versus-one">
 										
 									</div>
@@ -246,7 +248,7 @@
 								</div>
 							</div>
 							<div class="multi-create-warning display-none">
-								Host has left.
+								Host has Left
 							</div>
 							<button type="button" class="multi-leave-game">Leave</button>
 							<button type="button" class="multi-ready-game">Ready</button>
@@ -294,9 +296,7 @@
 				<!-- Multiplayer host left  summary -->
 				<div class="multi-host-left-container display-none">
 					<div class="multi-host-left">
-						<div class="multi-host-left-header">
-							<h3>Host has Left</h3>
-						</div>
+						<h3 class="multi-host-left-header">HOST HAS LEFT</h3>
 						<div class="multi-host-left-leave">
 							<button type="button" class="multi-host-left-leave-button">Leave</button>
 						</div>

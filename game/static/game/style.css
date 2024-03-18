@@ -336,7 +336,7 @@ hr {
 	color:white;
 }
 
-.pause-header, .game-end-display-header{
+.pause-header, .game-end-display-header, .multi-host-left-header{
 	border:1px solid white;
 	border-radius:0.25rem;
 	padding:0.25rem;
@@ -391,6 +391,7 @@ hr {
 .multi-host-left {
 	display:grid;
 	align-content:center;
+	justify-content:center;
 	background-color:rgb(32,32,32,0.7);
 	min-height:50%;
 	min-width: 50%;
@@ -541,6 +542,10 @@ hr {
 	margin:0 0.25rem;
 }
 
+.multi-create-warning {
+	margin:0.25rem 0;
+}
+
 .multi-create-menu .multi-start-game, .multi-create-menu .multi-ready-game,.multi-create-menu .multi-matchFix {
 	border-radius:0.25rem;
 }
@@ -552,6 +557,10 @@ hr {
 	font-size: 0.7rem;
 	padding:0 0.25rem;
 	color:white;
+}
+
+.multi-teamname-submit-one, .multi-teamname-submit-two {
+	margin:0;
 }
 
 #multi-teamname-one, #multi-teamname-two {

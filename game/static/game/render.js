@@ -493,7 +493,7 @@ export function updateMatchFix() {
 				firstReady.classList.add("display-none");
 				firstReady.setAttribute("data-player","multi-matchFix-" + playerGame[0].alias + "-ready")
 				secondName.textContent = playerGame[1].alias;
-				secondReady.textContent = "Ready";
+				secondReady.textContent = "READY";
 				secondReady.classList.add("ready");
 				secondReady.classList.add("multi-ready-matchfix");
 				secondReady.classList.add("display-none");
@@ -1030,8 +1030,6 @@ function processUI() {
 				document.querySelector(".multi-start-game").classList.add("ready")
 			else 
 				document.querySelector(".multi-start-game").classList.remove("ready")
-			document.getElementById("multi-teamname-one").value = document.global.socket.gameInfo.playerGame[0].teamName;
-			document.getElementById("multi-teamname-two").value = document.global.socket.gameInfo.playerGame[1].teamName;
 		}
 		else {
 			const playerArray = Object.keys(document.global.socket.gameInfo.player)
