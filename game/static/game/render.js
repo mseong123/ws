@@ -1478,6 +1478,8 @@ function sendMultiData() {
 }
 
 
+
+
 export function main() {
 	const frameTimer = {
 		now:0,
@@ -1514,6 +1516,16 @@ export function main() {
 	document.global.arena3D = arena3D;
 	scene.add(arena3D);
 
+	function resizeRenderer() {
+		const width = document.querySelector(".canvas-container").clienthWidth;
+		const height = document.querySelector(".canvas-container").clienthHeight;
+	
+		renderer.setSize(width,height);
+		renderer.setPixelRatio(window.devicePixelRatio);
+	}
+	resizeRenderer();
+	window.addEventListener('resize', resizeRenderer);
+
 	function render( time ) {
 		if (document.global.gameplay.gameStart)
 			frameTimer.now = Math.floor(time * 0.001);
@@ -1522,11 +1534,13 @@ export function main() {
 			frameTimer.prev = 0;
 		}
 		
+		
 		if ( resizeRendererToDisplaySize( renderer ) ) {
 			const canvas = renderer.domElement;
 			camera.aspect = canvas.clientWidth / canvas.clientHeight;
 			camera.updateProjectionMatrix();
 		}
+		
 		processCountDown(frameTimer);
 		processCamera(camera);
 		

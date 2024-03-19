@@ -5,14 +5,6 @@ export function keyBindingProfile() {
 	})
 	const profileExpandLandscape = document.querySelector(".profile-expand-landscape");
 	profileExpandLandscape.addEventListener("click", (e)=>{
-		
-		if (document.global.ui.profile) {
-			document.global.ui.profile = 0;
-			document.global.ui.chat = 1;
-		}
-		else {
-			document.global.ui.chat = 0;
-			document.global.ui.profile = 1;
-		}
+		document.global.ui.profile? document.global.ui.profile = 0:document.global.ui.profile = 1;
 	})
 }

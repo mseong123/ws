@@ -134,7 +134,7 @@ function canvasMouseMove(e) {
 }
 
 function canvasTouchMove(e) {
-	if (event.touches.length < 2)
+	if (e.touches.length < 2)
 		e.preventDefault();
 	const canvas = document.querySelector(".canvas");
 	const canvasContainer = document.querySelector(".canvas-container");
@@ -493,7 +493,7 @@ export function matchFixMulti() {
 export function keyBinding() {
 	const canvas = document.querySelector(".canvas");
 	canvas.addEventListener("mousemove", canvasMouseMove);
-	canvas.addEventListener("touchmove", canvasTouchMove,{ passive: true });
+	canvas.addEventListener("touchmove", canvasTouchMove);
 	canvas.addEventListener("keydown", canvasKeydown);
 	canvas.addEventListener("keyup", canvasKeyup);
 	document.addEventListener("keydown", (e)=>{

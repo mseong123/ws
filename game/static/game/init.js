@@ -1,12 +1,21 @@
 function windowResize(e) {
 	const canvas = document.querySelector(".canvas-container");
 	const mainContainer = document.querySelector(".main-container");
-	if (mainContainer.clientWidth >= 577 && mainContainer.clientWidth <= 1000) {
+	if (mainContainer.clientWidth >= 577 && mainContainer.clientWidth <= 993) {
 		canvas.style.height = mainContainer.clientHeight;
 		canvas.style.width = (canvas.clientHeight * document.global.arena.aspect) + 'px';
+		document.global.ui.profile= 1;
 	}
-	else 
+	else if (mainContainer.clientWidth < 577) {
+		canvas.style.width = "100%"
 		canvas.style.height = (canvas.clientWidth / document.global.arena.aspect) + 'px';
+		document.global.ui.profile= 0;
+	}
+	else {
+		document.global.ui.profile= 1;
+		canvas.style.width = document.global.desktopWidth;
+		canvas.style.height = (canvas.clientWidth / document.global.arena.aspect) + 'px';
+	}
 	//for each individual client
 	document.global.directionalLight.positionX = canvas.clientWidth;
 	document.global.directionalLight.positionY = canvas.clientWidth;
@@ -30,6 +39,7 @@ function initGlobal() {
 	//initiate global variable
 	document.global = {};
 	document.global.clientWidth = clientWidth;
+	document.global.desktopWidth = 800;
 
 	//arena info
 	document.global.arena = {};
@@ -249,6 +259,7 @@ function initGlobal() {
 	document.global.ui.auth = 0;
 	document.global.ui.authWarning = 0;
 	document.global.ui.profile = 0;
+	document.global.ui.desktopWidth = 900;
 	
 
 	//fetch
