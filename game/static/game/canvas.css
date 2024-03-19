@@ -99,7 +99,7 @@ button:hover, button:focus {
 	display:flex;
 	flex-direction:column;
 	min-height:100vh;
-	width:100%;
+	/* width:100%; */
 }
 
 .banner {
@@ -700,6 +700,10 @@ hr {
 	margin:0.25rem 0;
 }
 
+.nav-desktop {
+	display:none;
+}
+
 
 @media (min-width:577px) {
 	.main-container {
@@ -712,11 +716,19 @@ hr {
 		margin:0 auto;
 		min-height:auto;
 		display:grid;
-		grid-template-columns: auto 1fr auto 1fr;
+		grid-template-columns: 1fr auto auto auto auto 1fr;
 		align-items:center;
-		justify-content:center;
 		width:90%;
 		height:100vh;
+		overflow:auto;
+	}
+	.nav-desktop {
+		display:grid;
+		grid-template-columns: auto;
+		height:600px;
+		align-content:start;
+		background-color:rgb(49,49,49)
+		
 	}
 }
 

@@ -3,11 +3,13 @@
 	background-color:rgb(49,49,49);
 	color:rgb(177,177,177);
 	display:grid;
-	flex-direction:column;
 	align-items:center;
 	justify-content: center;
 	width:100%;
+	transition:height 0.3s ease-in-out, width 0.3s ease-in-out;
 }
+
+
 
 @media (min-width:577px) {
 	.chat-container {
@@ -17,7 +19,15 @@
 
 @media (min-width:993px) {
 	.chat-container {
-		display:block;
+		display:grid;
+		overflow:auto;
 		height:600px;
+	}
+	.chat-expand-desktop {
+		margin-top:1rem;
+		padding:0;
+		border:0;
+		background-color:transparent;
+		color:white;
 	}
 }

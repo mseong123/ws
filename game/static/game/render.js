@@ -2,6 +2,7 @@ import * as THREE from 'https://threejs.org/build/three.module.js';
 import {processGame,movePaddle,keyBinding,resetPowerUp} from './gameplay.js';
 import {keyBindingMultiplayer,createGameSocket, processSendLiveGameData, multiGameStart} from './multiplayer.js';
 import {keyBindingProfile} from './profile.js';
+import {keyBindingChat} from './chat.js';
 import {createPowerUp,createFirstHalfCircleGeometry,createSecondHalfCircleGeometry} from './powerup.js';
 import {init} from './init.js'
 
@@ -1096,8 +1097,32 @@ function processUI() {
 		}
 		document.global.socket.spectate? document.querySelector(".nav-pause").classList.add("display-none"):document.querySelector(".nav-pause").classList.remove("display-none");
 	}
-	document.global.ui.profile? document.querySelector(".profile-container").classList.remove("display-none"):document.querySelector(".profile-container").classList.add("display-none")
-	document.global.ui.chat? document.querySelector(".chat-container").classList.remove("display-none"):document.querySelector(".chat-container").classList.add("display-none")
+	
+	if (document.querySelector(".main-container").clientWidth < 577) {
+		document.querySelector(".profile-container").style.width = "100%"
+		document.querySelector(".chat-container").style.width = "100%"
+		if (document.global.ui.profile)
+			document.querySelector(".profile-container").style.height = document.global.mobileProfileHeight;
+		else
+			document.querySelector(".profile-container").style.height = "0";
+	}
+	else if (document.querySelector(".main-container").clientWidth >= 577 && document.querySelector(".main-container").clientWidth <= 993) {
+		document.querySelector(".profile-container").style.width = "";
+		document.querySelector(".profile-container").style.height = "100vh";
+	}
+	else {
+		document.querySelector(".profile-container").style.height = document.global.desktopCanvasHeight;
+		if (document.global.ui.profile) 
+			document.querySelector(".profile-container").style.width =document.global.desktopProfileWidth;
+		else 
+			document.querySelector(".profile-container").style.width = "0";
+	}
+	if (document.querySelector(".main-container").clientWidth > 993) {
+		if (document.global.ui.chat)
+			document.querySelector(".chat-container").style.width = document.global.desktopChatWidth;
+		else
+			document.querySelector(".chat-container").style.width = "0";
+	}
 }
 
 function arenaRotateY() {
@@ -1110,7 +1135,6 @@ function arenaRotateY() {
 		document.global.sphere.sphereMesh.forEach(sphereMesh=>{
 			sphereMesh.rotation.y = -document.global.arena3D.rotation.y;
 		})
-		
 		document.global.arena3D.position.z -= document.global.arena.depth;
 	}
 }
@@ -1493,6 +1517,7 @@ export function main() {
 	keyBinding();
 	keyBindingMultiplayer();
 	keyBindingProfile();
+	keyBindingChat();
 	
 	const canvas = document.querySelector( '.canvas' );
 	const renderer = new THREE.WebGLRenderer( { antialias: true, canvas } );

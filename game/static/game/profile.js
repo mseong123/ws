@@ -1,10 +1,10 @@
 export function keyBindingProfile() {
-	const profileExpandPortrait = document.querySelector(".profile-expand-portrait");
-	profileExpandPortrait.addEventListener("click", (e)=>{
+	const profileExpandMobile = document.querySelector(".profile-expand-mobile");
+	profileExpandMobile.addEventListener("click", (e)=>{
 		document.global.ui.profile? document.global.ui.profile = 0:document.global.ui.profile = 1;
 	})
-	const profileExpandLandscape = document.querySelector(".profile-expand-landscape");
-	profileExpandLandscape.addEventListener("click", (e)=>{
+	const profileExpandDesktop = document.querySelector(".profile-expand-desktop");
+	profileExpandDesktop.addEventListener("click", (e)=>{
 		document.global.ui.profile? document.global.ui.profile = 0:document.global.ui.profile = 1;
 	})
 }
