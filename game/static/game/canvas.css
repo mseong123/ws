@@ -753,6 +753,7 @@ hr {
 	}
 	.menu-canvas, .menu-game{
 		font-size: 1rem;
+		margin-top:0.5rem;
 	}
 	.menu-canvas .nav, .menu-game .nav{
 		margin:0.5rem 0;
