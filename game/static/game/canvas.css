@@ -384,6 +384,7 @@ hr {
 	border:1px solid white;
 	border-radius:0.25rem;
 	padding:0.25rem;
+	font-size: 1rem;
 }
 
 
@@ -542,7 +543,7 @@ hr {
 	border-radius:0.25rem;
 	color:rgb(2,238,139);
 	padding:0.25rem 0.25rem;
-	font-size: 0.75rem;
+	font-size: 1rem;
 	margin-left:0.25rem;
 }
 
