@@ -1,9 +1,12 @@
+import {global} from './init.js';
+
+
 export function keyBindingChat() {
 	const chatExpand = document.querySelector(".chat-expand");
 	chatExpand.addEventListener("click", (e)=>{
-		if (!document.global.ui.chat) {
-			document.global.ui.profile = 0;
-			document.global.ui.chat = 1;
+		if (!global.ui.chat) {
+			global.ui.profile = 0;
+			global.ui.chat = 1;
 		}
 	})
 }

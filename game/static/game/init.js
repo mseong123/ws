@@ -4,30 +4,28 @@ function windowResize(e) {
 	
 	if (mainContainer.clientWidth >= 577 && mainContainer.clientWidth <= 993) {
 		canvas.style.height = mainContainer.clientHeight;
-		canvas.style.width = (canvas.clientHeight * document.global.arena.aspect) + 'px';
+		canvas.style.width = (canvas.clientHeight * global.arena.aspect) + 'px';
 	}
 	else if (mainContainer.clientWidth < 577) {
 		canvas.style.width = "100%"
-		canvas.style.height = (canvas.clientWidth / document.global.arena.aspect) + 'px';
+		canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
 	}
 	else {
-		canvas.style.width = document.global.desktopCanvasWidth;
-		canvas.style.height = (canvas.clientWidth / document.global.arena.aspect) + 'px';
+		canvas.style.width = global.desktopCanvasWidth;
+		canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
 	}
-	document.global.desktopCanvasHeight = canvas.clientHeight;
+	global.desktopCanvasHeight = canvas.clientHeight;
 	
 	//for each individual client
-	document.global.directionalLight.positionX = canvas.clientWidth;
-	document.global.directionalLight.positionY = canvas.clientWidth;
+	global.directionalLight.positionX = canvas.clientWidth;
+	global.directionalLight.positionY = canvas.clientWidth;
 	
-	
-
 	//for local  or multiplayer mainClient
-	if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.username === document.global.socket.gameInfo.mainClient) {
-		document.global.sphere.sphereMesh.forEach(sphereMesh=>{
-			sphereMesh.velocityX = canvas.clientWidth / document.global.sphere.velocityDivision;
-			sphereMesh.velocityY = canvas.clientWidth / document.global.sphere.velocityDivision;
-			sphereMesh.velocityZ = canvas.clientWidth / document.global.sphere.velocityDivision;
+	if (global.gameplay.local || !global.gameplay.local && global.gameplay.username === global.socket.gameInfo.mainClient) {
+		global.sphere.sphereMesh.forEach(sphereMesh=>{
+			sphereMesh.velocityX = canvas.clientWidth / global.sphere.velocityDivision;
+			sphereMesh.velocityY = canvas.clientWidth / global.sphere.velocityDivision;
+			sphereMesh.velocityZ = canvas.clientWidth / global.sphere.velocityDivision;
 		})
 	}
 }
@@ -55,7 +53,6 @@ const global = {
 		velocityBottomLimit:1,
 		color:"#686868",
 		velocityDivision:300,
-		circleRadius:radius * 2,
 	},
 	camera:{
 		fov:62,
@@ -72,7 +69,7 @@ const global = {
 		paddlesProperty:[],
 		opacity:0.9,
 		maxPaddle:4,
-		distanceFromEdgeModifier= 2,
+		distanceFromEdgeModifier:2,
 		hitBackModifier:5,
 	},
 	directionalLight:{
@@ -94,7 +91,7 @@ const global = {
 		heightSegments:6,
 		shininess:60,
 		circleRotation:0.1,
-		index,
+		index:0,
 		durationFrame:0, 
 		durationFrameLimit:750, 
 		mesh:[],
@@ -113,105 +110,98 @@ const global = {
 		ultimate:{
 			count:10,
 		},
-		gameplay:{
-			username:"",
-			backgroundClass:["canvas-url-space", "canvas-url-ocean", "canvas-url-alien", "canvas-url-desert"],
-			backgroundIndex:Math.floor(Math.random() * 4), 
-			roundStart:0,
-			gameStart:0,
-			gameEnd:0,
-			pause:0,
-			gameSummary:0,
-			single:0,
-			playerIndex:[], 
-			immortality:0,
-			cheat:1,
-			defaultLudicrious:0,
-			defaultPowerUp:1,
-			defaultCheatCount:3,
-			ludicrious:0,
-			ludicriousYminuteUpper:1,
-			ludicriousYminuteLower:0,
-			ludicriousYsecondUpper:60,
-			ludicriousYsecondLower:30,
-			ludicriousXminuteUpper:1,
-			ludicriousXminuteLower:0,
-			ludicriousXsecondUpper:30,
-			ludicriousXsecondLower:10,
-			ludicriousYXminuteUpper:1,
-			ludicriousYXminuteLower:0,
-			ludicriousYXsecondUpper:10,
-			ludicriousYXsecondLower:0,
-			initRotateY:1,
-			initRotateX:0,
-			rotationY:0.005,
-			rotationX:0.005,
-			rotate90:0,
-			roundStartFrame:0,
-			roundStartFrameLimit:30,
-			shadowFrame:0,
-			shadowFrameLimit:5,
-			defaultDuration:"01:10",
-			local:1,
-			computerScore:0,
-			computerWinner:false,
-		},
-		keyboard:{
-			w:0,
-			a:0,
-			s:0,
-			d:0,
-			up:0,
-			down:0,
-			left:0,
-			right:0,
-			speed:5,
-		},
-		touch:{
-			startX:0,
-			startY:0,
-		},
-		ui: {
-			toggleCanvas:0,
-			toggleChat:0,
-			toggleGame:0,
-			chat:1,
-			mainMenu:1,
-			login:0,
-			local:0,
-			single:0,
-			two:0,
-			tournament:0,
-			multiLobby:0,
-			multiCreate:0,
-			auth:0,
-			authWarning:0,
-			profile:0,
-		},
-		fetch: {
-			authURL:"auth/",
-			sessionURL:"session/",
-			logoutURL:"logout/",
-		},
-		socket: {
-			gameLobbySocket:null,
-			gameLobbyInfo:[],
-			gameSocket:null,
-			ready:0,
-			matchFix:0,
-			spectate:0,
-			gameLobbyError:0,
-			gameError:0,
-		}
-		
 	},
-
-
-	
-
-	
-
-	
+	gameplay:{
+		username:"",
+		backgroundClass:["canvas-url-space", "canvas-url-ocean", "canvas-url-alien", "canvas-url-desert"],
+		backgroundIndex:Math.floor(Math.random() * 4), 
+		roundStart:0,
+		gameStart:0,
+		gameEnd:0,
+		pause:0,
+		gameSummary:0,
+		single:0,
+		playerIndex:[], 
+		immortality:0,
+		cheat:1,
+		defaultLudicrious:0,
+		defaultPowerUp:1,
+		defaultCheatCount:3,
+		ludicrious:0,
+		ludicriousYminuteUpper:1,
+		ludicriousYminuteLower:0,
+		ludicriousYsecondUpper:60,
+		ludicriousYsecondLower:30,
+		ludicriousXminuteUpper:1,
+		ludicriousXminuteLower:0,
+		ludicriousXsecondUpper:30,
+		ludicriousXsecondLower:10,
+		ludicriousYXminuteUpper:1,
+		ludicriousYXminuteLower:0,
+		ludicriousYXsecondUpper:10,
+		ludicriousYXsecondLower:0,
+		initRotateY:1,
+		initRotateX:0,
+		rotationY:0.005,
+		rotationX:0.005,
+		rotate90:0,
+		roundStartFrame:0,
+		roundStartFrameLimit:30,
+		shadowFrame:0,
+		shadowFrameLimit:5,
+		defaultDuration:"01:10",
+		local:1,
+		computerScore:0,
+		computerWinner:false,
+	},
+	keyboard:{
+		w:0,
+		a:0,
+		s:0,
+		d:0,
+		up:0,
+		down:0,
+		left:0,
+		right:0,
+		speed:5,
+	},
+	touch:{
+		startX:0,
+		startY:0,
+	},
+	ui: {
+		toggleCanvas:0,
+		toggleChat:0,
+		toggleGame:0,
+		chat:1,
+		mainMenu:1,
+		login:0,
+		local:0,
+		single:0,
+		two:0,
+		tournament:0,
+		multiLobby:0,
+		multiCreate:0,
+		auth:0,
+		authWarning:0,
+		profile:0,
+	},
+	fetch: {
+		authURL:"auth/",
+		sessionURL:"session/",
+		logoutURL:"logout/",
+	},
+	socket: {
+		gameLobbySocket:null,
+		gameLobbyInfo:[],
+		gameSocket:null,
+		ready:0,
+		matchFix:0,
+		spectate:0,
+		gameLobbyError:0,
+		gameError:0,
+	},
+		
 };
 
 global.arena.width = global.clientWidth / global.arena.widthDivision;
@@ -219,10 +209,11 @@ global.arena.height = global.clientWidth / global.arena.aspect / global.arena.wi
 global.arena.depth = global.clientWidth / global.arena.aspect;
 global.desktopCanvasHeight = global.desktopCanvasWidth * global.arena.aspect;
 global.sphere.radius = global.clientWidth /global.sphere.radiusDivision;
-global.sphere.velocityX = clientWidth / global.sphere.velocityDivision;
-global.sphere.velocityY = clientWidth / global.sphere.velocityDivision;
-global.sphere.velocityZ = clientWidth /global.sphere.velocityDivision;
-global.camera.positionZ = clientWidth / global.arena.aspect;
+global.sphere.velocityX = global.clientWidth / global.sphere.velocityDivision;
+global.sphere.velocityY = global.clientWidth / global.sphere.velocityDivision;
+global.sphere.velocityZ = global.clientWidth /global.sphere.velocityDivision;
+global.sphere.circleRadius = global.sphere.radius * 2;
+global.camera.positionZ = global.clientWidth / global.arena.aspect;
 global.camera.initPositionY = global.arena.width;
 global.paddle.color = [global.colorSpace, global.colorOcean, global.colorAlien, global.colorDesert];
 global.paddle.defaultWidth = global.clientWidth / global.arena.widthDivision / 5;
@@ -279,276 +270,8 @@ global.socket.gameInfo = {
 
 export {global};
 
-function initGlobal() {
-	const canvas = document.querySelector(".canvas-container");
-	const clientWidth = canvas.clientWidth;
-
-	//initiate global variable
-	document.global = {};
-	document.global.clientWidth = clientWidth;
-	
-
-	//arena info
-	document.global.arena = {};
-	document.global.arena.widthDivision = 2.5;
-	document.global.arena.aspect = 4 / 3;
-	document.global.arena.color = "#fff";
-	document.global.arena.thickness = 6;
-	document.global.arena.width = clientWidth / document.global.arena.widthDivision;
-	document.global.arena.height = clientWidth / document.global.arena.aspect / document.global.arena.widthDivision;
-	document.global.arena.depth = clientWidth / document.global.arena.aspect;
-
-	
-	//responsive info
-	document.global.desktopCanvasWidth = 800;
-	document.global.desktopCanvasHeight = document.global.desktopCanvasWidth * document.global.arena.aspect;
-
-	//sphere info
-	document.global.sphere = {};
-	document.global.sphere.sphereMesh = [];
-	document.global.sphere.sphereMeshProperty = [];
-	document.global.sphere.radiusDivision = 100; //to change to be based on clientwidth
-	document.global.sphere.widthSegments = 12;
-	document.global.sphere.heightSegments = 12;
-	document.global.sphere.shininess = 60;
-	document.global.sphere.velocityTopLimit = 3;
-	document.global.sphere.velocityBottomLimit = 1;
-	document.global.sphere.color = "#686868";
-	document.global.sphere.velocityDivision = 300;
-	document.global.sphere.radius = clientWidth / document.global.sphere.radiusDivision;
-	document.global.sphere.circleRadius = document.global.sphere.radius * 2;
-	document.global.sphere.velocityX = clientWidth / document.global.sphere.velocityDivision;
-	document.global.sphere.velocityY = clientWidth / document.global.sphere.velocityDivision;
-	document.global.sphere.velocityZ = clientWidth / document.global.sphere.velocityDivision;
-
-	//camera info
-	document.global.camera = {};
-	document.global.camera.fov = 62;
-	document.global.camera.near = 0.1;
-	document.global.camera.far = 3000;
-	document.global.camera.positionZ = clientWidth / document.global.arena.aspect;
-	document.global.camera.initPositionY = document.global.arena.width;
-	document.global.camera.initRotationX = -Math.PI / 6.5;
-
-
-	const colorSpace = ["#0E2954","#1F6E8C","#2E8A99","#84A7A1","#453C67", "#6D67E4", "#46C2CB", "#F2F7A1"];
-	const colorOcean = ["#F6F4EB","#91C8E4","#749BC2","#4682A9", "#ECF4D6", "#9AD0C2", "#2D9596", "#265073"];
-	const colorAlien = ["#635985","#443C68","#393053","#18122B", "#711DB0", "#C21292", "#EF4040", "#FFA732"];
-	const colorDesert = ["#472D2D","#553939","#704F4F","#A77979", "#9B4444", "#C68484","#A3C9AA","#EEEEEE"];
-	document.global.paddle={};
-	document.global.paddle.paddles = [];
-	document.global.paddle.paddlesProperty = [];
-	document.global.paddle.color = [colorSpace, colorOcean, colorAlien, colorDesert];
-	document.global.paddle.opacity = 0.9;
-	document.global.paddle.maxPaddle = 4;
-	document.global.paddle.distanceFromEdgeModifier= 2;
-	document.global.paddle.hitBackModifier = 5;
-	document.global.paddle.defaultWidth = clientWidth / document.global.arena.widthDivision / 5; //5
-	document.global.paddle.defaultHeight = clientWidth / document.global.arena.aspect / document.global.arena.widthDivision / 7 //7;
-	document.global.paddle.thickness = clientWidth / document.global.arena.aspect / 100;
-
-	//directional light info
-	
-	document.global.directionalLight = {};
-	document.global.directionalLight.color = "#FFF";
-	document.global.directionalLight.intensity = 15;
-	document.global.directionalLight.positionZ = 0;
-	document.global.directionalLight.positionX = clientWidth;
-	document.global.directionalLight.positionY = clientWidth;
-	
-	
-	//point light info
-	document.global.pointLight = {};
-	document.global.pointLight.color = "#FFF";
-	document.global.pointLight.intensity = 10;
-	document.global.pointLight.distance = 5000;
-	
-
-	//shadow planes info
-	document.global.shadowPlane = {};
-	document.global.shadowPlane.opacity = 0.3
-	document.global.shadowPlane.sideWidth = clientWidth / document.global.arena.aspect / document.global.arena.widthDivision;
-	document.global.shadowPlane.sideHeight = clientWidth  / document.global.arena.aspect;
-	document.global.shadowPlane.TopBottomWidth = clientWidth / document.global.arena.widthDivision;
-
-	
-	//overall powerup info
-	
-	document.global.powerUp = {};
-	document.global.powerUp.enable = 1;
-	document.global.powerUp.widthSegments = 6;
-	document.global.powerUp.heightSegments = 6;
-	document.global.powerUp.radius = document.global.sphere.radius;
-	document.global.powerUp.circleRadius = document.global.powerUp.radius * 3;
-	document.global.powerUp.shininess = 60;
-	document.global.powerUp.circleRotation = 0.1;
-	document.global.powerUp.index;
-	document.global.powerUp.durationFrame = 0; //miliseconds
-	document.global.powerUp.durationFrameLimit = 750; //miliseconds
-	document.global.powerUp.mesh = [];
-	document.global.powerUp.meshProperty = [];
-	document.global.powerUp.color = ["#FFA500", "#088F8F", "#7F7F7F", "#B22222", "#123456"];
-	
-	//largepaddle powerup info
-	document.global.powerUp.largePaddle = {};
-	document.global.powerUp.largePaddle.multiplier = 4;
-
-	//shake powerup info
-	document.global.powerUp.shake = {};
-	document.global.powerUp.shake.multiplier = 4;
-	document.global.powerUp.shake.enable = 0;
-
-	//invisibility powerup info
-	document.global.powerUp.invisibility = {};
-	document.global.powerUp.invisibility.opacity = 0.1;
-
-	//ultimate powerup info
-	document.global.powerUp.ultimate = {};
-	document.global.powerUp.ultimate.count = 10;
-		
-	//gameplay
-	document.global.gameplay = {};
-	document.global.gameplay.username = "";
-	document.global.gameplay.backgroundClass = ["canvas-url-space", "canvas-url-ocean", "canvas-url-alien", "canvas-url-desert"];
-	document.global.gameplay.backgroundIndex = Math.floor(Math.random() * 4); 
-	document.global.gameplay.roundStart = 0;
-	document.global.gameplay.gameStart = 0;
-	document.global.gameplay.gameEnd = 0;
-	document.global.gameplay.pause = 0;
-	document.global.gameplay.gameSummary = 0;
-	document.global.gameplay.single = 0;
-	document.global.gameplay.playerIndex = []; 
-	document.global.gameplay.immortality = 0; //for gameplay debugging purpose
-	document.global.gameplay.cheat = 1; // for show purpose
-	document.global.gameplay.defaultLudicrious = 0;
-	document.global.gameplay.defaultPowerUp = 1;
-	document.global.gameplay.defaultCheatCount = 3;
-	document.global.gameplay.ludicrious = 0;
-	document.global.gameplay.ludicriousYminuteUpper = 1;
-	document.global.gameplay.ludicriousYminuteLower = 0;
-	document.global.gameplay.ludicriousYsecondUpper = 60;
-	document.global.gameplay.ludicriousYsecondLower = 30;
-	document.global.gameplay.ludicriousXminuteUpper = 1;
-	document.global.gameplay.ludicriousXminuteLower = 0;
-	document.global.gameplay.ludicriousXsecondUpper = 30;
-	document.global.gameplay.ludicriousXsecondLower = 10;
-	document.global.gameplay.ludicriousYXminuteUpper = 1;
-	document.global.gameplay.ludicriousYXminuteLower = 0;
-	document.global.gameplay.ludicriousYXsecondUpper = 10;
-	document.global.gameplay.ludicriousYXsecondLower = 0;
-	document.global.gameplay.initRotateY = 1;
-	document.global.gameplay.initRotateX = 0;
-	document.global.gameplay.rotationY = 0.005;
-	document.global.gameplay.rotationX = 0.005;
-	document.global.gameplay.rotate90 = 0;
-	document.global.gameplay.roundStartFrame = 0;
-	document.global.gameplay.roundStartFrameLimit = 30;
-	document.global.gameplay.shadowFrame = 0;
-	document.global.gameplay.shadowFrameLimit = 5;
-	document.global.gameplay.defaultDuration = "01:10";
-
-	//local or multiplayer game
-	document.global.gameplay.local = 1;
-	document.global.gameplay.localSingleInfo = { 
-		player:[{alias:"Player", score:0, winner:false}],
-		ludicrious:document.global.gameplay.defaultLudicrious,
-		powerUp:document.global.gameplay.defaultPowerUp,
-		duration:document.global.gameplay.defaultDuration,
-		durationCount:document.global.gameplay.defaultDuration,
-	};
-	document.global.gameplay.localTwoInfo = { 
-		player:[{alias:"Player-One", score:0, winner:false}, {alias:"Player-Two", score:0, winner:false}],
-		ludicrious:document.global.gameplay.defaultLudicrious,
-		powerUp:document.global.gameplay.defaultPowerUp,
-		duration:document.global.gameplay.defaultDuration,
-		durationCount:document.global.gameplay.defaultDuration,
-	};
-	document.global.gameplay.localTournamentInfo = { 
-		player:[{alias:"Player-One"}, {alias:"Player-Two"}],
-		playerGame:[],
-		currentRound:0,
-		round:0,
-		ludicrious:document.global.gameplay.defaultLudicrious,
-		powerUp:document.global.gameplay.defaultPowerUp,
-		duration:document.global.gameplay.defaultDuration,
-		durationCount:document.global.gameplay.defaultDuration,
-	};
-	document.global.gameplay.computerScore = 0;
-	document.global.gameplay.computerWinner = false;
-	
-	//keyboard
-	document.global.keyboard = {};
-	document.global.keyboard.w = 0;
-	document.global.keyboard.a = 0;
-	document.global.keyboard.s = 0;
-	document.global.keyboard.d = 0;
-	document.global.keyboard.up = 0;
-	document.global.keyboard.down = 0;
-	document.global.keyboard.left = 0;
-	document.global.keyboard.right = 0;
-	document.global.keyboard.speed = 5;
-
-	//touchscreen
-	document.global.touch = {}
-	document.global.touch.startX = 0;
-	document.global.touch.startY = 0;
-
-
-	//UI
-	document.global.ui = {}
-	document.global.ui.toggleCanvas = 0;
-	document.global.ui.toggleChat = 0;
-	document.global.ui.toggleGame = 0;
-	document.global.ui.chat = 1;
-	document.global.ui.mainMenu = 1;
-	document.global.ui.login = 0;
-	document.global.ui.local = 0;
-	document.global.ui.single = 0;
-	document.global.ui.two = 0;
-	document.global.ui.tournament = 0;
-	document.global.ui.multiLobby = 0;
-	document.global.ui.multiCreate = 0;
-	document.global.ui.auth = 0;
-	document.global.ui.authWarning = 0;
-	document.global.ui.profile = 0;
-	
-
-	//fetch
-	document.global.fetch = {};
-	document.global.fetch.authURL = "auth/";
-	document.global.fetch.sessionURL = "session/";
-	document.global.fetch.logoutURL = "logout/";
-
-	//websockets
-	document.global.socket = {}
-	document.global.socket.gameLobbySocket = null;
-	document.global.socket.gameLobbyInfo = [];
-	document.global.socket.gameSocket = null;
-	document.global.socket.gameInfo = {
-		mainClient:"",
-		gameMode:"",
-		player:{},
-		playerGame:[],
-		currentRound:0,
-		round:0,
-		cheatCount:0,
-		ludicrious:document.global.gameplay.defaultLudicrious,
-		powerUp:document.global.gameplay.defaultPowerUp,
-		teamUp:0,
-		duration:document.global.gameplay.defaultDuration,
-		durationCount:document.global.gameplay.defaultDuration,
-	};
-	document.global.socket.ready = 0;
-	document.global.socket.matchFix = 0;
-	document.global.socket.spectate = 0;
-	document.global.socket.gameLobbyError = 0;
-	document.global.socket.gameError = 0;
-	
-}
-
 export function init() {
-	initGlobal();
-	window.removeEventListener("resize", windowResize);
+	
 	window.addEventListener("resize", windowResize);
 	windowResize();
 }

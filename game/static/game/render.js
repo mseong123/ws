@@ -5,6 +5,7 @@ import {keyBindingProfile} from './profile.js';
 import {keyBindingChat} from './chat.js';
 import {createPowerUp,createFirstHalfCircleGeometry,createSecondHalfCircleGeometry} from './powerup.js';
 import {init} from './init.js'
+import { global } from './init.js';
 
 function resizeRendererToDisplaySize( renderer ) {
 
@@ -19,21 +20,21 @@ function resizeRendererToDisplaySize( renderer ) {
 }
 
 function createArenaMesh(arena3D) {
-	const arenaMaterial = new THREE.LineBasicMaterial( { color: document.global.arena.color } );
+	const arenaMaterial = new THREE.LineBasicMaterial( { color: global.arena.color } );
 	
 	const arenaMesh = [];
-	for (let i = 0; i < document.global.arena.thickness; i++) {
-		const arenaGeometry = new THREE.EdgesGeometry(new THREE.BoxGeometry( (document.global.clientWidth + i) / document.global.arena.widthDivision,
-		(document.global.clientWidth + i) / document.global.arena.aspect / document.global.arena.widthDivision , (document.global.clientWidth + 1) / document.global.arena.aspect));
+	for (let i = 0; i < global.arena.thickness; i++) {
+		const arenaGeometry = new THREE.EdgesGeometry(new THREE.BoxGeometry( (global.clientWidth + i) / global.arena.widthDivision,
+		(global.clientWidth + i) / global.arena.aspect / global.arena.widthDivision , (global.clientWidth + 1) / global.arena.aspect));
 		arenaMesh.push(new THREE.LineSegments( arenaGeometry, arenaMaterial ));
 		arena3D.add(arenaMesh[i]);
 	}
-	document.global.arenaMesh = arenaMesh;
+	global.arenaMesh = arenaMesh;
 }
 
 function createPowerUpCircle(sphereMesh) {
-	const firstHalfCircleGeometry = createFirstHalfCircleGeometry(document.global.sphere.circleRadius);
-	const SecondHalfCircleGeometry = createSecondHalfCircleGeometry(document.global.sphere.circleRadius);
+	const firstHalfCircleGeometry = createFirstHalfCircleGeometry(global.sphere.circleRadius);
+	const SecondHalfCircleGeometry = createSecondHalfCircleGeometry(global.sphere.circleRadius);
 	const circleMaterial = new THREE.LineBasicMaterial( { color: "#fff", transparent:true, opacity:1});
 	const firstHalfCircleMesh = new THREE.Line( firstHalfCircleGeometry, circleMaterial);
 	const secondHalfCircleMesh = new THREE.Line( SecondHalfCircleGeometry, circleMaterial);
@@ -45,18 +46,18 @@ function createPowerUpCircle(sphereMesh) {
 }
 
 export function createSphereMesh(arena3D) {
-	const sphereGeometry = new THREE.SphereGeometry( document.global.sphere.radius, document.global.sphere.widthSegments, document.global.sphere.heightSegments );
-	const sphereMaterial = new THREE.MeshPhongMaterial( { color: document.global.sphere.color, emissive: document.global.sphere.color, shininess:document.global.sphere.shininess, transparent:true, opacity:1 } );
+	const sphereGeometry = new THREE.SphereGeometry( global.sphere.radius, global.sphere.widthSegments, global.sphere.heightSegments );
+	const sphereMaterial = new THREE.MeshPhongMaterial( { color: global.sphere.color, emissive: global.sphere.color, shininess:global.sphere.shininess, transparent:true, opacity:1 } );
 	
-	for (let i = 0; i < document.global.powerUp.ultimate.count; i++) {
+	for (let i = 0; i < global.powerUp.ultimate.count; i++) {
 		const sphereMesh = new THREE.Mesh( sphereGeometry, sphereMaterial );
 		const sphereMeshProperty = {
 			positionX:0,
 			positionY:0,
 			positionZ:0,
-			velocityX:document.global.sphere.velocityX,
-			velocityY:document.global.sphere.velocityY,
-			velocityZ:document.global.sphere.velocityZ,
+			velocityX:global.sphere.velocityX,
+			velocityY:global.sphere.velocityY,
+			velocityZ:global.sphere.velocityZ,
 			opacity:1,
 			visible:false,
 			circleVisible:false,
@@ -68,26 +69,26 @@ export function createSphereMesh(arena3D) {
 		//create powerup surrounding circle timer
 		createPowerUpCircle(sphereMesh);
 		sphereMesh.castShadow=true;
-		document.global.sphere.sphereMesh.push(sphereMesh);
-		document.global.sphere.sphereMeshProperty.push(sphereMeshProperty);
+		global.sphere.sphereMesh.push(sphereMesh);
+		global.sphere.sphereMeshProperty.push(sphereMeshProperty);
 		arena3D.add(sphereMesh);
 	}
 }
 
 function createCamera() {
-	const camera = new THREE.PerspectiveCamera( document.global.camera.fov, document.global.arena.aspect, document.global.camera.near, document.global.camera.far );
-	camera.position.z = document.global.camera.positionZ;
-	// camera.position.y = document.global.arena.width;
+	const camera = new THREE.PerspectiveCamera( global.camera.fov, global.arena.aspect, global.camera.near, global.camera.far );
+	camera.position.z = global.camera.positionZ;
+	// camera.position.y = global.arena.width;
 	// 	camera.rotation.x = -Math.PI/5
 	return camera;
 }
 
 function createPaddleMesh(arena3D) {
-	const colorPalette = document.global.paddle.color[document.global.gameplay.backgroundIndex];
-	const paddleGeometry = new THREE.BoxGeometry(document.global.paddle.defaultWidth, document.global.paddle.defaultHeight, document.global.paddle.thickness )
-	const paddlesProperty = document.global.paddle.paddlesProperty;
-	for (let i = 0; i < document.global.paddle.maxPaddle; i++) {
-		const paddleMaterial = new THREE.MeshPhongMaterial( { color: colorPalette[i], emissive: colorPalette[i], transparent:true, opacity:document.global.paddle.opacity });
+	const colorPalette = global.paddle.color[global.gameplay.backgroundIndex];
+	const paddleGeometry = new THREE.BoxGeometry(global.paddle.defaultWidth, global.paddle.defaultHeight, global.paddle.thickness )
+	const paddlesProperty = global.paddle.paddlesProperty;
+	for (let i = 0; i < global.paddle.maxPaddle; i++) {
+		const paddleMaterial = new THREE.MeshPhongMaterial( { color: colorPalette[i], emissive: colorPalette[i], transparent:true, opacity:global.paddle.opacity });
 		const paddleMeshPropertyTemplate = {
 			visible:false,
 			positionX:0,
@@ -95,45 +96,45 @@ function createPaddleMesh(arena3D) {
 			positionZ:0,
 			largePaddle:0,
 			invisibility:0,
-			width:document.global.paddle.defaultWidth,
-			height:document.global.paddle.defaultHeight
+			width:global.paddle.defaultWidth,
+			height:global.paddle.defaultHeight
 		}
 		const paddleMesh = new THREE.Mesh(paddleGeometry, paddleMaterial);
 		paddleMesh.castShadow = true;
-		document.global.paddle.paddles.push(paddleMesh);
+		global.paddle.paddles.push(paddleMesh);
 		paddlesProperty.push(paddleMeshPropertyTemplate);
 		arena3D.add(paddleMesh);
 	}
 	//render initial paddle
 	paddlesProperty[0].positionX = 0;
 	paddlesProperty[0].positionY = 0;
-	paddlesProperty[0].positionZ = (document.global.clientWidth / document.global.arena.aspect / 2) - (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier);
+	paddlesProperty[0].positionZ = (global.clientWidth / global.arena.aspect / 2) - (global.paddle.thickness * global.paddle.distanceFromEdgeModifier);
 	paddlesProperty[0].visible = true;
 	paddlesProperty[1].positionX = 0;
 	paddlesProperty[1].positionY = 0;
-	paddlesProperty[1].positionZ = -(document.global.clientWidth / document.global.arena.aspect / 2) + (document.global.paddle.thickness * document.global.paddle.distanceFromEdgeModifier);
+	paddlesProperty[1].positionZ = -(global.clientWidth / global.arena.aspect / 2) + (global.paddle.thickness * global.paddle.distanceFromEdgeModifier);
 	paddlesProperty[1].visible = true;
 
 }
 
 function createDirectionalLight(arena3D) {
-	const directionalLight = new THREE.DirectionalLight(document.global.directionalLight.color, document.global.directionalLight.intensity);
-	directionalLight.position.set(document.global.directionalLight.positionX,document.global.directionalLight.positionY, document.global.directionalLight.positionZ);
-	document.global.directionalLight = directionalLight;
+	const directionalLight = new THREE.DirectionalLight(global.directionalLight.color, global.directionalLight.intensity);
+	directionalLight.position.set(global.directionalLight.positionX,global.directionalLight.positionY, global.directionalLight.positionZ);
+	global.directionalLight = directionalLight;
 	arena3D.add(directionalLight);
 }
 
 function createPointLight(arena3D) {
-	const pointLight = new THREE.PointLight(document.global.pointLight.color , document.global.pointLight.intensity, document.global.pointLight.distance);
-	document.global.pointLight = pointLight;
+	const pointLight = new THREE.PointLight(global.pointLight.color , global.pointLight.intensity, global.pointLight.distance);
+	global.pointLight = pointLight;
 	arena3D.add(pointLight);
 }
 
 function createShadowPlanes(arena3D) {
-	const geometrySides = new THREE.PlaneGeometry( document.global.shadowPlane.sideWidth, document.global.shadowPlane.sideHeight );
-	const geometryTopBottom = new THREE.PlaneGeometry( document.global.shadowPlane.TopBottomWidth, document.global.shadowPlane.sideHeight );
+	const geometrySides = new THREE.PlaneGeometry( global.shadowPlane.sideWidth, global.shadowPlane.sideHeight );
+	const geometryTopBottom = new THREE.PlaneGeometry( global.shadowPlane.TopBottomWidth, global.shadowPlane.sideHeight );
 	const material = new THREE.ShadowMaterial({side:THREE.DoubleSide});
-	material.opacity = document.global.shadowPlane.opacity;
+	material.opacity = global.shadowPlane.opacity;
 	const shadowPlanes = [];
 
 	//sides
@@ -145,8 +146,8 @@ function createShadowPlanes(arena3D) {
 		arena3D.add( plane );
 		shadowPlanes[i] = plane;
 	}
-	shadowPlanes[0].position.set(-document.global.clientWidth / document.global.arena.widthDivision / 2, 0, 0);
-	shadowPlanes[1].position.set(document.global.clientWidth / document.global.arena.widthDivision / 2, 0, 0);
+	shadowPlanes[0].position.set(-global.clientWidth / global.arena.widthDivision / 2, 0, 0);
+	shadowPlanes[1].position.set(global.clientWidth / global.arena.widthDivision / 2, 0, 0);
 	//top bottom
 	for (let i = 2; i < 4; i++) {
 		const plane = new THREE.Mesh( geometryTopBottom, material );
@@ -155,15 +156,15 @@ function createShadowPlanes(arena3D) {
 		arena3D.add( plane );
 		shadowPlanes[i] = plane;
 	}
-	shadowPlanes[2].position.set(0, document.global.clientWidth / document.global.arena.aspect/ document.global.arena.widthDivision / 2, 0);
-	shadowPlanes[3].position.set(0,-document.global.clientWidth / document.global.arena.aspect/ document.global.arena.widthDivision / 2, 0);
-	document.global.shadowPlanes = shadowPlanes;
+	shadowPlanes[2].position.set(0, global.clientWidth / global.arena.aspect/ global.arena.widthDivision / 2, 0);
+	shadowPlanes[3].position.set(0,-global.clientWidth / global.arena.aspect/ global.arena.widthDivision / 2, 0);
+	global.shadowPlanes = shadowPlanes;
 }
 
 function processCamera(camera) {
-	if (!document.global.gameplay.gameStart || document.global.gameplay.gameEnd) {
-		camera.position.y = document.global.camera.initPositionY;
-		camera.rotation.x = document.global.camera.initRotationX;
+	if (!global.gameplay.gameStart || global.gameplay.gameEnd) {
+		camera.position.y = global.camera.initPositionY;
+		camera.rotation.x = global.camera.initRotationX;
 	}
 	else {
 		camera.position.y = 0;
@@ -173,24 +174,24 @@ function processCamera(camera) {
 }
 
 function processSphere() {
-	document.global.sphere.sphereMesh.forEach((sphereMesh,idx)=>{
+	global.sphere.sphereMesh.forEach((sphereMesh,idx)=>{
 		//update position
-		sphereMesh.position.set(document.global.sphere.sphereMeshProperty[idx].positionX, document.global.sphere.sphereMeshProperty[idx].positionY, document.global.sphere.sphereMeshProperty[idx].positionZ)
+		sphereMesh.position.set(global.sphere.sphereMeshProperty[idx].positionX, global.sphere.sphereMeshProperty[idx].positionY, global.sphere.sphereMeshProperty[idx].positionZ)
 		//render visibility
-		if (document.global.sphere.sphereMeshProperty[idx].visible)
+		if (global.sphere.sphereMeshProperty[idx].visible)
 			sphereMesh.visible = true;
 		else
 			sphereMesh.visible = false;
 		
 		//render surrounding circle color and opacity
-		const circleMaterial = new THREE.LineBasicMaterial( { color: document.global.sphere.sphereMeshProperty[idx].circleColor, transparent:true, opacity:document.global.sphere.sphereMeshProperty[idx].circleOpacity});
+		const circleMaterial = new THREE.LineBasicMaterial( { color: global.sphere.sphereMeshProperty[idx].circleColor, transparent:true, opacity:global.sphere.sphereMeshProperty[idx].circleOpacity});
 		sphereMesh.children[0].material.dispose();
 		sphereMesh.children[1].material.dispose();
 		sphereMesh.children[0].material = circleMaterial;
 		sphereMesh.children[1].material = circleMaterial;
 
 		//render surrounding circle visibility
-		if (document.global.sphere.sphereMeshProperty[idx].circleVisible) {
+		if (global.sphere.sphereMeshProperty[idx].circleVisible) {
 			sphereMesh.children[0].visible = true;
 			sphereMesh.children[1].visible = true;
 		}
@@ -199,20 +200,20 @@ function processSphere() {
 			sphereMesh.children[1].visible = false;
 		}
 		//render opacity
-		const sphereMaterial = new THREE.MeshPhongMaterial( { color: document.global.sphere.color, emissive: document.global.sphere.color, shininess:document.global.sphere.shininess, transparent:true, opacity:document.global.sphere.sphereMeshProperty[idx].opacity } );
+		const sphereMaterial = new THREE.MeshPhongMaterial( { color: global.sphere.color, emissive: global.sphere.color, shininess:global.sphere.shininess, transparent:true, opacity:global.sphere.sphereMeshProperty[idx].opacity } );
 		sphereMesh.material.dispose();
 		sphereMesh.material = sphereMaterial;
 	})
 }
 
 function processPaddle() {
-	document.global.paddle.paddles.forEach((paddle,idx)=>{
+	global.paddle.paddles.forEach((paddle,idx)=>{
 		//Update position each paddle
-		paddle.visible = document.global.paddle.paddlesProperty[idx].visible;
-		paddle.position.set(document.global.paddle.paddlesProperty[idx].positionX, document.global.paddle.paddlesProperty[idx].positionY, document.global.paddle.paddlesProperty[idx].positionZ);
+		paddle.visible = global.paddle.paddlesProperty[idx].visible;
+		paddle.position.set(global.paddle.paddlesProperty[idx].positionX, global.paddle.paddlesProperty[idx].positionY, global.paddle.paddlesProperty[idx].positionZ);
 		//Update height and width of each paddle
-		if (document.global.paddle.paddlesProperty[idx].width != paddle.geometry.width || document.global.paddle.paddlesProperty[idx].height != paddle.geometry.height) {
-			const paddleGeometry = new THREE.BoxGeometry(document.global.paddle.paddlesProperty[idx].width, document.global.paddle.paddlesProperty[idx].height, document.global.paddle.thickness );
+		if (global.paddle.paddlesProperty[idx].width != paddle.geometry.width || global.paddle.paddlesProperty[idx].height != paddle.geometry.height) {
+			const paddleGeometry = new THREE.BoxGeometry(global.paddle.paddlesProperty[idx].width, global.paddle.paddlesProperty[idx].height, global.paddle.thickness );
 			paddle.geometry.dispose()
 			paddle.geometry = paddleGeometry;
 		}
@@ -220,38 +221,38 @@ function processPaddle() {
 }
 
 function processPowerUp() {
-	document.global.powerUp.mesh.forEach((mesh, idx)=>{
+	global.powerUp.mesh.forEach((mesh, idx)=>{
 		//rotate circle around each powerup
-		mesh.rotation.z += document.global.powerUp.circleRotation;
+		mesh.rotation.z += global.powerUp.circleRotation;
 		//render visible 
-		if (document.global.powerUp.meshProperty[idx].visible)
+		if (global.powerUp.meshProperty[idx].visible)
 			mesh.visible = true;
 		else
 			mesh.visible = false;
 		//update position
-		mesh.position.set(document.global.powerUp.meshProperty[idx].positionX, document.global.powerUp.meshProperty[idx].positionY, document.global.powerUp.meshProperty[idx].positionZ)
+		mesh.position.set(global.powerUp.meshProperty[idx].positionX, global.powerUp.meshProperty[idx].positionY, global.powerUp.meshProperty[idx].positionZ)
 	})
 	//rotate circle around each sphere
-	document.global.sphere.sphereMesh.forEach(sphereMesh=>{
-		sphereMesh.children[0].rotation.z += document.global.powerUp.circleRotation;
-		sphereMesh.children[1].rotation.z += document.global.powerUp.circleRotation;
+	global.sphere.sphereMesh.forEach(sphereMesh=>{
+		sphereMesh.children[0].rotation.z += global.powerUp.circleRotation;
+		sphereMesh.children[1].rotation.z += global.powerUp.circleRotation;
 	})
 }
 
 function updateGameSummary() {
 	const parent = document.querySelector(".game-summary-display");
-	if (document.global.gameplay.local && document.global.gameplay.single) {
+	if (global.gameplay.local && global.gameplay.single) {
 		if (parent.children.length === 0) {
 			const roundSpan = document.createElement("span");
 			const singleName = document.createElement("span");
 			const singleScore = document.createElement("span");
 			const AIname = document.createElement("span");
 			const AIscore = document.createElement("span");
-			singleName.textContent = document.global.gameplay.localSingleInfo.player[0].alias;
-			singleScore.textContent = document.global.gameplay.localSingleInfo.player[0].score;
-			singleScore.classList.add('single-'+document.global.gameplay.localSingleInfo.player[0].alias + "-score")
+			singleName.textContent = global.gameplay.localSingleInfo.player[0].alias;
+			singleScore.textContent = global.gameplay.localSingleInfo.player[0].score;
+			singleScore.classList.add('single-'+global.gameplay.localSingleInfo.player[0].alias + "-score")
 			AIname.textContent = "A.I."
-			AIscore.textContent = document.global.gameplay.computerScore;
+			AIscore.textContent = global.gameplay.computerScore;
 			AIscore.classList.add("AI-score")
 			const roundDiv = document.createElement("div");
 			const singleDiv = document.createElement("div");
@@ -272,16 +273,16 @@ function updateGameSummary() {
 			parent.appendChild(containerDiv);
 		}
 		else {
-			document.querySelector(".single-" + document.global.gameplay.localSingleInfo.player[0].alias + "-score").textContent = document.global.gameplay.localSingleInfo.player[0].score;
-			document.querySelector(".AI-score").textContent = document.global.gameplay.computerScore;
+			document.querySelector(".single-" + global.gameplay.localSingleInfo.player[0].alias + "-score").textContent = global.gameplay.localSingleInfo.player[0].score;
+			document.querySelector(".AI-score").textContent = global.gameplay.computerScore;
 		}
-		if (document.global.gameplay.localSingleInfo.player[0].winner)
+		if (global.gameplay.localSingleInfo.player[0].winner)
 			document.querySelector(".game-summary-display").children[0].children[1].classList.add("won");
-		else if (document.global.gameplay.computerWinner)
+		else if (global.gameplay.computerWinner)
 			document.querySelector(".game-summary-display").children[0].children[3].classList.add("won");
 		
 	}
-	else if (document.global.gameplay.local && document.global.gameplay.two) {
+	else if (global.gameplay.local && global.gameplay.two) {
 		if (parent.children.length === 0) {
 			const parent = document.querySelector(".game-summary-display");
 			const roundSpan = document.createElement("span");
@@ -289,12 +290,12 @@ function updateGameSummary() {
 			const twoFirstScore = document.createElement("span");
 			const twoSecondName = document.createElement("span");
 			const twoSecondScore = document.createElement("span");
-			twoFirstName.textContent = document.global.gameplay.localTwoInfo.player[0].alias;
-			twoFirstScore.textContent = document.global.gameplay.localTwoInfo.player[0].score;
-			twoFirstScore.classList.add("two-" + document.global.gameplay.localTwoInfo.player[0].alias + "-score")
-			twoSecondName.textContent = document.global.gameplay.localTwoInfo.player[1].alias;
-			twoSecondScore.textContent = document.global.gameplay.localTwoInfo.player[1].score;
-			twoSecondScore.classList.add("two-" + document.global.gameplay.localTwoInfo.player[1].alias + "-score")
+			twoFirstName.textContent = global.gameplay.localTwoInfo.player[0].alias;
+			twoFirstScore.textContent = global.gameplay.localTwoInfo.player[0].score;
+			twoFirstScore.classList.add("two-" + global.gameplay.localTwoInfo.player[0].alias + "-score")
+			twoSecondName.textContent = global.gameplay.localTwoInfo.player[1].alias;
+			twoSecondScore.textContent = global.gameplay.localTwoInfo.player[1].score;
+			twoSecondScore.classList.add("two-" + global.gameplay.localTwoInfo.player[1].alias + "-score")
 			const roundDiv = document.createElement("div");
 			const twoFirstDiv = document.createElement("div");
 			const separatorDiv = document.createElement("div");
@@ -314,17 +315,17 @@ function updateGameSummary() {
 			parent.appendChild(containerDiv);
 		}
 		else {
-			document.querySelector(".two-" + document.global.gameplay.localTwoInfo.player[0].alias + "-score").textContent = document.global.gameplay.localTwoInfo.player[0].score;
-			document.querySelector(".two-" + document.global.gameplay.localTwoInfo.player[1].alias + "-score").textContent = document.global.gameplay.localTwoInfo.player[1].score;
+			document.querySelector(".two-" + global.gameplay.localTwoInfo.player[0].alias + "-score").textContent = global.gameplay.localTwoInfo.player[0].score;
+			document.querySelector(".two-" + global.gameplay.localTwoInfo.player[1].alias + "-score").textContent = global.gameplay.localTwoInfo.player[1].score;
 		}
-		if (document.global.gameplay.localTwoInfo.player[0].winner)
+		if (global.gameplay.localTwoInfo.player[0].winner)
 			document.querySelector(".game-summary-display").children[0].children[1].classList.add("won");
-		else if (document.global.gameplay.localTwoInfo.player[1].winner)
+		else if (global.gameplay.localTwoInfo.player[1].winner)
 			document.querySelector(".game-summary-display").children[0].children[3].classList.add("won");
 	}
-	else if (document.global.gameplay.local && document.global.gameplay.tournament) {
+	else if (global.gameplay.local && global.gameplay.tournament) {
 		if (parent.children.length === 0) {
-			document.global.gameplay.localTournamentInfo.playerGame.forEach((playerGame,idx)=>{
+			global.gameplay.localTournamentInfo.playerGame.forEach((playerGame,idx)=>{
 				const roundSpan = document.createElement("span");
 				const firstName = document.createElement("span");
 				const firstScore = document.createElement("span");
@@ -357,7 +358,7 @@ function updateGameSummary() {
 			})
 		}
 		else {
-			document.global.gameplay.localTournamentInfo.playerGame.forEach((playerGame,idx)=>{
+			global.gameplay.localTournamentInfo.playerGame.forEach((playerGame,idx)=>{
 				parent.children[idx].children[1].children[0].textContent = playerGame[0].alias;
 				parent.children[idx].children[3].children[0].textContent = playerGame[1].alias;
 				parent.children[idx].children[1].children[1].setAttribute("data-player","tournament-" + playerGame[0].alias + '-' + idx + "-score")
@@ -369,13 +370,13 @@ function updateGameSummary() {
 				else if (playerGame[1].winner)
 					document.querySelector(".game-summary-display").children[idx].children[3].classList.add("won");
 			})
-			document.querySelector('[data-player='+'"tournament-' + document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].alias + "-" +document.global.gameplay.localTournamentInfo.currentRound + '-score"]').textContent = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].score;
-			document.querySelector('[data-player='+'"tournament-' + document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].alias + "-" +document.global.gameplay.localTournamentInfo.currentRound + '-score"]').textContent = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].score;
+			document.querySelector('[data-player='+'"tournament-' + global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][0].alias + "-" +global.gameplay.localTournamentInfo.currentRound + '-score"]').textContent = global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][0].score;
+			document.querySelector('[data-player='+'"tournament-' + global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][1].alias + "-" +global.gameplay.localTournamentInfo.currentRound + '-score"]').textContent = global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][1].score;
 		}
 	}
-	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
+	else if (!global.gameplay.local && global.socket.gameInfo.gameMode === "versus") {
 		if (parent.children.length === 0) {
-			document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
+			global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
 				const headerContainer = document.createElement("h4");
 				const teamName = document.createElement("span");
 				const teamScore = document.createElement("span");
@@ -397,9 +398,9 @@ function updateGameSummary() {
 					playerColor.classList.add("game-summary-versus-color");
 					playerColor.classList.add(player);
 					if (idx === 0)
-						playerColor.style.backgroundColor = document.global.paddle.color[document.global.gameplay.backgroundIndex][idx1];
+						playerColor.style.backgroundColor = global.paddle.color[global.gameplay.backgroundIndex][idx1];
 					else
-						playerColor.style.backgroundColor = document.global.paddle.color[document.global.gameplay.backgroundIndex][idx1 + document.global.socket.gameInfo.playerGame[0].player.length];
+						playerColor.style.backgroundColor = global.paddle.color[global.gameplay.backgroundIndex][idx1 + global.socket.gameInfo.playerGame[0].player.length];
 					playerContainer.append(playerDisplay);
 					playerContainer.append(playerColor);
 					containerDiv.append(playerContainer);
@@ -408,25 +409,25 @@ function updateGameSummary() {
 			})
 		}
 		else {
-			document.querySelector(".versus-" + document.global.socket.gameInfo.playerGame[0].teamName + "-score").textContent = document.global.socket.gameInfo.playerGame[0].score;
-			document.querySelector(".versus-" + document.global.socket.gameInfo.playerGame[1].teamName + "-score").textContent = document.global.socket.gameInfo.playerGame[1].score;
-			document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
+			document.querySelector(".versus-" + global.socket.gameInfo.playerGame[0].teamName + "-score").textContent = global.socket.gameInfo.playerGame[0].score;
+			document.querySelector(".versus-" + global.socket.gameInfo.playerGame[1].teamName + "-score").textContent = global.socket.gameInfo.playerGame[1].score;
+			global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
 				playerGame.player.forEach((player, idx1)=>{
 					if (idx === 0)
-						document.querySelector(".game-summary-versus-color."+player).style.backgroundColor = document.global.paddle.color[document.global.gameplay.backgroundIndex][idx1];
+						document.querySelector(".game-summary-versus-color."+player).style.backgroundColor = global.paddle.color[global.gameplay.backgroundIndex][idx1];
 					else
-						document.querySelector(".game-summary-versus-color."+player).style.backgroundColor = document.global.paddle.color[document.global.gameplay.backgroundIndex][idx1 + document.global.socket.gameInfo.playerGame[0].player.length];
+						document.querySelector(".game-summary-versus-color."+player).style.backgroundColor = global.paddle.color[global.gameplay.backgroundIndex][idx1 + global.socket.gameInfo.playerGame[0].player.length];
 				})
 			})
 		}
-		if (document.global.socket.gameInfo.playerGame[0].winner)
+		if (global.socket.gameInfo.playerGame[0].winner)
 			document.querySelector(".game-summary-display").children[0].children[0].classList.add("won");
-		else if (document.global.socket.gameInfo.playerGame[1].winner)
+		else if (global.socket.gameInfo.playerGame[1].winner)
 			document.querySelector(".game-summary-display").children[1].children[0].classList.add("won");
 	}
-	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode ==="tournament") {
+	else if (!global.gameplay.local && global.socket.gameInfo.gameMode ==="tournament") {
 		if (parent.children.length === 0) {
-			document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
+			global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
 				const roundSpan = document.createElement("span");
 				const firstName = document.createElement("span");
 				const firstScore = document.createElement("span");
@@ -459,7 +460,7 @@ function updateGameSummary() {
 			})
 		}
 		else {
-			document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
+			global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
 				parent.children[idx].children[1].children[0].textContent = playerGame[0].alias;
 				parent.children[idx].children[3].children[0].textContent = playerGame[1].alias;
 				parent.children[idx].children[1].children[1].setAttribute("data-player","multi-tournament-" + playerGame[0].alias + '-' + idx + "-score")
@@ -470,8 +471,8 @@ function updateGameSummary() {
 				else if (playerGame[1].winner)
 					document.querySelector(".game-summary-display").children[idx].children[3].classList.add("won");
 				})
-			document.querySelector('[data-player='+'"multi-tournament-' + document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias + "-" +document.global.socket.gameInfo.currentRound + '-score"]').textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].score;
-			document.querySelector('[data-player='+'"multi-tournament-' + document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias + "-" +document.global.socket.gameInfo.currentRound + '-score"]').textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].score;
+			document.querySelector('[data-player='+'"multi-tournament-' + global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][0].alias + "-" +global.socket.gameInfo.currentRound + '-score"]').textContent = global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][0].score;
+			document.querySelector('[data-player='+'"multi-tournament-' + global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][1].alias + "-" +global.socket.gameInfo.currentRound + '-score"]').textContent = global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][1].score;
 		}
 	}
 }
@@ -479,9 +480,9 @@ function updateGameSummary() {
 export function updateMatchFix() {
 	const parent = document.querySelector(".multi-tournament-matchFix-display");
 
-	if (document.global.socket.gameInfo.mainClient) {
+	if (global.socket.gameInfo.mainClient) {
 		if (parent.children.length === 0) {
-			document.global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
+			global.socket.gameInfo.playerGame.forEach((playerGame,idx)=>{
 				const roundSpan = document.createElement("span");
 				const firstName = document.createElement("span");
 				const firstReady = document.createElement("span");
@@ -520,9 +521,9 @@ export function updateMatchFix() {
 			})
 		}
 		else {
-			const playerArray = Object.keys(document.global.socket.gameInfo.player);
+			const playerArray = Object.keys(global.socket.gameInfo.player);
 			playerArray.forEach(player=>{
-				document.global.socket.gameInfo.player[player].ready? document.querySelector('[data-player='+'"multi-matchFix-' + player + '-ready"]').classList.remove('display-none') :document.querySelector('[data-player='+'"multi-matchFix-' + player + '-ready"]').classList.add('display-none') 
+				global.socket.gameInfo.player[player].ready? document.querySelector('[data-player='+'"multi-matchFix-' + player + '-ready"]').classList.remove('display-none') :document.querySelector('[data-player='+'"multi-matchFix-' + player + '-ready"]').classList.add('display-none') 
 			})
 		}
 	}
@@ -531,30 +532,30 @@ export function updateMatchFix() {
 
 function processBackground() {
 	
-	if (document.querySelector(".canvas-background").classList[2] !== document.global.gameplay.backgroundClass[document.global.gameplay.backgroundIndex])
+	if (document.querySelector(".canvas-background").classList[2] !== global.gameplay.backgroundClass[global.gameplay.backgroundIndex])
 		document.querySelectorAll(".canvas-background").forEach(background=>{
 			background.classList.remove(background.classList[2]);
-			background.classList.add(document.global.gameplay.backgroundClass[document.global.gameplay.backgroundIndex])
-			const colorPalette = document.global.paddle.color[document.global.gameplay.backgroundIndex];
-			for (let i = 0; i < document.global.paddle.maxPaddle; i++) {
-				const paddleMaterial = new THREE.MeshPhongMaterial( { color: colorPalette[i], emissive: colorPalette[i], transparent:true, opacity:document.global.paddle.opacity });
-				document.global.paddle.paddles[i].material.dispose();
-				document.global.paddle.paddles[i].material = paddleMaterial;
+			background.classList.add(global.gameplay.backgroundClass[global.gameplay.backgroundIndex])
+			const colorPalette = global.paddle.color[global.gameplay.backgroundIndex];
+			for (let i = 0; i < global.paddle.maxPaddle; i++) {
+				const paddleMaterial = new THREE.MeshPhongMaterial( { color: colorPalette[i], emissive: colorPalette[i], transparent:true, opacity:global.paddle.opacity });
+				global.paddle.paddles[i].material.dispose();
+				global.paddle.paddles[i].material = paddleMaterial;
 			}
 		})
 	
 }
 
 function processUI() {
-	if (document.global.ui.toggleCanvas)
+	if (global.ui.toggleCanvas)
 		document.querySelector(".menu-canvas").classList.remove("display-none");
 	else
 		document.querySelector(".menu-canvas").classList.add("display-none");
-	if (document.global.ui.toggleGame)
+	if (global.ui.toggleGame)
 		document.querySelector(".menu-game").classList.remove("display-none");
 	else
 		document.querySelector(".menu-game").classList.add("display-none");
-	if (document.global.ui.auth) {
+	if (global.ui.auth) {
 		document.querySelector(".nav-local").classList.add("display-none");
 		document.querySelector(".nav-multi").classList.remove("display-none");
 	}
@@ -563,21 +564,21 @@ function processUI() {
 		document.querySelector(".nav-multi").classList.add("display-none");
 	}
 		
-	document.global.ui.mainMenu?
+	global.ui.mainMenu?
 		document.querySelector(".main-menu").classList.add("display-block"):document.querySelector(".main-menu").classList.remove("display-block");
-	document.global.ui.login?
+	global.ui.login?
 		document.querySelector(".login-menu").classList.add("display-block"):document.querySelector(".login-menu").classList.remove("display-block");
-	document.global.ui.local?
+	global.ui.local?
 		document.querySelector(".local-menu").classList.add("display-block"):document.querySelector(".local-menu").classList.remove("display-block");
-	document.global.ui.single?
+	global.ui.single?
 		document.querySelector(".single-menu").classList.add("display-block"):document.querySelector(".single-menu").classList.remove("display-block");
-	document.global.ui.two?
+	global.ui.two?
 		document.querySelector(".two-menu").classList.add("display-block"):document.querySelector(".two-menu").classList.remove("display-block");
-	document.global.ui.tournament?
+	global.ui.tournament?
 		document.querySelector(".tournament-menu").classList.add("display-block"):document.querySelector(".tournament-menu").classList.remove("display-block");
-	document.global.ui.multiLobby?
+	global.ui.multiLobby?
 		document.querySelector(".multi-lobby-menu").classList.add("display-block"):document.querySelector(".multi-lobby-menu").classList.remove("display-block");
-	if (document.global.socket.gameLobbyError) {
+	if (global.socket.gameLobbyError) {
 		document.querySelector(".multi-lobby-error").classList.remove("display-none");
 		document.querySelector(".multi-lobby").classList.add("display-none");
 	}
@@ -585,20 +586,20 @@ function processUI() {
 		document.querySelector(".multi-lobby-error").classList.add("display-none");
 		document.querySelector(".multi-lobby").classList.remove("display-none");
 	}
-	document.global.ui.multiCreate?
+	global.ui.multiCreate?
 		document.querySelector(".multi-create-menu").classList.add("display-block"):document.querySelector(".multi-create-menu").classList.remove("display-block");
-	if (Object.keys(document.global.socket.gameInfo).length && !document.global.socket.gameError) {
+	if (Object.keys(global.socket.gameInfo).length && !global.socket.gameError) {
 		document.querySelector(".multi-create-option-menu").classList.remove("display-none");
 		document.querySelector(".multi-create-warning").classList.add("display-none");
 		document.querySelector(".multi-create-game-error").classList.add("display-none");
 		document.querySelector(".multi-ready-game").classList.remove("display-none")
 		document.querySelector(".multi-host-left-container").classList.add("display-none")
 		document.querySelector(".multi-game-error-container").classList.add("display-none")
-		if (document.global.socket.gameInfo.gameMode === 'versus') {
+		if (global.socket.gameInfo.gameMode === 'versus') {
 			document.querySelector(".multi-create-display-player-versus-one").classList.remove("display-none")
 			document.querySelector(".multi-create-display-player-versus-two").classList.remove("display-none")
 			document.querySelector(".multi-create-display-player-tournament").classList.add("display-none")
-			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username)
+			if (global.socket.gameInfo.mainClient === global.gameplay.username)
 				document.querySelector(".multi-start-game").classList.remove("display-none")
 				
 			else {
@@ -611,7 +612,7 @@ function processUI() {
 			document.querySelector(".multi-create-display-player-tournament").classList.remove("display-none")
 			document.querySelector(".multi-start-game").classList.add("display-none")
 			
-			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+			if (global.socket.gameInfo.mainClient === global.gameplay.username) {
 				document.querySelector(".multi-matchfix").classList.remove("display-none")
 				document.querySelector(".multi-tournament-matchFix-start-button").classList.remove("display-none")
 			}
@@ -623,47 +624,47 @@ function processUI() {
 		}
 	}
 	else {
-		if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
-			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
-		if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
-			document.global.socket.gameSocket.close();
+		if (global.socket.gameLobbySocket && global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
+			global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+		if (global.socket.gameSocket && global.socket.gameSocket.readyState === WebSocket.OPEN)
+			global.socket.gameSocket.close();
 		document.querySelector(".multi-matchfix").classList.add("display-none")
-		if (!document.global.gameplay.gameStart && !document.global.gameplay.gameEnd && !document.global.socket.matchFix) {
+		if (!global.gameplay.gameStart && !global.gameplay.gameEnd && !global.socket.matchFix) {
 			document.querySelector(".multi-create-option-menu").classList.add("display-none");
-			if (document.global.socket.gameError)
+			if (global.socket.gameError)
 				document.querySelector(".multi-create-game-error").classList.remove("display-none");
 			else
 				document.querySelector(".multi-create-warning").classList.remove("display-none");
 			document.querySelector(".multi-ready-game").classList.add("display-none")
 			document.querySelector(".multi-start-game").classList.add("display-none")
 		}
-		if (!document.global.gameplay.gameStart && !document.global.gameplay.gameEnd && document.global.socket.matchFix) {
-			document.global.socket.matchFix = 0;
-			if (document.global.socket.gameError)
+		if (!global.gameplay.gameStart && !global.gameplay.gameEnd && global.socket.matchFix) {
+			global.socket.matchFix = 0;
+			if (global.socket.gameError)
 				document.querySelector(".multi-game-error-container").classList.remove("display-none")
 			else 
 				document.querySelector(".multi-host-left-container").classList.remove("display-none")
 		}
-		if (document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
-			if (document.global.socket.gameError)
+		if (global.gameplay.gameStart && !global.gameplay.gameEnd) {
+			if (global.socket.gameError)
 				document.querySelector(".multi-game-error-container").classList.remove("display-none")
 			else 
 				document.querySelector(".multi-host-left-container").classList.remove("display-none")
-			document.global.powerUp.shake.enable = 0;
-			document.global.gameplay.initRotateY = 0;
-			document.global.gameplay.initRotateX = 0;
+			global.powerUp.shake.enable = 0;
+			global.gameplay.initRotateY = 0;
+			global.gameplay.initRotateX = 0;
 		}
 	}
-	if (document.global.socket.matchFix) {
+	if (global.socket.matchFix) {
 		document.querySelector(".multi-tournament-matchFix-container").classList.remove("display-none")
 		updateMatchFix();
 	}
 	else
 		document.querySelector(".multi-tournament-matchfix-container").classList.add("display-none");
 
-	document.global.gameplay.ludicrious?
+	global.gameplay.ludicrious?
 		document.querySelector(".timer").classList.add("timer-ludicrious"):document.querySelector(".timer").classList.remove("timer-ludicrious");
-	if (document.global.ui.auth) {
+	if (global.ui.auth) {
 		document.querySelector(".nav-logout").classList.remove("display-none");
 		document.querySelector(".nav-login").classList.add("display-none");
 	}
@@ -671,11 +672,11 @@ function processUI() {
 		document.querySelector(".nav-logout").classList.add("display-none");
 		document.querySelector(".nav-login").classList.remove("display-none");
 	}
-	document.global.ui.authWarning? document.querySelector(".login-warning").classList.remove("display-none") : document.querySelector(".login-warning").classList.add("display-none");
+	global.ui.authWarning? document.querySelector(".login-warning").classList.remove("display-none") : document.querySelector(".login-warning").classList.add("display-none");
 	
-	for (let i = 0; i < document.global.gameplay.localSingleInfo.player.length; i++) {
+	for (let i = 0; i < global.gameplay.localSingleInfo.player.length; i++) {
 		const parent = document.querySelector(".single-alias-display-inside");
-		const target = document.querySelector(".single-" + document.global.gameplay.localSingleInfo.player[i].alias)
+		const target = document.querySelector(".single-" + global.gameplay.localSingleInfo.player[i].alias)
 		
 		if (!target) {
 			const element = document.createElement('p');
@@ -683,22 +684,22 @@ function processUI() {
 			button.setAttribute("type", "button")
 			const xmark = document.createElement('i');
 			xmark.classList.add("fa", "fa-xmark");
-			xmark.setAttribute("single-identifier",document.global.gameplay.localSingleInfo.player[i].alias);
+			xmark.setAttribute("single-identifier",global.gameplay.localSingleInfo.player[i].alias);
 			button.addEventListener("click", (e)=>{
-				for (let i = 0; i < document.global.gameplay.localSingleInfo.player.length; i++) {
-					if (document.global.gameplay.localSingleInfo.player.length && document.global.gameplay.localSingleInfo.player[i] && document.global.gameplay.localSingleInfo.player[i].alias === e.target.getAttribute("single-identifier"))
-						document.global.gameplay.localSingleInfo.player = [...document.global.gameplay.localSingleInfo.player.slice(0, i),...document.global.gameplay.localSingleInfo.player.slice(i + 1)];
+				for (let i = 0; i < global.gameplay.localSingleInfo.player.length; i++) {
+					if (global.gameplay.localSingleInfo.player.length && global.gameplay.localSingleInfo.player[i] && global.gameplay.localSingleInfo.player[i].alias === e.target.getAttribute("single-identifier"))
+						global.gameplay.localSingleInfo.player = [...global.gameplay.localSingleInfo.player.slice(0, i),...global.gameplay.localSingleInfo.player.slice(i + 1)];
 				}
 			})
-			element.classList.add("single-" + document.global.gameplay.localSingleInfo.player[i].alias)
-			element.textContent = document.global.gameplay.localSingleInfo.player[i].alias;
+			element.classList.add("single-" + global.gameplay.localSingleInfo.player[i].alias)
+			element.textContent = global.gameplay.localSingleInfo.player[i].alias;
 			parent.appendChild(element).appendChild(button).appendChild(xmark);
 		}
 	}
 
-	for (let i = 0; i < document.global.gameplay.localTwoInfo.player.length; i++) {
+	for (let i = 0; i < global.gameplay.localTwoInfo.player.length; i++) {
 		const parent = document.querySelector(".two-alias-display-inside");
-		const target = document.querySelector(".two-" + document.global.gameplay.localTwoInfo.player[i].alias)
+		const target = document.querySelector(".two-" + global.gameplay.localTwoInfo.player[i].alias)
 		
 		if (!target) {
 			const element = document.createElement('p');
@@ -706,22 +707,22 @@ function processUI() {
 			button.setAttribute("type", "button")
 			const xmark = document.createElement('i');
 			xmark.classList.add("fa", "fa-xmark");
-			xmark.setAttribute("two-identifier",document.global.gameplay.localTwoInfo.player[i].alias);
+			xmark.setAttribute("two-identifier",global.gameplay.localTwoInfo.player[i].alias);
 			button.addEventListener("click", (e)=>{
-				for (let i = 0; i < document.global.gameplay.localTwoInfo.player.length; i++) {
-					if (document.global.gameplay.localTwoInfo.player.length && document.global.gameplay.localTwoInfo.player[i] && document.global.gameplay.localTwoInfo.player[i].alias === e.target.getAttribute("two-identifier"))
-						document.global.gameplay.localTwoInfo.player = [...document.global.gameplay.localTwoInfo.player.slice(0, i),...document.global.gameplay.localTwoInfo.player.slice(i + 1)];
+				for (let i = 0; i < global.gameplay.localTwoInfo.player.length; i++) {
+					if (global.gameplay.localTwoInfo.player.length && global.gameplay.localTwoInfo.player[i] && global.gameplay.localTwoInfo.player[i].alias === e.target.getAttribute("two-identifier"))
+						global.gameplay.localTwoInfo.player = [...global.gameplay.localTwoInfo.player.slice(0, i),...global.gameplay.localTwoInfo.player.slice(i + 1)];
 				}
 			})
-			element.classList.add("two-" + document.global.gameplay.localTwoInfo.player[i].alias)
-			element.textContent = document.global.gameplay.localTwoInfo.player[i].alias;
+			element.classList.add("two-" + global.gameplay.localTwoInfo.player[i].alias)
+			element.textContent = global.gameplay.localTwoInfo.player[i].alias;
 			parent.appendChild(element).appendChild(button).appendChild(xmark);
 		}
 	}
 
-	for (let i = 0; i < document.global.gameplay.localTournamentInfo.player.length; i++) {
+	for (let i = 0; i < global.gameplay.localTournamentInfo.player.length; i++) {
 		const parent = document.querySelector(".tournament-alias-display-inside");
-		const target = document.querySelector(".tournament-" + document.global.gameplay.localTournamentInfo.player[i].alias)
+		const target = document.querySelector(".tournament-" + global.gameplay.localTournamentInfo.player[i].alias)
 		
 		if (!target) {
 			const element = document.createElement('p');
@@ -729,78 +730,78 @@ function processUI() {
 			button.setAttribute("type", "button")
 			const xmark = document.createElement('i');
 			xmark.classList.add("fa", "fa-xmark");
-			xmark.setAttribute("tournament-identifier",document.global.gameplay.localTournamentInfo.player[i].alias);
+			xmark.setAttribute("tournament-identifier",global.gameplay.localTournamentInfo.player[i].alias);
 			button.addEventListener("click", (e)=>{
-				for (let i = 0; i < document.global.gameplay.localTournamentInfo.player.length; i++) {
-					if (document.global.gameplay.localTournamentInfo.player.length && document.global.gameplay.localTournamentInfo.player[i] && document.global.gameplay.localTournamentInfo.player[i].alias === e.target.getAttribute("tournament-identifier"))
-						document.global.gameplay.localTournamentInfo.player = [...document.global.gameplay.localTournamentInfo.player.slice(0, i),...document.global.gameplay.localTournamentInfo.player.slice(i + 1)];
+				for (let i = 0; i < global.gameplay.localTournamentInfo.player.length; i++) {
+					if (global.gameplay.localTournamentInfo.player.length && global.gameplay.localTournamentInfo.player[i] && global.gameplay.localTournamentInfo.player[i].alias === e.target.getAttribute("tournament-identifier"))
+						global.gameplay.localTournamentInfo.player = [...global.gameplay.localTournamentInfo.player.slice(0, i),...global.gameplay.localTournamentInfo.player.slice(i + 1)];
 				}
 			})
-			element.classList.add("tournament-" + document.global.gameplay.localTournamentInfo.player[i].alias)
-			element.textContent = document.global.gameplay.localTournamentInfo.player[i].alias;
+			element.classList.add("tournament-" + global.gameplay.localTournamentInfo.player[i].alias)
+			element.textContent = global.gameplay.localTournamentInfo.player[i].alias;
 			parent.appendChild(element).appendChild(button).appendChild(xmark);
 		}
 	}
-	document.getElementById("single-duration").value = document.global.gameplay.localSingleInfo.duration;
-	document.getElementById("two-duration").value = document.global.gameplay.localTwoInfo.duration;
-	document.getElementById("tournament-duration").value = document.global.gameplay.localTournamentInfo.duration;
-	document.global.gameplay.localSingleInfo.powerUp? document.getElementById("single-powerup").checked=true:document.getElementById("single-powerup").checked=false;
-	document.global.gameplay.localSingleInfo.ludicrious? document.getElementById("single-ludicrious").checked=true:document.getElementById("single-ludicrious").checked=false;
-	document.global.gameplay.localTwoInfo.powerUp? document.getElementById("two-powerup").checked=true:document.getElementById("two-powerup").checked=false;
-	document.global.gameplay.localTwoInfo.ludicrious? document.getElementById("two-ludicrious").checked=true:document.getElementById("two-ludicrious").checked=false;
-	document.global.gameplay.localTournamentInfo.powerUp? document.getElementById("tournament-powerup").checked=true:document.getElementById("tournament-powerup").checked=false;
-	document.global.gameplay.localTournamentInfo.ludicrious? document.getElementById("tournament-ludicrious").checked=true:document.getElementById("tournament-ludicrious").checked=false;
+	document.getElementById("single-duration").value = global.gameplay.localSingleInfo.duration;
+	document.getElementById("two-duration").value = global.gameplay.localTwoInfo.duration;
+	document.getElementById("tournament-duration").value = global.gameplay.localTournamentInfo.duration;
+	global.gameplay.localSingleInfo.powerUp? document.getElementById("single-powerup").checked=true:document.getElementById("single-powerup").checked=false;
+	global.gameplay.localSingleInfo.ludicrious? document.getElementById("single-ludicrious").checked=true:document.getElementById("single-ludicrious").checked=false;
+	global.gameplay.localTwoInfo.powerUp? document.getElementById("two-powerup").checked=true:document.getElementById("two-powerup").checked=false;
+	global.gameplay.localTwoInfo.ludicrious? document.getElementById("two-ludicrious").checked=true:document.getElementById("two-ludicrious").checked=false;
+	global.gameplay.localTournamentInfo.powerUp? document.getElementById("tournament-powerup").checked=true:document.getElementById("tournament-powerup").checked=false;
+	global.gameplay.localTournamentInfo.ludicrious? document.getElementById("tournament-ludicrious").checked=true:document.getElementById("tournament-ludicrious").checked=false;
 	
 	const parentSingle = document.querySelector(".single-alias-display-inside")
 	Array.from(parentSingle.children).forEach(child=>{
-		if (document.global.gameplay.localSingleInfo.player.every(player=>{
+		if (global.gameplay.localSingleInfo.player.every(player=>{
 			return "single-" + player.alias !== child.classList[0]
 		}))
 			parentSingle.removeChild(child);
 	})
 	const parentTwo = document.querySelector(".two-alias-display-inside")
 	Array.from(parentTwo.children).forEach(child=>{
-		if (document.global.gameplay.localTwoInfo.player.every(player=>{
+		if (global.gameplay.localTwoInfo.player.every(player=>{
 			return "two-" + player.alias !== child.classList[0]
 		}))
 		parentTwo.removeChild(child);
 	})
 	const parentTournament = document.querySelector(".tournament-alias-display-inside")
 	Array.from(parentTournament.children).forEach(child=>{
-		if (document.global.gameplay.localTournamentInfo.player.every(player=>{
+		if (global.gameplay.localTournamentInfo.player.every(player=>{
 			return "tournament-" + player.alias !== child.classList[0]
 		}))
 		parentTournament.removeChild(child);
 	})
 	
 	
-	if (document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
+	if (global.gameplay.gameStart && !global.gameplay.gameEnd) {
 		//during gameStart and before gameEnd screen
 		document.querySelector(".banner").classList.add("display-none");
 		document.querySelector(".scoreboard").classList.remove("display-none");
 		document.querySelector(".toggle-game").classList.remove("display-none");
 		document.querySelector(".game-end-display-container").classList.add("display-none");
-		document.global.gameplay.gameSummary? document.querySelector(".game-summary-container").classList.remove("display-none"):document.querySelector(".game-summary-container").classList.add("display-none");
-		if (document.global.gameplay.cheat && !document.global.socket.spectate) {
+		global.gameplay.gameSummary? document.querySelector(".game-summary-container").classList.remove("display-none"):document.querySelector(".game-summary-container").classList.add("display-none");
+		if (global.gameplay.cheat && !global.socket.spectate) {
 			document.querySelector(".toggle-cheat").classList.remove("display-none");
-			if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
+			if (!global.gameplay.local && global.socket.gameInfo.gameMode === "versus") {
 				document.querySelector(".cheat-count").classList.remove("display-none");
-				if (document.global.socket.gameInfo.playerGame[0].player.includes(document.global.gameplay.username))
-					document.querySelector(".cheat-count").textContent = document.global.socket.gameInfo.playerGame[0].cheatCount;
+				if (global.socket.gameInfo.playerGame[0].player.includes(global.gameplay.username))
+					document.querySelector(".cheat-count").textContent = global.socket.gameInfo.playerGame[0].cheatCount;
 				else 
-					document.querySelector(".cheat-count").textContent = document.global.socket.gameInfo.playerGame[1].cheatCount;
+					document.querySelector(".cheat-count").textContent = global.socket.gameInfo.playerGame[1].cheatCount;
 			}
-			else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament"){
+			else if (!global.gameplay.local && global.socket.gameInfo.gameMode === "tournament"){
 				document.querySelector(".cheat-count").classList.remove("display-none");
 				let tournamentPlayerIndex;
-				if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias === document.global.gameplay.username)
+				if (global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][0].alias === global.gameplay.username)
 					tournamentPlayerIndex = 0;
-				else if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias === document.global.gameplay.username)
+				else if (global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][1].alias === global.gameplay.username)
 					tournamentPlayerIndex = 1;
 				else
 					tournamentPlayerIndex = -1;
 				if (tournamentPlayerIndex !== -1)
-					document.querySelector(".cheat-count").textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][tournamentPlayerIndex].cheatCount;
+					document.querySelector(".cheat-count").textContent = global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][tournamentPlayerIndex].cheatCount;
 				else
 					document.querySelector(".toggle-cheat").classList.add("display-none");
 			}
@@ -808,68 +809,68 @@ function processUI() {
 		else
 			document.querySelector(".toggle-cheat").classList.add("display-none");
 		document.querySelector(".reset-game").classList.add("display-none");
-		if (document.global.gameplay.local && document.global.gameplay.single) {
-			document.querySelector(".scoreboard-one-name").textContent = document.global.gameplay.localSingleInfo.player[0].alias;
-			document.querySelector(".scoreboard-one-score").textContent = document.global.gameplay.localSingleInfo.player[0].score;
+		if (global.gameplay.local && global.gameplay.single) {
+			document.querySelector(".scoreboard-one-name").textContent = global.gameplay.localSingleInfo.player[0].alias;
+			document.querySelector(".scoreboard-one-score").textContent = global.gameplay.localSingleInfo.player[0].score;
 			document.querySelector(".scoreboard-two-name").textContent = "A.I.";
-			document.querySelector(".scoreboard-two-score").textContent = document.global.gameplay.computerScore;
-			document.querySelector(".timer").textContent = document.global.gameplay.localSingleInfo.durationCount;
+			document.querySelector(".scoreboard-two-score").textContent = global.gameplay.computerScore;
+			document.querySelector(".timer").textContent = global.gameplay.localSingleInfo.durationCount;
 		}
-		else if (document.global.gameplay.local && document.global.gameplay.two) {
-			document.querySelector(".scoreboard-one-name").textContent = document.global.gameplay.localTwoInfo.player[0].alias;
-			document.querySelector(".scoreboard-one-score").textContent = document.global.gameplay.localTwoInfo.player[0].score;
-			document.querySelector(".scoreboard-two-name").textContent = document.global.gameplay.localTwoInfo.player[1].alias;
-			document.querySelector(".scoreboard-two-score").textContent = document.global.gameplay.localTwoInfo.player[1].score;
-			document.querySelector(".timer").textContent = document.global.gameplay.localTwoInfo.durationCount;
+		else if (global.gameplay.local && global.gameplay.two) {
+			document.querySelector(".scoreboard-one-name").textContent = global.gameplay.localTwoInfo.player[0].alias;
+			document.querySelector(".scoreboard-one-score").textContent = global.gameplay.localTwoInfo.player[0].score;
+			document.querySelector(".scoreboard-two-name").textContent = global.gameplay.localTwoInfo.player[1].alias;
+			document.querySelector(".scoreboard-two-score").textContent = global.gameplay.localTwoInfo.player[1].score;
+			document.querySelector(".timer").textContent = global.gameplay.localTwoInfo.durationCount;
 		}
-		else if (document.global.gameplay.local && document.global.gameplay.tournament) {
-			document.querySelector(".scoreboard-one-name").textContent = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].alias;
-			document.querySelector(".scoreboard-one-score").textContent = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].score;
-			document.querySelector(".scoreboard-two-name").textContent = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].alias;
-			document.querySelector(".scoreboard-two-score").textContent = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].score;
-			document.querySelector(".timer").textContent = document.global.gameplay.localTournamentInfo.durationCount;
+		else if (global.gameplay.local && global.gameplay.tournament) {
+			document.querySelector(".scoreboard-one-name").textContent = global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][0].alias;
+			document.querySelector(".scoreboard-one-score").textContent = global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][0].score;
+			document.querySelector(".scoreboard-two-name").textContent = global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][1].alias;
+			document.querySelector(".scoreboard-two-score").textContent = global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][1].score;
+			document.querySelector(".timer").textContent = global.gameplay.localTournamentInfo.durationCount;
 			
 		}
-		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
+		else if (!global.gameplay.local && global.socket.gameInfo.gameMode === "versus") {
 			document.querySelector('.multi-create-display-player-versus-one').innerHTML = ''
 			document.querySelector('.multi-create-display-player-versus-two').innerHTML = ''
-			document.querySelector(".scoreboard-one-name").textContent = document.global.socket.gameInfo.playerGame[0].teamName;
-			document.querySelector(".scoreboard-one-score").textContent = document.global.socket.gameInfo.playerGame[0].score;
-			document.querySelector(".scoreboard-two-name").textContent = document.global.socket.gameInfo.playerGame[1].teamName;
-			document.querySelector(".scoreboard-two-score").textContent = document.global.socket.gameInfo.playerGame[1].score;
-			document.querySelector(".timer").textContent = document.global.socket.gameInfo.durationCount;
+			document.querySelector(".scoreboard-one-name").textContent = global.socket.gameInfo.playerGame[0].teamName;
+			document.querySelector(".scoreboard-one-score").textContent = global.socket.gameInfo.playerGame[0].score;
+			document.querySelector(".scoreboard-two-name").textContent = global.socket.gameInfo.playerGame[1].teamName;
+			document.querySelector(".scoreboard-two-score").textContent = global.socket.gameInfo.playerGame[1].score;
+			document.querySelector(".timer").textContent = global.socket.gameInfo.durationCount;
 			
 		}
-		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
+		else if (!global.gameplay.local && global.socket.gameInfo.gameMode === "tournament") {
 			document.querySelector('.multi-create-display-player-tournament').innerHTML = ''
-			document.querySelector(".scoreboard-one-name").textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias;
-			document.querySelector(".scoreboard-one-score").textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].score;
-			document.querySelector(".scoreboard-two-name").textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias;
-			document.querySelector(".scoreboard-two-score").textContent = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].score;
+			document.querySelector(".scoreboard-one-name").textContent = global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][0].alias;
+			document.querySelector(".scoreboard-one-score").textContent = global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][0].score;
+			document.querySelector(".scoreboard-two-name").textContent = global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][1].alias;
+			document.querySelector(".scoreboard-two-score").textContent = global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][1].score;
 			
-			document.querySelector(".timer").textContent = document.global.socket.gameInfo.durationCount;
+			document.querySelector(".timer").textContent = global.socket.gameInfo.durationCount;
 			
 		}
 		updateGameSummary();
 	}
-	else if (document.global.gameplay.gameStart && document.global.gameplay.gameEnd) {
+	else if (global.gameplay.gameStart && global.gameplay.gameEnd) {
 		//for gameEnd screen
 		updateGameSummary();
 
 		document.querySelector(".game-summary-container").classList.remove("display-none");
-		if (document.global.gameplay.single || document.global.gameplay.two || document.global.gameplay.tournament && 
-			(document.global.gameplay.localTournamentInfo.currentRound === document.global.gameplay.localTournamentInfo.round - 1) || 
-			!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus" ||
-			(!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament" && document.global.socket.gameInfo.currentRound === document.global.socket.gameInfo.round - 1))
+		if (global.gameplay.single || global.gameplay.two || global.gameplay.tournament && 
+			(global.gameplay.localTournamentInfo.currentRound === global.gameplay.localTournamentInfo.round - 1) || 
+			!global.gameplay.local && global.socket.gameInfo.gameMode === "versus" ||
+			(!global.gameplay.local && global.socket.gameInfo.gameMode === "tournament" && global.socket.gameInfo.currentRound === global.socket.gameInfo.round - 1))
 			document.querySelector(".game-end-display-container").classList.remove("display-none");
 		document.querySelector(".banner").classList.add("display-none");
 		document.querySelector(".scoreboard").classList.add("display-none");
 		document.querySelector(".toggle-game").classList.add("display-none");
-		if (document.global.gameplay.local || !document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus")
+		if (global.gameplay.local || !global.gameplay.local && global.socket.gameInfo.gameMode === "versus")
 			document.querySelector(".reset-game").classList.remove("display-none");
-		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament" && document.global.socket.gameInfo.mainClient === document.global.gameplay.username)
+		else if (!global.gameplay.local && global.socket.gameInfo.gameMode === "tournament" && global.socket.gameInfo.mainClient === global.gameplay.username)
 			document.querySelector(".reset-game").classList.remove("display-none");
-		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament" && document.global.socket.gameInfo.mainClient !== document.global.gameplay.username && document.global.socket.gameInfo.currentRound === document.global.socket.gameInfo.round - 1)
+		else if (!global.gameplay.local && global.socket.gameInfo.gameMode === "tournament" && global.socket.gameInfo.mainClient !== global.gameplay.username && global.socket.gameInfo.currentRound === global.socket.gameInfo.round - 1)
 			document.querySelector(".reset-game").classList.remove("display-none");
 		document.querySelector(".toggle-cheat").classList.add("display-none");
 		document.querySelector(".cheat-count").classList.add("display-none");
@@ -886,12 +887,12 @@ function processUI() {
 		
 	}
 	
-	if (document.global.gameplay.pause) 
+	if (global.gameplay.pause) 
 		document.querySelector(".pause").classList.remove("display-none");
 	else 
 		document.querySelector(".pause").classList.add("display-none");
-	for (let i = 0; i < document.global.socket.gameLobbyInfo.length; i++) {
-		const target = document.querySelector(".multi-lobby-game-container"+"."+document.global.socket.gameLobbyInfo[i].mainClient)
+	for (let i = 0; i < global.socket.gameLobbyInfo.length; i++) {
+		const target = document.querySelector(".multi-lobby-game-container"+"."+global.socket.gameLobbyInfo[i].mainClient)
 		if (!target) {
 			const gameContainer = document.createElement('div');
 			const gameOptionsContainer = document.createElement('div');
@@ -901,40 +902,40 @@ function processUI() {
 			const join = document.createElement('button');
 			const spectate = document.createElement('button');
 			gameContainer.classList.add('multi-lobby-game-container');
-			gameContainer.classList.add(document.global.socket.gameLobbyInfo[i].mainClient);
+			gameContainer.classList.add(global.socket.gameLobbyInfo[i].mainClient);
 			gameOptionsContainer.classList.add('multi-lobby-game-container-options');
 			gameHost.classList.add("multi-lobby-game-header")
-			gameHost.textContent = document.global.socket.gameLobbyInfo[i].mainClient + " " + document.global.socket.gameLobbyInfo[i].gameMode.toUpperCase();
+			gameHost.textContent = global.socket.gameLobbyInfo[i].mainClient + " " + global.socket.gameLobbyInfo[i].gameMode.toUpperCase();
 			playerNum.classList.add("multi-game-player");
-			playerNum.classList.add(document.global.socket.gameLobbyInfo[i].mainClient);
-			playerNum.textContent = "Players: " + document.global.socket.gameLobbyInfo[i].player.length + " / " + document.global.paddle.maxPaddle;
+			playerNum.classList.add(global.socket.gameLobbyInfo[i].mainClient);
+			playerNum.textContent = "Players: " + global.socket.gameLobbyInfo[i].player.length + " / " + global.paddle.maxPaddle;
 			status.classList.add("multi-game-status");
-			status.classList.add(document.global.socket.gameLobbyInfo[i].mainClient);
+			status.classList.add(global.socket.gameLobbyInfo[i].mainClient);
 			status.textContent = "Not Live";
 			join.setAttribute("type","button")
 			join.classList.add("multi-game-join")
-			join.classList.add(document.global.socket.gameLobbyInfo[i].mainClient)
+			join.classList.add(global.socket.gameLobbyInfo[i].mainClient)
 			join.textContent = "JOIN";
 			spectate.setAttribute("type","button")
 			spectate.classList.add("multi-game-spectate")
-			spectate.classList.add(document.global.socket.gameLobbyInfo[i].mainClient)
+			spectate.classList.add(global.socket.gameLobbyInfo[i].mainClient)
 			spectate.textContent = "SPECTATE";
 			join.addEventListener("click", (e)=>{
-				if (document.global.gameplay.username !== e.target.classList[1]) {
+				if (global.gameplay.username !== e.target.classList[1]) {
 					let currentGame;
-					document.global.socket.gameLobbyInfo.forEach(game=>{
+					global.socket.gameLobbyInfo.forEach(game=>{
 						if(game.mainClient === e.target.classList[1])
 							currentGame = game;
 					})
-					if (currentGame.player.length < document.global.paddle.maxPaddle && !currentGame.player.includes(document.global.gameplay.username) && !currentGame.gameStart) {
-						if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
-							document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"join", mainClient:e.target.classList[1]}))
+					if (currentGame.player.length < global.paddle.maxPaddle && !currentGame.player.includes(global.gameplay.username) && !currentGame.gameStart) {
+						if (global.socket.gameLobbySocket && global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
+							global.socket.gameLobbySocket.send(JSON.stringify({mode:"join", mainClient:e.target.classList[1]}))
 						createGameSocket(e.target.classList[1])
-						document.global.socket.gameSocket.onopen = function() {
-								document.global.ui.multiCreate = 1;
-								document.global.ui.multiLobby = 0;
-								if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
-									document.global.socket.gameSocket.send(JSON.stringify({
+						global.socket.gameSocket.onopen = function() {
+								global.ui.multiCreate = 1;
+								global.ui.multiLobby = 0;
+								if (global.socket.gameSocket && global.socket.gameSocket.readyState === WebSocket.OPEN)
+									global.socket.gameSocket.send(JSON.stringify({
 										mode:"join",
 									}))
 							}
@@ -943,8 +944,8 @@ function processUI() {
 			})
 			spectate.addEventListener("click", (e)=>{
 				createGameSocket(e.target.classList[1])
-				document.global.socket.gameSocket.onopen = function() {
-					document.global.socket.spectate = 1;
+				global.socket.gameSocket.onopen = function() {
+					global.socket.spectate = 1;
 					multiGameStart();
 				}
 			})
@@ -957,36 +958,36 @@ function processUI() {
 			document.querySelector('.multi-lobby-display').appendChild(gameContainer);
 		}
 		else {
-			document.global.socket.gameLobbyInfo[i].player.length < document.global.paddle.maxPaddle? document.querySelector(".multi-game-join." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = false :document.querySelector(".multi-game-join." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = true;
-			if (document.global.socket.gameLobbyInfo[i].gameStart) {
-				document.querySelector(".multi-game-spectate." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = false;
-				document.querySelector(".multi-game-join." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = true;
-				document.querySelector(".multi-game-status." + document.global.socket.gameLobbyInfo[i].mainClient).textContent = "Live";
-				document.querySelector(".multi-game-status." + document.global.socket.gameLobbyInfo[i].mainClient).classList.add("live");
+			global.socket.gameLobbyInfo[i].player.length < global.paddle.maxPaddle? document.querySelector(".multi-game-join." + global.socket.gameLobbyInfo[i].mainClient).disabled = false :document.querySelector(".multi-game-join." + global.socket.gameLobbyInfo[i].mainClient).disabled = true;
+			if (global.socket.gameLobbyInfo[i].gameStart) {
+				document.querySelector(".multi-game-spectate." + global.socket.gameLobbyInfo[i].mainClient).disabled = false;
+				document.querySelector(".multi-game-join." + global.socket.gameLobbyInfo[i].mainClient).disabled = true;
+				document.querySelector(".multi-game-status." + global.socket.gameLobbyInfo[i].mainClient).textContent = "Live";
+				document.querySelector(".multi-game-status." + global.socket.gameLobbyInfo[i].mainClient).classList.add("live");
 			}
 			else {
-				document.querySelector(".multi-game-spectate." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = true;
-				document.querySelector(".multi-game-join." + document.global.socket.gameLobbyInfo[i].mainClient).disabled = false;
-				document.querySelector(".multi-game-status." + document.global.socket.gameLobbyInfo[i].mainClient).textContent = "Not Live";
-				document.querySelector(".multi-game-status." + document.global.socket.gameLobbyInfo[i].mainClient).classList.remove("live");
+				document.querySelector(".multi-game-spectate." + global.socket.gameLobbyInfo[i].mainClient).disabled = true;
+				document.querySelector(".multi-game-join." + global.socket.gameLobbyInfo[i].mainClient).disabled = false;
+				document.querySelector(".multi-game-status." + global.socket.gameLobbyInfo[i].mainClient).textContent = "Not Live";
+				document.querySelector(".multi-game-status." + global.socket.gameLobbyInfo[i].mainClient).classList.remove("live");
 			}
-			document.querySelector(".multi-game-player." + document.global.socket.gameLobbyInfo[i].mainClient).textContent = "Players: " + document.global.socket.gameLobbyInfo[i].player.length + " / " + document.global.paddle.maxPaddle;
+			document.querySelector(".multi-game-player." + global.socket.gameLobbyInfo[i].mainClient).textContent = "Players: " + global.socket.gameLobbyInfo[i].player.length + " / " + global.paddle.maxPaddle;
 				
 
 		}
 	}
 	const multiLobbyDisplay = document.querySelector(".multi-lobby-display")
 	Array.from(multiLobbyDisplay.children).forEach(child=>{
-		if (document.global.socket.gameLobbyInfo.every(game=>{
+		if (global.socket.gameLobbyInfo.every(game=>{
 			return game.mainClient !== child.classList[1]
 		}))
 		multiLobbyDisplay.removeChild(child);
 	})
-	if (document.global.socket.gameInfo.mainClient) {
-		document.querySelector(".multi-create-mainClient").textContent = document.global.socket.gameInfo.mainClient + " " + document.global.socket.gameInfo.gameMode.toUpperCase();
-		if (document.global.socket.gameInfo.gameMode == "versus") {
-			const playerArrayOne = document.global.socket.gameInfo.playerGame[0].player
-			const playerArrayTwo = document.global.socket.gameInfo.playerGame[1].player
+	if (global.socket.gameInfo.mainClient) {
+		document.querySelector(".multi-create-mainClient").textContent = global.socket.gameInfo.mainClient + " " + global.socket.gameInfo.gameMode.toUpperCase();
+		if (global.socket.gameInfo.gameMode == "versus") {
+			const playerArrayOne = global.socket.gameInfo.playerGame[0].player
+			const playerArrayTwo = global.socket.gameInfo.playerGame[1].player
 			
 			const versusMultiCreateDisplayPlayerOne = document.querySelector(".multi-create-display-player-versus-one")
 			Array.from(versusMultiCreateDisplayPlayerOne.children).forEach(child=>{
@@ -1042,37 +1043,37 @@ function processUI() {
 			})
 			
 			
-			const playerArray = Object.keys(document.global.socket.gameInfo.player)
+			const playerArray = Object.keys(global.socket.gameInfo.player)
 			playerArray.forEach(player=>{
-				document.global.socket.gameInfo.player[player].ready? document.querySelector(".multi-ready-versus."+player).classList.remove("display-none"):document.querySelector(".multi-ready-versus."+player).classList.add("display-none")
+				global.socket.gameInfo.player[player].ready? document.querySelector(".multi-ready-versus."+player).classList.remove("display-none"):document.querySelector(".multi-ready-versus."+player).classList.add("display-none")
 			})
 			if ((playerArray.every(player=>{
-				return document.global.socket.gameInfo.player[player].ready === 1
-			})) && document.global.socket.gameInfo.playerGame[0].player.length>0 && document.global.socket.gameInfo.playerGame[1].player.length>0)
+				return global.socket.gameInfo.player[player].ready === 1
+			})) && global.socket.gameInfo.playerGame[0].player.length>0 && global.socket.gameInfo.playerGame[1].player.length>0)
 				document.querySelector(".multi-start-game").classList.add("ready")
 			else 
 				document.querySelector(".multi-start-game").classList.remove("ready")
 		}
 		else {
-			const playerArray = Object.keys(document.global.socket.gameInfo.player)
+			const playerArray = Object.keys(global.socket.gameInfo.player)
 			const tournamentMultiCreateDisplayPlayer = document.querySelector(".multi-create-display-player-tournament")
 			for (let i = 0; i < playerArray.length; i++) {
-				const target = document.querySelector(".multi-create-tournament."+document.global.socket.gameInfo.player[playerArray[i]].name)
+				const target = document.querySelector(".multi-create-tournament."+global.socket.gameInfo.player[playerArray[i]].name)
 				if (!target) {
 					const player = document.createElement('p');
 					const ready = document.createElement('span');
 					ready.textContent = "READY";
 					ready.classList.add("ready");
 					ready.classList.add("multi-ready-tournament")
-					ready.classList.add(document.global.socket.gameInfo.player[playerArray[i]].name);
+					ready.classList.add(global.socket.gameInfo.player[playerArray[i]].name);
 					ready.classList.add("display-none");
-					player.textContent = document.global.socket.gameInfo.player[playerArray[i]].name;
+					player.textContent = global.socket.gameInfo.player[playerArray[i]].name;
 					player.classList.add("multi-create-tournament")
-					player.classList.add(document.global.socket.gameInfo.player[playerArray[i]].name)
+					player.classList.add(global.socket.gameInfo.player[playerArray[i]].name)
 					player.appendChild(ready);
 					document.querySelector('.multi-create-display-player-tournament').appendChild(player)
 				}
-				document.global.socket.gameInfo.player[playerArray[i]].ready? document.querySelector(".multi-ready-tournament."+document.global.socket.gameInfo.player[playerArray[i]].name).classList.remove("display-none"):document.querySelector(".multi-ready-tournament." + document.global.socket.gameInfo.player[playerArray[i]].name).classList.add("display-none")
+				global.socket.gameInfo.player[playerArray[i]].ready? document.querySelector(".multi-ready-tournament."+global.socket.gameInfo.player[playerArray[i]].name).classList.remove("display-none"):document.querySelector(".multi-ready-tournament." + global.socket.gameInfo.player[playerArray[i]].name).classList.add("display-none")
 			}
 			Array.from(tournamentMultiCreateDisplayPlayer.children).forEach(child=>{
 				if (playerArray.every(player=>{
@@ -1081,14 +1082,14 @@ function processUI() {
 				tournamentMultiCreateDisplayPlayer.removeChild(child);
 			})
 			if (playerArray.every(player=>{
-				return document.global.socket.gameInfo.player[player].ready === 1
+				return global.socket.gameInfo.player[player].ready === 1
 			}))
 				document.querySelector(".multi-matchFix").classList.add("ready")
 			else 
 				document.querySelector(".multi-matchFix").classList.remove("ready")
 		}
 		
-		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+		if (global.socket.gameInfo.mainClient === global.gameplay.username) {
 			document.getElementById("multi-create-duration").disabled = false;
 			document.getElementById("multi-create-ludicrious").disabled = false;
 			document.getElementById("multi-create-powerUp").disabled = false;
@@ -1099,15 +1100,15 @@ function processUI() {
 			document.getElementById("multi-create-ludicrious").disabled = true;
 			document.getElementById("multi-create-powerUp").disabled = true;
 		}
-		document.getElementById("multi-create-duration").value = document.global.socket.gameInfo.duration;
-		document.global.socket.gameInfo.ludicrious? document.getElementById("multi-create-ludicrious").checked=true:document.getElementById("multi-create-ludicrious").checked=false;
-		document.global.socket.gameInfo.powerUp? document.getElementById("multi-create-powerUp").checked=true:document.getElementById("multi-create-powerUp").checked=false;
-		if (document.global.socket.ready) 
+		document.getElementById("multi-create-duration").value = global.socket.gameInfo.duration;
+		global.socket.gameInfo.ludicrious? document.getElementById("multi-create-ludicrious").checked=true:document.getElementById("multi-create-ludicrious").checked=false;
+		global.socket.gameInfo.powerUp? document.getElementById("multi-create-powerUp").checked=true:document.getElementById("multi-create-powerUp").checked=false;
+		if (global.socket.ready) 
 			document.querySelector(".multi-ready-game").classList.add("ready")
 		else
 			document.querySelector(".multi-ready-game").classList.remove("ready")
 			
-		if (document.global.socket.gameInfo.gameMode === "versus") {
+		if (global.socket.gameInfo.gameMode === "versus") {
 			document.querySelector(".multi-create-display-player-versus-container").classList.remove("display-none");
 			document.querySelector(".multi-create-display-player-tournament").classList.add("display-none");
 		}
@@ -1115,7 +1116,7 @@ function processUI() {
 			document.querySelector(".multi-create-display-player-versus-container").classList.add("display-none");
 			document.querySelector(".multi-create-display-player-tournament").classList.remove("display-none");
 		}
-		document.global.socket.spectate? document.querySelector(".nav-pause").classList.add("display-none"):document.querySelector(".nav-pause").classList.remove("display-none");
+		global.socket.spectate? document.querySelector(".nav-pause").classList.add("display-none"):document.querySelector(".nav-pause").classList.remove("display-none");
 	}
 	
 	if (document.querySelector(".main-container").clientWidth < 577) {
@@ -1124,7 +1125,7 @@ function processUI() {
 		document.querySelector(".main-nav").style.height = "initial";
 		document.querySelector(".main-nav").style.width = "100%";
 		
-		if (document.global.ui.profile){
+		if (global.ui.profile){
 			document.querySelector(".profile-container").style.height = document.querySelector(".main-container").clientHeight - document.querySelector(".canvas-container").clientHeight - document.querySelector(".main-nav").clientHeight;
 			document.querySelector(".chat-container").style.height = "0";
 		}
@@ -1137,7 +1138,7 @@ function processUI() {
 		document.querySelector(".profile-container").style.height = "100vh";
 		document.querySelector(".chat-container").style.height = "100vh";
 		document.querySelector(".main-nav").style.height ="100vh";
-		if (document.global.ui.profile){
+		if (global.ui.profile){
 			document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
 			document.querySelector(".chat-container").style.width = "0";
 		}
@@ -1147,10 +1148,10 @@ function processUI() {
 		}
 	}
 	else {
-		document.querySelector(".profile-container").style.height = document.global.desktopCanvasHeight;
-		document.querySelector(".main-nav").style.height = document.global.desktopCanvasHeight;
-		document.querySelector(".chat-container").style.height = document.global.desktopCanvasHeight;
-		if (document.global.ui.profile){
+		document.querySelector(".profile-container").style.height = global.desktopCanvasHeight;
+		document.querySelector(".main-nav").style.height = global.desktopCanvasHeight;
+		document.querySelector(".chat-container").style.height = global.desktopCanvasHeight;
+		if (global.ui.profile){
 			document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth - document.querySelector(".fr-start").clientWidth - document.querySelector(".fr-end").clientWidth;
 			document.querySelector(".chat-container").style.width = "0";
 		}
@@ -1159,93 +1160,93 @@ function processUI() {
 			document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth - document.querySelector(".fr-start").clientWidth - document.querySelector(".fr-end").clientWidth;
 		}	
 	}
-	document.global.socket.spectate? document.querySelector(".spectate-container").classList.remove("display-none"):document.querySelector(".spectate-container").classList.add("display-none")
+	global.socket.spectate? document.querySelector(".spectate-container").classList.remove("display-none"):document.querySelector(".spectate-container").classList.add("display-none")
 	
 	
 }
 
 function arenaRotateY() {
-	if (document.global.gameplay.initRotateY && !document.global.gameplay.pause && !document.global.gameplay.gameEnd) {
-		document.global.arena3D.position.z += document.global.arena.depth;
-		document.global.arena3D.rotation.y += document.global.gameplay.rotationY;
-		document.global.powerUp.mesh.forEach(mesh=>{
-			mesh.rotation.y = -document.global.arena3D.rotation.y;
+	if (global.gameplay.initRotateY && !global.gameplay.pause && !global.gameplay.gameEnd) {
+		global.arena3D.position.z += global.arena.depth;
+		global.arena3D.rotation.y += global.gameplay.rotationY;
+		global.powerUp.mesh.forEach(mesh=>{
+			mesh.rotation.y = -global.arena3D.rotation.y;
 		})
-		document.global.sphere.sphereMesh.forEach(sphereMesh=>{
-			sphereMesh.rotation.y = -document.global.arena3D.rotation.y;
+		global.sphere.sphereMesh.forEach(sphereMesh=>{
+			sphereMesh.rotation.y = -global.arena3D.rotation.y;
 		})
-		document.global.arena3D.position.z -= document.global.arena.depth;
+		global.arena3D.position.z -= global.arena.depth;
 	}
 }
 
 function arenaRotateX() {
-	if (document.global.gameplay.initRotateX && !document.global.gameplay.pause && !document.global.gameplay.gameEnd) {
-		document.global.arena3D.position.z += document.global.arena.depth;
-		document.global.arena3D.rotation.x += document.global.gameplay.rotationX;
-		document.global.powerUp.mesh.forEach(mesh=>{
-			mesh.rotation.x = -document.global.arena3D.rotation.x;
+	if (global.gameplay.initRotateX && !global.gameplay.pause && !global.gameplay.gameEnd) {
+		global.arena3D.position.z += global.arena.depth;
+		global.arena3D.rotation.x += global.gameplay.rotationX;
+		global.powerUp.mesh.forEach(mesh=>{
+			mesh.rotation.x = -global.arena3D.rotation.x;
 		})
-		document.global.sphere.sphereMesh.forEach(sphereMesh=>{
-			sphereMesh.rotation.x = -document.global.arena3D.rotation.x;
+		global.sphere.sphereMesh.forEach(sphereMesh=>{
+			sphereMesh.rotation.x = -global.arena3D.rotation.x;
 		})
 		
-		document.global.arena3D.position.z -=document.global.arena.depth;
+		global.arena3D.position.z -=global.arena.depth;
 	}
 }
 
 
 
 function shakeEffect() {
-	const arena3D = document.global.arena3D;
-	if (document.global.powerUp.shake.enable && !document.global.gameplay.pause) {
+	const arena3D = global.arena3D;
+	if (global.powerUp.shake.enable && !global.gameplay.pause) {
 		const randomNum = Math.floor(Math.random() * 6);
 		if (randomNum === 0)
-			arena3D.position.x += 1 * document.global.powerUp.shake.multiplier;
+			arena3D.position.x += 1 * global.powerUp.shake.multiplier;
 		else if (randomNum === 1)
-			arena3D.position.x -= 1 * document.global.powerUp.shake.multiplier;
+			arena3D.position.x -= 1 * global.powerUp.shake.multiplier;
 		else if (randomNum === 2)
-			arena3D.position.y += 1 * document.global.powerUp.shake.multiplier;
+			arena3D.position.y += 1 * global.powerUp.shake.multiplier;
 		else if (randomNum === 3)
-			arena3D.position.y -= 1 * document.global.powerUp.shake.multiplier;
+			arena3D.position.y -= 1 * global.powerUp.shake.multiplier;
 		else if (randomNum === 4)
-			arena3D.position.z += 1 * document.global.powerUp.shake.multiplier;
+			arena3D.position.z += 1 * global.powerUp.shake.multiplier;
 		else if (randomNum === 5)
-			arena3D.position.z -= 1 * document.global.powerUp.shake.multiplier;
+			arena3D.position.z -= 1 * global.powerUp.shake.multiplier;
 	}
 	else 
 		arena3D.position.set(0,0,0);
 }
 
 function setTimer() {
-	if (document.global.gameplay.gameStart && !document.global.gameplay.pause && !document.global.gameplay.gameEnd) {
+	if (global.gameplay.gameStart && !global.gameplay.pause && !global.gameplay.gameEnd) {
 		//roundStart shadow issue actions for ALL CLIENTS
-		if (document.global.gameplay.roundStart === 0) {
-			document.global.pointLight.castShadow = false;
-			document.global.gameplay.shadowFrame = 0;
+		if (global.gameplay.roundStart === 0) {
+			global.pointLight.castShadow = false;
+			global.gameplay.shadowFrame = 0;
 		}
-		if (document.global.gameplay.roundStart === 1)
-			document.global.gameplay.shadowFrame++;
-		if (document.global.gameplay.shadowFrame === document.global.gameplay.shadowFrameLimit)
-			document.global.pointLight.castShadow = true;
+		if (global.gameplay.roundStart === 1)
+			global.gameplay.shadowFrame++;
+		if (global.gameplay.shadowFrame === global.gameplay.shadowFrameLimit)
+			global.pointLight.castShadow = true;
 	
 		// Below gameplay delay and powerup executed by mainClient
-		if (document.global.gameplay.local || !document.global.gameplay.local && document.global.gameplay.username === document.global.socket.gameInfo.mainClient) {
-			if (document.global.gameplay.roundStart === 0) 
-				document.global.gameplay.roundStartFrame++;
+		if (global.gameplay.local || !global.gameplay.local && global.gameplay.username === global.socket.gameInfo.mainClient) {
+			if (global.gameplay.roundStart === 0) 
+				global.gameplay.roundStartFrame++;
 			
-			if (document.global.gameplay.roundStartFrame === document.global.gameplay.roundStartFrameLimit) {
-				document.global.gameplay.roundStart = 1;
-				document.global.gameplay.roundStartFrame = 0;
+			if (global.gameplay.roundStartFrame === global.gameplay.roundStartFrameLimit) {
+				global.gameplay.roundStart = 1;
+				global.gameplay.roundStartFrame = 0;
 			}
 			// powerup timer
-			if (document.global.powerUp.enable) {
-				if (document.global.powerUp.meshProperty.every(meshProperty=>{
+			if (global.powerUp.enable) {
+				if (global.powerUp.meshProperty.every(meshProperty=>{
 					return !meshProperty.visible;
 				}))
-					document.global.powerUp.durationFrame++;
-				if (document.global.powerUp.durationFrame >= document.global.powerUp.durationFrameLimit) {
+					global.powerUp.durationFrame++;
+				if (global.powerUp.durationFrame >= global.powerUp.durationFrameLimit) {
 					resetPowerUp();
-					document.global.powerUp.durationFrame = 0;
+					global.powerUp.durationFrame = 0;
 				}
 			}
 		}
@@ -1253,104 +1254,104 @@ function setTimer() {
 }
 
 export function populateWinner() {
-	if (document.global.gameplay.local && document.global.gameplay.single) {
-		const scoreOne = parseInt(document.global.gameplay.localSingleInfo.player[0].score);
-		const scoreAI = parseInt(document.global.gameplay.computerScore);
+	if (global.gameplay.local && global.gameplay.single) {
+		const scoreOne = parseInt(global.gameplay.localSingleInfo.player[0].score);
+		const scoreAI = parseInt(global.gameplay.computerScore);
 		if (scoreOne > scoreAI) {
-			document.global.gameplay.localSingleInfo.player[0].winner = true;
-			document.global.gameplay.computerWinner = false;
+			global.gameplay.localSingleInfo.player[0].winner = true;
+			global.gameplay.computerWinner = false;
 		}
 		else if (scoreAI > scoreOne) {
-			document.global.gameplay.localSingleInfo.player[0].winner = false;
-			document.global.gameplay.computerWinner = true;
+			global.gameplay.localSingleInfo.player[0].winner = false;
+			global.gameplay.computerWinner = true;
 		}
 	}
-	else if (document.global.gameplay.local && document.global.gameplay.two) {
-		const scoreOne = parseInt(document.global.gameplay.localTwoInfo.player[0].score);
-		const scoreTwo = parseInt(document.global.gameplay.localTwoInfo.player[1].score);
+	else if (global.gameplay.local && global.gameplay.two) {
+		const scoreOne = parseInt(global.gameplay.localTwoInfo.player[0].score);
+		const scoreTwo = parseInt(global.gameplay.localTwoInfo.player[1].score);
 		if (scoreOne > scoreTwo) {
-			document.global.gameplay.localTwoInfo.player[0].winner = true;
-			document.global.gameplay.localTwoInfo.player[1].winner = false;
+			global.gameplay.localTwoInfo.player[0].winner = true;
+			global.gameplay.localTwoInfo.player[1].winner = false;
 		}
 		else if (scoreTwo > scoreOne) {
-			document.global.gameplay.localTwoInfo.player[0].winner = false;
-			document.global.gameplay.localTwoInfo.player[1].winner = true;
+			global.gameplay.localTwoInfo.player[0].winner = false;
+			global.gameplay.localTwoInfo.player[1].winner = true;
 		}
 	}
-	else if (document.global.gameplay.local && document.global.gameplay.tournament) {
-		const scoreOne = parseInt(document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].score);
-		const scoreTwo = parseInt(document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].score);
+	else if (global.gameplay.local && global.gameplay.tournament) {
+		const scoreOne = parseInt(global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][0].score);
+		const scoreTwo = parseInt(global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][1].score);
 		let winnerAlias;
 		if (scoreOne > scoreTwo) {
-			document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].winner = true;
-			document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].winner = false;
-			winnerAlias = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].alias;
+			global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][0].winner = true;
+			global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][1].winner = false;
+			winnerAlias = global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][0].alias;
 		}
 		else if (scoreTwo > scoreOne) {
-			document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].winner = true;
-			document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].winner = false;
-			winnerAlias = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].alias;
+			global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][1].winner = true;
+			global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][0].winner = false;
+			winnerAlias = global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][1].alias;
 		}
 		else {
 			const randomWinner = Math.floor(Math.random() * 1)
 			if (randomWinner === 0)
-				winnerAlias = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][0].alias;
+				winnerAlias = global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][0].alias;
 			else
-				winnerAlias = document.global.gameplay.localTournamentInfo.playerGame[document.global.gameplay.localTournamentInfo.currentRound][1].alias;
+				winnerAlias = global.gameplay.localTournamentInfo.playerGame[global.gameplay.localTournamentInfo.currentRound][1].alias;
 		}
 
-		for (let i = 0; i < document.global.gameplay.localTournamentInfo.playerGame.length; i++) {
-			if (document.global.gameplay.localTournamentInfo.playerGame[i][0].alias === "?") {
-				document.global.gameplay.localTournamentInfo.playerGame[i][0].alias = winnerAlias;
+		for (let i = 0; i < global.gameplay.localTournamentInfo.playerGame.length; i++) {
+			if (global.gameplay.localTournamentInfo.playerGame[i][0].alias === "?") {
+				global.gameplay.localTournamentInfo.playerGame[i][0].alias = winnerAlias;
 				break;
 			}
-			else if (document.global.gameplay.localTournamentInfo.playerGame[i][1].alias === "?") {
-				document.global.gameplay.localTournamentInfo.playerGame[i][1].alias = winnerAlias;
+			else if (global.gameplay.localTournamentInfo.playerGame[i][1].alias === "?") {
+				global.gameplay.localTournamentInfo.playerGame[i][1].alias = winnerAlias;
 				break;
 			}
 		}
 	}
-	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
-		const scoreOne = parseInt(document.global.socket.gameInfo.playerGame[0].score);
-		const scoreTwo = parseInt(document.global.socket.gameInfo.playerGame[1].score);
+	else if (!global.gameplay.local && global.socket.gameInfo.gameMode === "versus") {
+		const scoreOne = parseInt(global.socket.gameInfo.playerGame[0].score);
+		const scoreTwo = parseInt(global.socket.gameInfo.playerGame[1].score);
 		if (scoreOne > scoreTwo) {
-			document.global.socket.gameInfo.playerGame[0].winner = true;
-			document.global.socket.gameInfo.playerGame[1].winner = false;
+			global.socket.gameInfo.playerGame[0].winner = true;
+			global.socket.gameInfo.playerGame[1].winner = false;
 		}
 		else if (scoreTwo > scoreOne) {
-			document.global.socket.gameInfo.playerGame[0].winner = false;
-			document.global.socket.gameInfo.playerGame[1].winner = true;
+			global.socket.gameInfo.playerGame[0].winner = false;
+			global.socket.gameInfo.playerGame[1].winner = true;
 		}
 	}
-	else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
-		const scoreOne = parseInt(document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].score);
-		const scoreTwo = parseInt(document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].score);
+	else if (!global.gameplay.local && global.socket.gameInfo.gameMode === "tournament") {
+		const scoreOne = parseInt(global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][0].score);
+		const scoreTwo = parseInt(global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][1].score);
 		let winnerAlias;
 		if (scoreOne > scoreTwo) {
-			document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].winner = true;
-			document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].winner = false;
-			winnerAlias = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias;
+			global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][0].winner = true;
+			global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][1].winner = false;
+			winnerAlias = global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][0].alias;
 		}
 		else if (scoreTwo > scoreOne) {
-			document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].winner = true;
-			document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].winner = false;
-			winnerAlias = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias;
+			global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][1].winner = true;
+			global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][0].winner = false;
+			winnerAlias = global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][1].alias;
 		}
 		else {
 			const randomWinner = Math.floor(Math.random() * 1)
 			if (randomWinner === 0)
-				winnerAlias = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias;
+				winnerAlias = global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][0].alias;
 			else
-				winnerAlias = document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias;
+				winnerAlias = global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][1].alias;
 		}
-		if (document.global.socket.gameInfo.currentRound < document.global.socket.gameInfo.round - 1) {
-			for (let i = 0; i < document.global.socket.gameInfo.playerGame.length; i++) {
-				if (document.global.socket.gameInfo.playerGame[i][0].alias === "?") {
-					document.global.socket.gameInfo.playerGame[i][0].alias = winnerAlias;
+		if (global.socket.gameInfo.currentRound < global.socket.gameInfo.round - 1) {
+			for (let i = 0; i < global.socket.gameInfo.playerGame.length; i++) {
+				if (global.socket.gameInfo.playerGame[i][0].alias === "?") {
+					global.socket.gameInfo.playerGame[i][0].alias = winnerAlias;
 					break;
 				}
-				else if (document.global.socket.gameInfo.playerGame[i][1].alias === "?") {
-					document.global.socket.gameInfo.playerGame[i][1].alias = winnerAlias;
+				else if (global.socket.gameInfo.playerGame[i][1].alias === "?") {
+					global.socket.gameInfo.playerGame[i][1].alias = winnerAlias;
 					break;
 				}
 			}
@@ -1368,32 +1369,32 @@ function reduceTime(info) {
 	info.durationCount = date.getMinutes().toString().padStart(2, '0') + ':' + date.getSeconds().toString().padStart(2, '0');
 	//set ludicrious mode
 	if (info.ludicrious) {
-		if (date.getMinutes() < document.global.gameplay.ludicriousYminuteUpper && date.getMinutes() >= document.global.gameplay.ludicriousYminuteLower 
-		&& date.getSeconds() < document.global.gameplay.ludicriousYsecondUpper  && date.getSeconds() >= document.global.gameplay.ludicriousYsecondLower) {
-			document.global.gameplay.initRotateY = 1;
-			document.global.gameplay.initRotateX = 0;
-			document.global.gameplay.ludicrious = 1;
+		if (date.getMinutes() < global.gameplay.ludicriousYminuteUpper && date.getMinutes() >= global.gameplay.ludicriousYminuteLower 
+		&& date.getSeconds() < global.gameplay.ludicriousYsecondUpper  && date.getSeconds() >= global.gameplay.ludicriousYsecondLower) {
+			global.gameplay.initRotateY = 1;
+			global.gameplay.initRotateX = 0;
+			global.gameplay.ludicrious = 1;
 		}
-		if (date.getMinutes() < document.global.gameplay.ludicriousXminuteUpper && date.getMinutes() >= document.global.gameplay.ludicriousXminuteLower 
-			&& date.getSeconds() < document.global.gameplay.ludicriousXsecondUpper  && date.getSeconds() >= document.global.gameplay.ludicriousXsecondLower){
-				document.global.gameplay.initRotateY = 0;
-				document.global.gameplay.initRotateX = 1;
-				document.global.gameplay.ludicrious = 1;
+		if (date.getMinutes() < global.gameplay.ludicriousXminuteUpper && date.getMinutes() >= global.gameplay.ludicriousXminuteLower 
+			&& date.getSeconds() < global.gameplay.ludicriousXsecondUpper  && date.getSeconds() >= global.gameplay.ludicriousXsecondLower){
+				global.gameplay.initRotateY = 0;
+				global.gameplay.initRotateX = 1;
+				global.gameplay.ludicrious = 1;
 		}
-		if (date.getMinutes() < document.global.gameplay.ludicriousYXminuteUpper && date.getMinutes() >= document.global.gameplay.ludicriousYXminuteLower 
-			&& date.getSeconds() < document.global.gameplay.ludicriousYXsecondUpper  && date.getSeconds() >= document.global.gameplay.ludicriousYXsecondLower){
-				document.global.gameplay.initRotateY = 1;
-				document.global.gameplay.initRotateX = 1;
-				document.global.gameplay.ludicrious = 1;
+		if (date.getMinutes() < global.gameplay.ludicriousYXminuteUpper && date.getMinutes() >= global.gameplay.ludicriousYXminuteLower 
+			&& date.getSeconds() < global.gameplay.ludicriousYXsecondUpper  && date.getSeconds() >= global.gameplay.ludicriousYXsecondLower){
+				global.gameplay.initRotateY = 1;
+				global.gameplay.initRotateX = 1;
+				global.gameplay.ludicrious = 1;
 		}
 	}
 	if (minute === '00' && second === '01') {
-		document.global.gameplay.gameEnd = 1;
+		global.gameplay.gameEnd = 1;
 		populateWinner();
-		if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username && document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN) {
-			document.global.socket.gameSocket.send(JSON.stringify({
+		if (!global.gameplay.local && global.socket.gameInfo.mainClient === global.gameplay.username && global.socket.gameSocket && global.socket.gameSocket.readyState === WebSocket.OPEN) {
+			global.socket.gameSocket.send(JSON.stringify({
 				mode:"gameEnd",
-				gameInfo:document.global.socket.gameInfo
+				gameInfo:global.socket.gameInfo
 			}));
 		}
 	}
@@ -1401,34 +1402,34 @@ function reduceTime(info) {
 }
 
 function processCountDown(frameTimer) {
-	if (document.global.gameplay.gameStart && !document.global.gameplay.pause && !document.global.gameplay.gameEnd) {
-		if (document.global.gameplay.local && document.global.gameplay.single) {
+	if (global.gameplay.gameStart && !global.gameplay.pause && !global.gameplay.gameEnd) {
+		if (global.gameplay.local && global.gameplay.single) {
 			if (frameTimer.now - frameTimer.prev > 0) {
-				reduceTime(document.global.gameplay.localSingleInfo)
+				reduceTime(global.gameplay.localSingleInfo)
 				frameTimer.prev = frameTimer.now;
 			}
 		}
-		else if (document.global.gameplay.local && document.global.gameplay.two) {
+		else if (global.gameplay.local && global.gameplay.two) {
 			if (frameTimer.now - frameTimer.prev > 0) {
-				reduceTime(document.global.gameplay.localTwoInfo)
+				reduceTime(global.gameplay.localTwoInfo)
 				frameTimer.prev = frameTimer.now;
 			}
 		}
-		else if (document.global.gameplay.local && document.global.gameplay.tournament) {
+		else if (global.gameplay.local && global.gameplay.tournament) {
 			if (frameTimer.now - frameTimer.prev > 0) {
-				reduceTime(document.global.gameplay.localTournamentInfo)
+				reduceTime(global.gameplay.localTournamentInfo)
 				frameTimer.prev = frameTimer.now;
 			}
 		}
-		else if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username && document.global.socket.gameInfo.gameMode === "versus") {
+		else if (!global.gameplay.local && global.socket.gameInfo.mainClient === global.gameplay.username && global.socket.gameInfo.gameMode === "versus") {
 			if (frameTimer.now - frameTimer.prev > 0) {
-				reduceTime(document.global.socket.gameInfo)
+				reduceTime(global.socket.gameInfo)
 				frameTimer.prev = frameTimer.now;
 			}
 		}
-		else if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username && document.global.socket.gameInfo.gameMode === "tournament") {
+		else if (!global.gameplay.local && global.socket.gameInfo.mainClient === global.gameplay.username && global.socket.gameInfo.gameMode === "tournament") {
 			if (frameTimer.now - frameTimer.prev > 0) {
-				reduceTime(document.global.socket.gameInfo)
+				reduceTime(global.socket.gameInfo)
 				frameTimer.prev = frameTimer.now;
 			}
 		}
@@ -1438,102 +1439,102 @@ function processCountDown(frameTimer) {
 }
 
 function sendMultiData() {
-	if (document.global.socket.gameInfo.mainClient && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd && document.global.socket.gameSocket && !document.global.socket.spectate) {
-		if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
-			if (document.global.socket.gameInfo.gameMode === "versus") {
-				let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
+	if (global.socket.gameInfo.mainClient && global.gameplay.gameStart && !global.gameplay.gameEnd && global.socket.gameSocket && !global.socket.spectate) {
+		if (global.socket.gameInfo.mainClient === global.gameplay.username) {
+			if (global.socket.gameInfo.gameMode === "versus") {
+				let paddleIndex = global.socket.gameInfo.playerGame[0].player.indexOf(global.gameplay.username);
 				if (paddleIndex === -1)
-					paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
+					paddleIndex = global.socket.gameInfo.playerGame[1].player.indexOf(global.gameplay.username) + global.socket.gameInfo.playerGame[0].player.length;
 				let liveGameData =
 				{
-					sphereMeshProperty:JSON.parse(JSON.stringify(document.global.sphere.sphereMeshProperty)),
-					paddlesProperty:{...document.global.paddle.paddlesProperty[paddleIndex]},
-					ludicrious:document.global.gameplay.ludicrious,
-					roundStart:document.global.gameplay.roundStart,
-					initRotateY:document.global.gameplay.initRotateY,
-					initRotateX:document.global.gameplay.initRotateX,
-					shake:document.global.powerUp.shake.enable,
-					backgroundIndex:document.global.gameplay.backgroundIndex,
-					meshProperty:JSON.parse(JSON.stringify(document.global.powerUp.meshProperty)),
+					sphereMeshProperty:JSON.parse(JSON.stringify(global.sphere.sphereMeshProperty)),
+					paddlesProperty:{...global.paddle.paddlesProperty[paddleIndex]},
+					ludicrious:global.gameplay.ludicrious,
+					roundStart:global.gameplay.roundStart,
+					initRotateY:global.gameplay.initRotateY,
+					initRotateX:global.gameplay.initRotateX,
+					shake:global.powerUp.shake.enable,
+					backgroundIndex:global.gameplay.backgroundIndex,
+					meshProperty:JSON.parse(JSON.stringify(global.powerUp.meshProperty)),
 				}
 				processSendLiveGameData(liveGameData)
-				if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
-					document.global.socket.gameSocket.send(JSON.stringify({
+				if (global.socket.gameSocket && global.socket.gameSocket.readyState === WebSocket.OPEN)
+					global.socket.gameSocket.send(JSON.stringify({
 						mode:"mainClient",
-						gameInfo:document.global.socket.gameInfo,
+						gameInfo:global.socket.gameInfo,
 						liveGameData:liveGameData,
 					}))
 			}
 			else {
 				let tournamentPaddleIndex;
-				if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias === document.global.gameplay.username)
+				if (global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][0].alias === global.gameplay.username)
 					tournamentPaddleIndex = 0;
-				else if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias === document.global.gameplay.username)
+				else if (global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][1].alias === global.gameplay.username)
 					tournamentPaddleIndex = 1;
 				else
 					tournamentPaddleIndex = -1;
 				let liveGameData =
 				{
-					sphereMeshProperty:JSON.parse(JSON.stringify(document.global.sphere.sphereMeshProperty)),
-					paddlesProperty:tournamentPaddleIndex !== -1? {...document.global.paddle.paddlesProperty[tournamentPaddleIndex]}: {},
-					ludicrious:document.global.gameplay.ludicrious,
-					roundStart:document.global.gameplay.roundStart,
-					initRotateY:document.global.gameplay.initRotateY,
-					initRotateX:document.global.gameplay.initRotateX,
-					shake:document.global.powerUp.shake.enable,
-					backgroundIndex:document.global.gameplay.backgroundIndex,
-					meshProperty:JSON.parse(JSON.stringify(document.global.powerUp.meshProperty)),
+					sphereMeshProperty:JSON.parse(JSON.stringify(global.sphere.sphereMeshProperty)),
+					paddlesProperty:tournamentPaddleIndex !== -1? {...global.paddle.paddlesProperty[tournamentPaddleIndex]}: {},
+					ludicrious:global.gameplay.ludicrious,
+					roundStart:global.gameplay.roundStart,
+					initRotateY:global.gameplay.initRotateY,
+					initRotateX:global.gameplay.initRotateX,
+					shake:global.powerUp.shake.enable,
+					backgroundIndex:global.gameplay.backgroundIndex,
+					meshProperty:JSON.parse(JSON.stringify(global.powerUp.meshProperty)),
 				}
 				processSendLiveGameData(liveGameData)
-				if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
-					document.global.socket.gameSocket.send(JSON.stringify({
+				if (global.socket.gameSocket && global.socket.gameSocket.readyState === WebSocket.OPEN)
+					global.socket.gameSocket.send(JSON.stringify({
 						mode:"mainClient",
-						gameInfo:document.global.socket.gameInfo,
+						gameInfo:global.socket.gameInfo,
 						liveGameData:liveGameData,
 					}))
 				
 			}
 		}
 		else {
-			const clientWidth = document.global.clientWidth; 
+			const clientWidth = global.clientWidth; 
 			let paddlesProperty = {}
-			if (document.global.socket.gameInfo.gameMode === "versus") {
-				let paddleIndex = document.global.socket.gameInfo.playerGame[0].player.indexOf(document.global.gameplay.username);
+			if (global.socket.gameInfo.gameMode === "versus") {
+				let paddleIndex = global.socket.gameInfo.playerGame[0].player.indexOf(global.gameplay.username);
 				if (paddleIndex === -1)
-					paddleIndex = document.global.socket.gameInfo.playerGame[1].player.indexOf(document.global.gameplay.username) + document.global.socket.gameInfo.playerGame[0].player.length;
-				paddlesProperty = {...document.global.paddle.paddlesProperty[paddleIndex]}
+					paddleIndex = global.socket.gameInfo.playerGame[1].player.indexOf(global.gameplay.username) + global.socket.gameInfo.playerGame[0].player.length;
+				paddlesProperty = {...global.paddle.paddlesProperty[paddleIndex]}
 				paddlesProperty.positionX = paddlesProperty.positionX / clientWidth;
 				paddlesProperty.positionY = paddlesProperty.positionY / clientWidth;
 				paddlesProperty.positionZ = paddlesProperty.positionZ / clientWidth;
 				paddlesProperty.width = paddlesProperty.width / clientWidth;
 				paddlesProperty.height = paddlesProperty.height / clientWidth;
-				if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
-					document.global.socket.gameSocket.send(JSON.stringify({
+				if (global.socket.gameSocket && global.socket.gameSocket.readyState === WebSocket.OPEN)
+					global.socket.gameSocket.send(JSON.stringify({
 						mode:"player",
-						playerName:document.global.gameplay.username,
+						playerName:global.gameplay.username,
 						liveGameData:paddlesProperty
 					}))
 			}
 			else {
 				let tournamentPaddleIndex;
-				if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][0].alias === document.global.gameplay.username)
+				if (global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][0].alias === global.gameplay.username)
 					tournamentPaddleIndex = 0;
-				else if (document.global.socket.gameInfo.playerGame[document.global.socket.gameInfo.currentRound][1].alias === document.global.gameplay.username)
+				else if (global.socket.gameInfo.playerGame[global.socket.gameInfo.currentRound][1].alias === global.gameplay.username)
 					tournamentPaddleIndex = 1;
 				else
 					tournamentPaddleIndex = -1;
 				if (tournamentPaddleIndex !== -1) {
-					paddlesProperty = {...document.global.paddle.paddlesProperty[tournamentPaddleIndex]}
+					paddlesProperty = {...global.paddle.paddlesProperty[tournamentPaddleIndex]}
 					paddlesProperty.positionX = paddlesProperty.positionX / clientWidth;
 					paddlesProperty.positionY = paddlesProperty.positionY / clientWidth;
 					paddlesProperty.positionZ = paddlesProperty.positionZ / clientWidth;
 					paddlesProperty.width = paddlesProperty.width / clientWidth;
 					paddlesProperty.height = paddlesProperty.height / clientWidth;
 				}
-				if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
-					document.global.socket.gameSocket.send(JSON.stringify({
+				if (global.socket.gameSocket && global.socket.gameSocket.readyState === WebSocket.OPEN)
+					global.socket.gameSocket.send(JSON.stringify({
 						mode:"player",
-						playerName:document.global.gameplay.username,
+						playerName:global.gameplay.username,
 						liveGameData:paddlesProperty,
 					}))
 			}
@@ -1554,8 +1555,8 @@ export function main() {
 
 	init();
 	//render background
-	document.querySelector(".canvas-background-1").classList.add(document.global.gameplay.backgroundClass[document.global.gameplay.backgroundIndex]);
-	document.querySelector(".canvas-background-2").classList.add(document.global.gameplay.backgroundClass[document.global.gameplay.backgroundIndex]);
+	document.querySelector(".canvas-background-1").classList.add(global.gameplay.backgroundClass[global.gameplay.backgroundIndex]);
+	document.querySelector(".canvas-background-2").classList.add(global.gameplay.backgroundClass[global.gameplay.backgroundIndex]);
 	keyBinding();
 	keyBindingMultiplayer();
 	keyBindingProfile();
@@ -1580,7 +1581,7 @@ export function main() {
 	createShadowPlanes(arena3D);
 	createPowerUp(arena3D);
 	//attach arena and add to scene
-	document.global.arena3D = arena3D;
+	global.arena3D = arena3D;
 	scene.add(arena3D);
 
 	function resizeRenderer() {
@@ -1594,7 +1595,7 @@ export function main() {
 	window.addEventListener('resize', resizeRenderer);
 
 	function render( time ) {
-		if (document.global.gameplay.gameStart)
+		if (global.gameplay.gameStart)
 			frameTimer.now = Math.floor(time * 0.001);
 		else {
 			frameTimer.now = 0;
@@ -1620,12 +1621,12 @@ export function main() {
 		shakeEffect();
 		arenaRotateY();
 		arenaRotateX();
-		if (document.global.gameplay.rotate90) {
-			document.global.arena3D.rotation.y = -Math.PI / 2;
-			for (let i = 0; i < document.global.powerUp.mesh.length; i++) {
-				document.global.powerUp.mesh[i].rotation.y = Math.PI / 2;
+		if (global.gameplay.rotate90) {
+			global.arena3D.rotation.y = -Math.PI / 2;
+			for (let i = 0; i < global.powerUp.mesh.length; i++) {
+				global.powerUp.mesh[i].rotation.y = Math.PI / 2;
 			}
-			document.global.sphere.sphereMesh.forEach(sphereMesh=>{
+			global.sphere.sphereMesh.forEach(sphereMesh=>{
 				sphereMesh.rotation.y = Math.PI / 2;
 			})
 		}
@@ -1635,9 +1636,9 @@ export function main() {
 		sendMultiData()
 		
 
-		document.global.requestID = requestAnimationFrame(render);
+		global.requestID = requestAnimationFrame(render);
 	}
-	document.global.requestID = requestAnimationFrame(render);
+	global.requestID = requestAnimationFrame(render);
 }
 
 main();
