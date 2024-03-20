@@ -5,21 +5,17 @@ function windowResize(e) {
 	if (mainContainer.clientWidth >= 577 && mainContainer.clientWidth <= 993) {
 		canvas.style.height = mainContainer.clientHeight;
 		canvas.style.width = (canvas.clientHeight * document.global.arena.aspect) + 'px';
-		document.global.ui.profile = 1;
-		document.global.defaultFlexMobileLandScapeWidth = window.getComputedStyle(document.querySelector(".profile-container")).getPropertyValue('width');
-		
 	}
 	else if (mainContainer.clientWidth < 577) {
 		canvas.style.width = "100%"
 		canvas.style.height = (canvas.clientWidth / document.global.arena.aspect) + 'px';
-		document.global.ui.profile= 0;
 	}
 	else {
-		document.global.ui.profile= 0;
-		document.global.ui.chat= 0;
 		canvas.style.width = document.global.desktopCanvasWidth;
 		canvas.style.height = (canvas.clientWidth / document.global.arena.aspect) + 'px';
 	}
+	document.global.desktopCanvasHeight = canvas.clientHeight;
+	
 	//for each individual client
 	document.global.directionalLight.positionX = canvas.clientWidth;
 	document.global.directionalLight.positionY = canvas.clientWidth;
@@ -43,11 +39,7 @@ function initGlobal() {
 	//initiate global variable
 	document.global = {};
 	document.global.clientWidth = clientWidth;
-	document.global.desktopCanvasWidth = 800;
-	document.global.desktopCanvasHeight = 600;
-	document.global.desktopChatWidth = 300;
-	document.global.mobileProfileHeight = 120;
-	document.global.desktopProfileWidth = 300;
+	
 
 	//arena info
 	document.global.arena = {};
@@ -58,6 +50,11 @@ function initGlobal() {
 	document.global.arena.width = clientWidth / document.global.arena.widthDivision;
 	document.global.arena.height = clientWidth / document.global.arena.aspect / document.global.arena.widthDivision;
 	document.global.arena.depth = clientWidth / document.global.arena.aspect;
+
+	
+	//responsive info
+	document.global.desktopCanvasWidth = 800;
+	document.global.desktopCanvasHeight = document.global.desktopCanvasWidth * document.global.arena.aspect;
 
 	//sphere info
 	document.global.sphere = {};

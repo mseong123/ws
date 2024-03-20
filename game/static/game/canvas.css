@@ -28,6 +28,20 @@ button:hover, button:focus {
 	  "slnt" 0;
   }
 
+.main-container {
+	height:100vh;
+}
+
+.main-nav button {
+	border:0;
+	background-color:transparent;
+}
+
+.main-nav-header {
+	padding:0.25rem 1rem;
+	margin:0;
+}
+
 .canvas-container {
 	flex:0 0 auto;
 	position:relative;
@@ -95,19 +109,13 @@ button:hover, button:focus {
 	outline:none;
 }
 
-.main-container {
-	display:flex;
-	flex-direction:column;
-	min-height:100vh;
-	
-}
 
 .banner {
 	position:absolute;
 	z-index: 2;
 	font-size: 2rem;
 	color:white;
-	margin-left:0.5rem;
+	margin-left:0.25rem;
 	margin-top:1rem;
 }
 
@@ -698,34 +706,29 @@ hr {
 	margin:0.25rem 0;
 }
 
-.nav-desktop {
-	display:none;
-}
-
 
 @media (min-width:577px) {
 	.main-container {
-		flex-direction:row;
+		display:grid;
+		grid-template-columns: 1fr auto auto auto auto 1fr;
 	}
+	.main-nav-header {
+		padding:1rem 0.25rem;
+		display:grid;
+		grid-template-columns: auto;
+	}
+	.main-nav-header button {
+		margin:0.25rem 0;
+		padding:0;
+	}
+	
 }
 
 @media (min-width:993px) {
 	.main-container {
 		margin:0 auto;
-		min-height:auto;
-		display:grid;
-		grid-template-columns: 1fr auto auto auto auto 1fr;
 		align-items:center;
-		width:90%;
-		height:100vh;
 		overflow:auto;
-	}
-	.nav-desktop {
-		display:grid;
-		grid-template-columns: auto;
-		height:600px;
-		align-content:start;
-		padding:0 1rem;
 	}
 	.banner {
 		margin-top:2rem;

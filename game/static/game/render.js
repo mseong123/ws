@@ -1099,30 +1099,48 @@ function processUI() {
 	}
 	
 	if (document.querySelector(".main-container").clientWidth < 577) {
-		document.querySelector(".profile-container").style.width = "100%"
-		document.querySelector(".chat-container").style.width = "100%"
-		if (document.global.ui.profile)
-			document.querySelector(".profile-container").style.height = document.global.mobileProfileHeight;
-		else
+		document.querySelector(".profile-container").style.width = "100%";
+		document.querySelector(".chat-container").style.width = "100%";
+		document.querySelector(".main-nav").style.height = "initial";
+		document.querySelector(".main-nav").style.width = "100%";
+		
+		if (document.global.ui.profile){
+			document.querySelector(".profile-container").style.height = document.querySelector(".main-container").clientHeight - document.querySelector(".canvas-container").clientHeight - document.querySelector(".main-nav").clientHeight;
+			document.querySelector(".chat-container").style.height = "0";
+		}
+		else {
 			document.querySelector(".profile-container").style.height = "0";
+			document.querySelector(".chat-container").style.height = document.querySelector(".main-container").clientHeight - document.querySelector(".canvas-container").clientHeight - document.querySelector(".main-nav").clientHeight;
+		}
 	}
 	else if (document.querySelector(".main-container").clientWidth >= 577 && document.querySelector(".main-container").clientWidth <= 993) {
-		document.querySelector(".profile-container").style.width = "";
 		document.querySelector(".profile-container").style.height = "100vh";
+		document.querySelector(".chat-container").style.height = "100vh";
+		document.querySelector(".main-nav").style.height ="100vh";
+		if (document.global.ui.profile){
+			document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
+			document.querySelector(".chat-container").style.width = "0";
+		}
+		else {
+			document.querySelector(".profile-container").style.width = "0";
+			document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
+		}
 	}
 	else {
 		document.querySelector(".profile-container").style.height = document.global.desktopCanvasHeight;
-		if (document.global.ui.profile) 
-			document.querySelector(".profile-container").style.width =document.global.desktopProfileWidth;
-		else 
-			document.querySelector(".profile-container").style.width = "0";
-	}
-	if (document.querySelector(".main-container").clientWidth > 993) {
-		if (document.global.ui.chat)
-			document.querySelector(".chat-container").style.width = document.global.desktopChatWidth;
-		else
+		document.querySelector(".main-nav").style.height = document.global.desktopCanvasHeight;
+		document.querySelector(".chat-container").style.height = document.global.desktopCanvasHeight;
+		if (document.global.ui.profile){
+			document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth - document.querySelector(".fr-start").clientWidth - document.querySelector(".fr-end").clientWidth;
 			document.querySelector(".chat-container").style.width = "0";
+		}
+		else {
+			document.querySelector(".profile-container").style.width = "0";
+			document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth - document.querySelector(".fr-start").clientWidth - document.querySelector(".fr-end").clientWidth;
+		}	
 	}
+	
+	
 }
 
 function arenaRotateY() {
