@@ -1,5 +1,5 @@
 import {gameStart, matchFixMulti, adjustPaddles, resetGame, powerUpCollisionEffect} from './gameplay.js'
-import {updateMatchFix, populateWinner} from './render.js'
+import {updateMatchFix, populateWinner} from './main.js'
 import { global } from './init.js';
 
 

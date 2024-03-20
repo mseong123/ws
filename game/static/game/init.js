@@ -1,36 +1,7 @@
-function windowResize(e) {
-	const canvas = document.querySelector(".canvas-container");
-	const mainContainer = document.querySelector(".main-container");
-	
-	if (mainContainer.clientWidth >= 577 && mainContainer.clientWidth <= 993) {
-		canvas.style.height = mainContainer.clientHeight;
-		canvas.style.width = (canvas.clientHeight * global.arena.aspect) + 'px';
-	}
-	else if (mainContainer.clientWidth < 577) {
-		canvas.style.width = "100%"
-		canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
-	}
-	else {
-		canvas.style.width = global.desktopCanvasWidth;
-		canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
-	}
-	global.desktopCanvasHeight = canvas.clientHeight;
-	
-	//for each individual client
-	global.directionalLight.positionX = canvas.clientWidth;
-	global.directionalLight.positionY = canvas.clientWidth;
-	
-	//for local  or multiplayer mainClient
-	if (global.gameplay.local || !global.gameplay.local && global.gameplay.username === global.socket.gameInfo.mainClient) {
-		global.sphere.sphereMesh.forEach(sphereMesh=>{
-			sphereMesh.velocityX = canvas.clientWidth / global.sphere.velocityDivision;
-			sphereMesh.velocityY = canvas.clientWidth / global.sphere.velocityDivision;
-			sphereMesh.velocityZ = canvas.clientWidth / global.sphere.velocityDivision;
-		})
-	}
-}
+import * as THREE from 'https://threejs.org/build/three.module.js';
 
 const global = {
+	renderer:new THREE.WebGLRenderer( { antialias: true, canvas:document.querySelector(".canvas") } ),
 	clientWidth:document.querySelector(".canvas-container").clientWidth,
 	arena:{
 		widthDivision:2.5,
@@ -272,6 +243,6 @@ export {global};
 
 export function init() {
 	
-	window.addEventListener("resize", windowResize);
+	
 	windowResize();
 }

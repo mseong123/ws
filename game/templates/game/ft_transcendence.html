@@ -6,6 +6,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" href="{% static 'game/main.css' %}">
 	<link rel="stylesheet" href="{% static 'game/canvas.css' %}">
 	<link rel="stylesheet" href="{% static 'game/profile.css' %}">
 	<link rel="stylesheet" href="{% static 'game/chat.css' %}">
@@ -414,7 +415,9 @@
 	</body>
 	
 	<script type="module" src="{% static 'game/init.js' %}"></script>
+	<script type="module" src="{% static 'game/3Dobject.js' %}"></script>
 	<script type="module" src="{% static 'game/render.js' %}"></script>
+	<script type="module" src="{% static 'game/main.js' %}"></script>
 	<script type="module" src="{% static 'game/gameplay.js' %}"></script>
 	<script type="module" src="{% static 'game/multiplayer.js' %}"></script>
 	<script type="module" src="{% static 'game/profile.js' %}"></script>

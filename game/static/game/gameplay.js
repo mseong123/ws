@@ -1,5 +1,5 @@
 import * as THREE from 'https://threejs.org/build/three.module.js';
-import {populateWinner} from './render.js'
+import {populateWinner} from './main.js'
 import {global} from './init.js';
 
 
