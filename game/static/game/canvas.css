@@ -706,6 +706,24 @@ hr {
 	margin:0.25rem 0;
 }
 
+.spectate-container {
+	position:absolute;
+	z-index: 1;
+	bottom:0.25rem;
+	width:100%;
+	display:grid;
+	justify-content:center;
+}
+
+.spectate-header {
+	margin:0;
+	border:1px solid white;
+	border-radius:0.25rem;
+	padding:0.25rem;
+	color:white;
+	font-size: 1rem;
+}
+
 
 @media (min-width:577px) {
 	.main-container {
@@ -831,7 +849,7 @@ hr {
 		margin:0 0.75rem;
 	}
 	.pause-header, .game-end-display-header, .multi-host-left-header {
-		font-size: 1.25rem;
+		font-size: 1.5rem;
 	}
 	
 	.reset-game-button, .multi-tournament-matchFix-ready-button, .multi-tournament-matchFix-start-button, .multi-host-left-leave-button {
@@ -853,41 +871,13 @@ hr {
 		margin:0.2rem 0;
 		grid-template-columns:50% 50%;
 	}
-	
+
+	.spectate-container {
+		bottom:0.75rem;
+	}
+	.spectate-header {
+		font-size: 1.5rem;
+	}
 
 }
 
-/*
-	.scoreboard {
-		font-size: 1.75rem;
-	}
-	.scoreboard-one .scoreboard-one-score, .scoreboard-two .scoreboard-two-score {
-		width:17.5px;
-	}
-	
-	.pause-header, .game-end-display-header{
-		padding:0.75rem;
-		font-size: 1.75rem;
-	}
-	.game-summary, .multi-tournament-matchFix {
-		padding:0.75rem;
-		font-size: 1rem;
-	
-	}
-	.game-summary-header, .multi-tournament-matchFix-header {
-		margin:0.5rem 0;
-		font-size: 1.25rem;
-	}
-	.game-summary-items div span{
-		margin:0 0.75rem;
-	}
-	.reset-game-button {
-		font-size: 1rem;
-	}
-}
-
-@media (min-width:993px) {
-	.canvas-container {
-		width:1100px;
-	}
-} */

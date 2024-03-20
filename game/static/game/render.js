@@ -1139,6 +1139,7 @@ function processUI() {
 			document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth - document.querySelector(".fr-start").clientWidth - document.querySelector(".fr-end").clientWidth;
 		}	
 	}
+	document.global.socket.spectate? document.querySelector(".spectate-container").classList.remove("display-none"):document.querySelector(".spectate-container").classList.add("display-none")
 	
 	
 }
