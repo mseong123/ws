@@ -305,6 +305,8 @@ export function resetGame() {
 	//overall game reset
 	document.global.gameplay.gameStart = 0;
 	document.global.gameplay.gameEnd = 0;
+	document.global.gameplay.pause = 0;
+	document.global.gameplay.gameSummary = 0;
 	document.global.gameplay.local = 1;
 	document.global.gameplay.initRotateY = 1;
 	document.global.gameplay.initRotateX = 0;
@@ -377,7 +379,7 @@ export function resetGame() {
 	}
 	else if (document.global.socket.gameInfo.gameMode ==="versus") {
 		if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
-				document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
+			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
 		if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
 			document.global.socket.gameSocket.close();
 		document.global.socket.ready = 0;
@@ -401,7 +403,8 @@ export function resetGame() {
 			document.global.socket.gameInfo.currentRound++;
 			document.global.socket.gameInfo.durationCount = document.global.socket.gameInfo.duration;
 			document.global.powerUp.enable = document.global.socket.gameInfo.powerUp;
-			document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
+			if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+				document.global.socket.gameSocket.send(JSON.stringify({mode:"gameStart"}))
 		}
 		else {
 			if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
@@ -499,7 +502,7 @@ export function keyBinding() {
 	document.addEventListener("keydown", (e)=>{
 		if (e.keyCode === 27 && document.global.gameplay.gameStart && !document.global.gameplay.gameEnd && !document.global.socket.spectate) {
 			document.global.gameplay.pause? document.global.gameplay.pause = 0 :document.global.gameplay.pause = 1;
-			if (!document.global.gameplay.local)
+			if (!document.global.gameplay.local && document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
 				document.global.socket.gameSocket.send(JSON.stringify({mode:"pause", pause:document.global.gameplay.pause}))
 		}
 		if (e.keyCode === 9)
@@ -543,7 +546,7 @@ export function keyBinding() {
 		if (document.global.powerUp.meshProperty.some(meshProperty=>meshProperty.visible)) {
 			if (document.global.gameplay.local)
 				powerUpCollisionEffect(document.global.sphere.sphereMeshProperty[0])
-			else if (!document.global.gameplay.local)
+			else if (!document.global.gameplay.local && document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
 				document.global.socket.gameSocket.send(JSON.stringify({mode:"cheat", player:document.global.gameplay.username}));
 		}
 	})
@@ -704,7 +707,7 @@ export function keyBinding() {
 		if (!document.global.gameplay.gameEnd) {
 			document.global.gameplay.pause = 1;
 			document.global.ui.toggleGame = 0;
-			if (!document.global.gameplay.local)
+			if (!document.global.gameplay.local && document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
 				document.global.socket.gameSocket.send(JSON.stringify({mode:"pause", pause:document.global.gameplay.pause}))
 		}
 	})
@@ -712,7 +715,7 @@ export function keyBinding() {
 	pause.addEventListener("click", (e)=>{
 		if (!document.global.gameplay.gameEnd && !document.global.socket.spectate) {
 			document.global.gameplay.pause = 0;
-			if (!document.global.gameplay.local)
+			if (!document.global.gameplay.local && document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
 				document.global.socket.gameSocket.send(JSON.stringify({mode:"pause", pause:document.global.gameplay.pause}))
 		}
 	})
@@ -740,8 +743,7 @@ export function keyBinding() {
 		if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
 			if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
 				document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
-			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
-				
+			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username && document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN) {
 				document.global.socket.gameSocket.send(JSON.stringify({
 					mode:"gameEnd",
 					gameInfo:document.global.socket.gameInfo
@@ -753,7 +755,7 @@ export function keyBinding() {
 			}
 		}
 		else if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "tournament") {
-			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+			if (document.global.socket.gameInfo.mainClient === document.global.gameplay.username && document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN) {
 				document.global.socket.gameSocket.send(JSON.stringify({
 					mode:"gameEnd",
 					gameInfo:document.global.socket.gameInfo
@@ -961,10 +963,13 @@ export function powerUpCollisionEffect(sphereMeshProperty) {
 				adjustPaddles(document.global.paddle.paddlesProperty[1])
 			}
 		}
-		else
-			document.global.socket.gameSocket.send(JSON.stringify({
-				mode:"enableLargePaddle",
-			}))
+		else {
+			if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+				document.global.socket.gameSocket.send(JSON.stringify({
+					mode:"enableLargePaddle",
+				}))
+		}
+			
 	}
 	//shake
 	else if (index === 1)
@@ -978,10 +983,12 @@ export function powerUpCollisionEffect(sphereMeshProperty) {
 			else
 				document.global.paddle.paddlesProperty[1].invisibility = 1;
 		}
-		else 
-			document.global.socket.gameSocket.send(JSON.stringify({
-				mode:"enableInvisibility",
-			}))
+		else {
+			if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+				document.global.socket.gameSocket.send(JSON.stringify({
+					mode:"enableInvisibility",
+				}))
+		}
 		sphereMeshProperty.opacity = document.global.powerUp.invisibility.opacity;
 		sphereMeshProperty.circleOpacity = document.global.powerUp.invisibility.opacity;
 	}
@@ -1064,9 +1071,10 @@ export function resetPowerUp() {
 				paddleProperty.invisibility = 0;
 			});
 		else {
-			document.global.socket.gameSocket.send(JSON.stringify({
-				mode:"resetPaddle",
-			}))
+			if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+				document.global.socket.gameSocket.send(JSON.stringify({
+					mode:"resetPaddle",
+				}))
 		}
 		//shake reset
 		document.global.powerUp.shake.enable = 0;

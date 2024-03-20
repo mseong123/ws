@@ -380,18 +380,12 @@ hr {
 	color:white;
 }
 
-.pause-header, .game-end-display-header, .multi-host-left-header{
+.pause-header, .game-end-display-header, .multi-host-left-header, .multi-game-error-header{
 	border:1px solid white;
 	border-radius:0.25rem;
 	padding:0.25rem;
 }
 
-
-.next-one, .next-two {
-	margin:0 1rem;
-	color:rgb(177,177,177);
-	font-size: 0.75rem;
-}
 
 .toggle-game-container, .toggle-cheat{
 	position:absolute;
@@ -418,7 +412,7 @@ hr {
 	border-color:rgb(2,238,139);
 }
 
-.game-summary-container, .multi-tournament-matchFix-container, .multi-host-left-container {
+.game-summary-container, .multi-tournament-matchFix-container, .multi-host-left-container, .multi-game-error-container {
 	z-index:3;
 	position:absolute;
 	top:0;
@@ -432,7 +426,7 @@ hr {
 	align-content: center;
 	color:white;
 }
-.multi-host-left {
+.multi-host-left, .multi-game-error {
 	display:grid;
 	align-content:center;
 	justify-content:center;
@@ -444,10 +438,10 @@ hr {
 	border-radius:0.25rem;
 }
 
-.multi-host-left-header {
+.multi-host-left-header, .multi-game-error-header {
 	text-align:center;
 }
-.multi-host-left-leave {
+.multi-host-left-leave, .multi-game-error-leave {
 	text-align:center;
 }
 
@@ -542,7 +536,7 @@ hr {
 	justify-content:end;
 	grid-template-columns:auto auto;
 }
-.reset-game-button, .multi-tournament-matchFix-ready-button, .multi-tournament-matchFix-start-button, .multi-host-left-leave-button {
+.reset-game-button, .multi-tournament-matchFix-ready-button, .multi-tournament-matchFix-start-button, .multi-host-left-leave-button, .multi-game-error-leave-button {
 	border:1px solid rgb(2,238,139);
 	background-color:transparent;
 	border-radius:0.25rem;
@@ -585,7 +579,7 @@ hr {
 	margin:0 0.25rem;
 }
 
-.multi-create-warning {
+.multi-create-warning, .multi-create-game-error {
 	margin:0.5rem 0;
 }
 
@@ -692,6 +686,11 @@ hr {
 
 .multi-lobby-game-header {
 	margin:0.1rem 0 !important;
+}
+
+.multi-lobby-error {
+	color:red;
+	margin:0.75rem 0;
 }
 
 .multi-game-join:disabled {
@@ -823,8 +822,7 @@ hr {
 		margin-top:0.25rem;
 		max-height:80px;
 	}
-	.multi-create-warning {
-		
+	.multi-create-warning, .multi-create-game-error {
 		margin:0.75rem 0;
 	}
 	.multi-ready-versus, .multi-ready-tournament, .multi-ready-matchFix  {
@@ -848,11 +846,11 @@ hr {
 	.game-summary-items div span{
 		margin:0 0.75rem;
 	}
-	.pause-header, .game-end-display-header, .multi-host-left-header {
+	.pause-header, .game-end-display-header, .multi-host-left-header, .multi-game-error-header {
 		font-size: 1.5rem;
 	}
 	
-	.reset-game-button, .multi-tournament-matchFix-ready-button, .multi-tournament-matchFix-start-button, .multi-host-left-leave-button {
+	.reset-game-button, .multi-tournament-matchFix-ready-button, .multi-tournament-matchFix-start-button, .multi-host-left-leave-button, .multi-game-error-leave-button {
 		font-size: 1rem;
 	}
 

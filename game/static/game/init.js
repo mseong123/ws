@@ -294,6 +294,8 @@ function initGlobal() {
 	document.global.socket.ready = 0;
 	document.global.socket.matchFix = 0;
 	document.global.socket.spectate = 0;
+	document.global.socket.gameLobbyError = 0;
+	document.global.socket.gameError = 0;
 	
 }
 

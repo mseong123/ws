@@ -577,13 +577,23 @@ function processUI() {
 		document.querySelector(".tournament-menu").classList.add("display-block"):document.querySelector(".tournament-menu").classList.remove("display-block");
 	document.global.ui.multiLobby?
 		document.querySelector(".multi-lobby-menu").classList.add("display-block"):document.querySelector(".multi-lobby-menu").classList.remove("display-block");
+	if (document.global.socket.gameLobbyError) {
+		document.querySelector(".multi-lobby-error").classList.remove("display-none");
+		document.querySelector(".multi-lobby").classList.add("display-none");
+	}
+	else {
+		document.querySelector(".multi-lobby-error").classList.add("display-none");
+		document.querySelector(".multi-lobby").classList.remove("display-none");
+	}
 	document.global.ui.multiCreate?
 		document.querySelector(".multi-create-menu").classList.add("display-block"):document.querySelector(".multi-create-menu").classList.remove("display-block");
-	if (Object.keys(document.global.socket.gameInfo).length) {
+	if (Object.keys(document.global.socket.gameInfo).length && !document.global.socket.gameError) {
 		document.querySelector(".multi-create-option-menu").classList.remove("display-none");
 		document.querySelector(".multi-create-warning").classList.add("display-none");
+		document.querySelector(".multi-create-game-error").classList.add("display-none");
 		document.querySelector(".multi-ready-game").classList.remove("display-none")
 		document.querySelector(".multi-host-left-container").classList.add("display-none")
+		document.querySelector(".multi-game-error-container").classList.add("display-none")
 		if (document.global.socket.gameInfo.gameMode === 'versus') {
 			document.querySelector(".multi-create-display-player-versus-one").classList.remove("display-none")
 			document.querySelector(".multi-create-display-player-versus-two").classList.remove("display-none")
@@ -617,20 +627,28 @@ function processUI() {
 			document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"leave"}));
 		if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
 			document.global.socket.gameSocket.close();
+		document.querySelector(".multi-matchfix").classList.add("display-none")
 		if (!document.global.gameplay.gameStart && !document.global.gameplay.gameEnd && !document.global.socket.matchFix) {
 			document.querySelector(".multi-create-option-menu").classList.add("display-none");
-			document.querySelector(".multi-create-warning").classList.remove("display-none");
+			if (document.global.socket.gameError)
+				document.querySelector(".multi-create-game-error").classList.remove("display-none");
+			else
+				document.querySelector(".multi-create-warning").classList.remove("display-none");
 			document.querySelector(".multi-ready-game").classList.add("display-none")
 			document.querySelector(".multi-start-game").classList.add("display-none")
 		}
 		if (!document.global.gameplay.gameStart && !document.global.gameplay.gameEnd && document.global.socket.matchFix) {
 			document.global.socket.matchFix = 0;
-			document.querySelector(".multi-host-left-container").classList.remove("display-none")
+			if (document.global.socket.gameError)
+				document.querySelector(".multi-game-error-container").classList.remove("display-none")
+			else 
+				document.querySelector(".multi-host-left-container").classList.remove("display-none")
 		}
 		if (document.global.gameplay.gameStart && !document.global.gameplay.gameEnd) {
-			document.querySelector(".multi-host-left-container").classList.remove("display-none")
-			document.querySelector(".game-summary-container").classList.add("display-none");
-			document.querySelector(".pause").classList.add("display-none");
+			if (document.global.socket.gameError)
+				document.querySelector(".multi-game-error-container").classList.remove("display-none")
+			else 
+				document.querySelector(".multi-host-left-container").classList.remove("display-none")
 			document.global.powerUp.shake.enable = 0;
 			document.global.gameplay.initRotateY = 0;
 			document.global.gameplay.initRotateX = 0;
@@ -762,6 +780,7 @@ function processUI() {
 		document.querySelector(".scoreboard").classList.remove("display-none");
 		document.querySelector(".toggle-game").classList.remove("display-none");
 		document.querySelector(".game-end-display-container").classList.add("display-none");
+		document.global.gameplay.gameSummary? document.querySelector(".game-summary-container").classList.remove("display-none"):document.querySelector(".game-summary-container").classList.add("display-none");
 		if (document.global.gameplay.cheat && !document.global.socket.spectate) {
 			document.querySelector(".toggle-cheat").classList.remove("display-none");
 			if (!document.global.gameplay.local && document.global.socket.gameInfo.gameMode === "versus") {
@@ -836,6 +855,7 @@ function processUI() {
 	else if (document.global.gameplay.gameStart && document.global.gameplay.gameEnd) {
 		//for gameEnd screen
 		updateGameSummary();
+
 		document.querySelector(".game-summary-container").classList.remove("display-none");
 		if (document.global.gameplay.single || document.global.gameplay.two || document.global.gameplay.tournament && 
 			(document.global.gameplay.localTournamentInfo.currentRound === document.global.gameplay.localTournamentInfo.round - 1) || 
@@ -862,16 +882,14 @@ function processUI() {
 		document.querySelector(".scoreboard").classList.add("display-none");
 		document.querySelector(".toggle-game").classList.add("display-none");
 		document.querySelector(".toggle-cheat").classList.add("display-none");
+		document.querySelector(".game-summary-container").classList.add("display-none");
+		
 	}
 	
 	if (document.global.gameplay.pause) 
 		document.querySelector(".pause").classList.remove("display-none");
 	else 
 		document.querySelector(".pause").classList.add("display-none");
-	if (document.global.gameplay.gameSummary && !document.global.gameplay.gameEnd) 
-		document.querySelector(".game-summary-container").classList.remove("display-none");
-	else if (!document.global.gameplay.gameSummary && !document.global.gameplay.gameEnd)
-		document.querySelector(".game-summary-container").classList.add("display-none");
 	for (let i = 0; i < document.global.socket.gameLobbyInfo.length; i++) {
 		const target = document.querySelector(".multi-lobby-game-container"+"."+document.global.socket.gameLobbyInfo[i].mainClient)
 		if (!target) {
@@ -909,14 +927,16 @@ function processUI() {
 							currentGame = game;
 					})
 					if (currentGame.player.length < document.global.paddle.maxPaddle && !currentGame.player.includes(document.global.gameplay.username) && !currentGame.gameStart) {
-						document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"join", mainClient:e.target.classList[1]}))
+						if (document.global.socket.gameLobbySocket && document.global.socket.gameLobbySocket.readyState === WebSocket.OPEN)
+							document.global.socket.gameLobbySocket.send(JSON.stringify({mode:"join", mainClient:e.target.classList[1]}))
 						createGameSocket(e.target.classList[1])
 						document.global.socket.gameSocket.onopen = function() {
 								document.global.ui.multiCreate = 1;
 								document.global.ui.multiLobby = 0;
-								document.global.socket.gameSocket.send(JSON.stringify({
-									mode:"join",
-								}))
+								if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+									document.global.socket.gameSocket.send(JSON.stringify({
+										mode:"join",
+									}))
 							}
 					}
 				}
@@ -1370,7 +1390,7 @@ function reduceTime(info) {
 	if (minute === '00' && second === '01') {
 		document.global.gameplay.gameEnd = 1;
 		populateWinner();
-		if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username) {
+		if (!document.global.gameplay.local && document.global.socket.gameInfo.mainClient === document.global.gameplay.username && document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN) {
 			document.global.socket.gameSocket.send(JSON.stringify({
 				mode:"gameEnd",
 				gameInfo:document.global.socket.gameInfo
@@ -1437,11 +1457,12 @@ function sendMultiData() {
 					meshProperty:JSON.parse(JSON.stringify(document.global.powerUp.meshProperty)),
 				}
 				processSendLiveGameData(liveGameData)
-				document.global.socket.gameSocket.send(JSON.stringify({
-					mode:"mainClient",
-					gameInfo:document.global.socket.gameInfo,
-					liveGameData:liveGameData,
-				}))
+				if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+					document.global.socket.gameSocket.send(JSON.stringify({
+						mode:"mainClient",
+						gameInfo:document.global.socket.gameInfo,
+						liveGameData:liveGameData,
+					}))
 			}
 			else {
 				let tournamentPaddleIndex;
@@ -1464,11 +1485,12 @@ function sendMultiData() {
 					meshProperty:JSON.parse(JSON.stringify(document.global.powerUp.meshProperty)),
 				}
 				processSendLiveGameData(liveGameData)
-				document.global.socket.gameSocket.send(JSON.stringify({
-					mode:"mainClient",
-					gameInfo:document.global.socket.gameInfo,
-					liveGameData:liveGameData,
-				}))
+				if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+					document.global.socket.gameSocket.send(JSON.stringify({
+						mode:"mainClient",
+						gameInfo:document.global.socket.gameInfo,
+						liveGameData:liveGameData,
+					}))
 				
 			}
 		}
@@ -1485,7 +1507,7 @@ function sendMultiData() {
 				paddlesProperty.positionZ = paddlesProperty.positionZ / clientWidth;
 				paddlesProperty.width = paddlesProperty.width / clientWidth;
 				paddlesProperty.height = paddlesProperty.height / clientWidth;
-				
+				if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
 					document.global.socket.gameSocket.send(JSON.stringify({
 						mode:"player",
 						playerName:document.global.gameplay.username,
@@ -1508,11 +1530,12 @@ function sendMultiData() {
 					paddlesProperty.width = paddlesProperty.width / clientWidth;
 					paddlesProperty.height = paddlesProperty.height / clientWidth;
 				}
-				document.global.socket.gameSocket.send(JSON.stringify({
-					mode:"player",
-					playerName:document.global.gameplay.username,
-					liveGameData:paddlesProperty,
-				}))
+				if (document.global.socket.gameSocket && document.global.socket.gameSocket.readyState === WebSocket.OPEN)
+					document.global.socket.gameSocket.send(JSON.stringify({
+						mode:"player",
+						playerName:document.global.gameplay.username,
+						liveGameData:paddlesProperty,
+					}))
 			}
 			
 			

@@ -231,6 +231,9 @@
 								<button type="button" class="multi-create-tournament">Tournament</button>
 							</div>
 						</div>
+						<div class="multi-lobby-error display-none">
+							Server Error
+						</div>
 					</div>
 					<!-- multiplayer game menu -->
 					<div class="multi-create-menu display-none">
@@ -275,6 +278,9 @@
 							</div>
 							<div class="multi-create-warning display-none">
 								Host has Left
+							</div>
+							<div class="multi-create-game-error display-none">
+								Server Error
 							</div>
 							<button type="button" class="multi-leave-game">Leave</button>
 							<button type="button" class="multi-ready-game">Ready</button>
@@ -328,6 +334,15 @@
 						<h3 class="multi-host-left-header">HOST HAS LEFT</h3>
 						<div class="multi-host-left-leave">
 							<button type="button" class="multi-host-left-leave-button">Leave</button>
+						</div>
+					</div>
+				</div>
+				<!-- Multiplayer socket error-->
+				<div class="multi-game-error-container display-none">
+					<div class="multi-game-error">
+						<h3 class="multi-game-error-header">SERVER ERROR</h3>
+						<div class="multi-game-error-leave">
+							<button type="button" class="multi-game-error-leave-button">Leave</button>
 						</div>
 					</div>
 				</div>
