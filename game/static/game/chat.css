@@ -11,12 +11,17 @@
 }
 
 .chat-inner-container {
-	padding:0 1rem;
+	/* padding:0 1rem; */
+	display:flex;
+	flex-direction: column;
+	justify-content:center;
+	align-items: center;
+	height:100%;
 }
 
 @media (min-width:577px) {
 	.chat-inner-container {
-		padding:1rem 0.25rem;
+		/* padding:1rem 0.25rem; */
 	}
 }
 
