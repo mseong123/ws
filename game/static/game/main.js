@@ -20,7 +20,6 @@ function windowResize(e) {
 		canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
 	}
 	else {
-		console.log("here")
 		canvas.style.width = global.desktopCanvasWidth;
 		canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
 	}
