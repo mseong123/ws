@@ -667,7 +667,7 @@ function processUI() {
 		global.socket.spectate? document.querySelector(".nav-pause").classList.add("display-none"):document.querySelector(".nav-pause").classList.remove("display-none");
 	}
 	
-	if (document.querySelector(".main-container").clientWidth < 577) {
+	if (document.querySelector("body").clientWidth < 577) {
 		document.querySelector(".profile-container").style.width = "100%";
 		document.querySelector(".chat-container").style.width = "100%";
 		document.querySelector(".main-nav").style.height = "initial";
@@ -682,7 +682,7 @@ function processUI() {
 			document.querySelector(".chat-container").style.height = document.querySelector(".main-container").clientHeight - document.querySelector(".canvas-container").clientHeight - document.querySelector(".main-nav").clientHeight;
 		}
 	}
-	else if (document.querySelector(".main-container").clientWidth >= 577 && document.querySelector(".main-container").clientWidth <= 993) {
+	else if (document.querySelector("body").clientWidth >= 577 && document.querySelector("body").clientWidth <= 993) {
 		document.querySelector(".profile-container").style.height = "100vh";
 		document.querySelector(".chat-container").style.height = "100vh";
 		document.querySelector(".main-nav").style.height ="100vh";
@@ -700,12 +700,12 @@ function processUI() {
 		document.querySelector(".main-nav").style.height = global.desktopCanvasHeight;
 		document.querySelector(".chat-container").style.height = global.desktopCanvasHeight;
 		if (global.ui.profile){
-			document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth - document.querySelector(".fr-start").clientWidth - document.querySelector(".fr-end").clientWidth;
+			document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
 			document.querySelector(".chat-container").style.width = "0";
 		}
 		else {
 			document.querySelector(".profile-container").style.width = "0";
-			document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth - document.querySelector(".fr-start").clientWidth - document.querySelector(".fr-end").clientWidth;
+			document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
 		}	
 	}
 	global.socket.spectate? document.querySelector(".spectate-container").classList.remove("display-none"):document.querySelector(".spectate-container").classList.add("display-none")

@@ -69,6 +69,10 @@ button:hover, button:focus {
 		margin:0.25rem 0;
 		padding:0;
 	}
+	.main-nav-header i {
+		padding:0;
+	}
+ 
 }
 
 @media (min-width:993px) {
@@ -80,4 +84,12 @@ button:hover, button:focus {
 	.main-nav button {
 		font-size: 2.5rem;
 	}
+	.main-nav-header i {
+		padding:0 0.5rem;
+	}
 }
+
+@media (min-width:1200px) {
+	.main-container {
+		width:80%;
+	}
