@@ -1,4 +1,4 @@
-import {global} from './init.js';
+import {global} from './global.js';
 
 
 export function keyBindingChat() {

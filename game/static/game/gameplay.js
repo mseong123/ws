@@ -1,7 +1,6 @@
 import * as THREE from 'https://threejs.org/build/three.module.js';
-import {populateWinner} from './main.js'
-import {global} from './init.js';
-
+import {global} from './global.js';
+import { matchFix, populateWinner } from './utilities.js'
 
 function canvasKeydown(e) {
 	let arrow = e.key;
@@ -226,7 +225,6 @@ function canvasTouchMove(e) {
 				paddlesProperty[tournamentPaddleIndex].positionY = positionY;
 		}
 	}
-
 }
 
 function setPaddle() {
@@ -258,7 +256,7 @@ function setPaddle() {
 	}
 }
 
-export function gameStart() {
+function gameStart() {
 	global.gameplay.gameEnd = 0;
 	global.gameplay.gameStart = 1;
 	global.gameplay.initRotateY = 0;
@@ -302,7 +300,7 @@ function resetPaddle() {
 	})
 }
 
-export function resetGame() {
+function resetGame() {
 	//overall game reset
 	global.gameplay.gameStart = 0;
 	global.gameplay.gameEnd = 0;
@@ -429,72 +427,54 @@ export function resetGame() {
 	} 
 } 
 
-function matchFix() {
-	const randomNumArray = [];
-	let j = 0;
-	global.gameplay.localTournamentInfo.round = global.gameplay.localTournamentInfo.player.length - 1;
-	while (randomNumArray.length != global.gameplay.localTournamentInfo.player.length) {
-		const randomNum = Math.floor(Math.random() * global.gameplay.localTournamentInfo.player.length)
-		if (randomNumArray.every(array => {
-			return array != randomNum
-		}))
-			randomNumArray.push(randomNum);
+function resetPowerUp() {
+	global.sphere.sphereMeshProperty.forEach((sphereMeshProperty, idx)=>{
+		//reset visible for sphere circle
+		sphereMeshProperty.circleVisible = false;
+		//invisibility reset
+		sphereMeshProperty.opacity = 1;
+		//double and ultimate sphere reset
+		if (idx === 0)
+			sphereMeshProperty.visible = true;
+		else
+			sphereMeshProperty.visible = false;
+	})
+	//reset visible for powerup mesh
+	global.powerUp.meshProperty.forEach(meshProperty=>{
+		meshProperty.visible = false;
+	})
+	if (global.gameplay.local) 
+		global.paddle.paddlesProperty.forEach(paddleProperty=>{
+			//large paddles reset
+			paddleProperty.largePaddle = 0;
+			paddleProperty.width = global.paddle.defaultWidth;
+			paddleProperty.height = global.paddle.defaultHeight;
+			//paddles invisibility reset
+			paddleProperty.invisibility = 0;
+		});
+	else {
+		if (global.socket.gameSocket && global.socket.gameSocket.readyState === WebSocket.OPEN)
+			global.socket.gameSocket.send(JSON.stringify({
+				mode:"resetPaddle",
+			}))
 	}
-	for (let i = 0; i < randomNumArray.length - 1; i++) {
-		
-		const round = [];
-		for (let k = j; k < j + 2 && j < (randomNumArray.length - 1) * 2 ; k++) {
-			const player = {
-				alias:'',
-				score:0,
-				winner:false
-			};
-			if (randomNumArray[k] !== undefined)
-				player.alias = global.gameplay.localTournamentInfo.player[randomNumArray[k]].alias;
-			else
-				player.alias = "?";
-			round.push(player)
-		}
-		j += 2;
-		global.gameplay.localTournamentInfo.playerGame.push(round);
+	//shake reset
+	global.powerUp.shake.enable = 0;
+
+	//set new random powerup and position
+	if (global.powerUp.enable) {
+		const random = Math.floor(Math.random() * 5);
+		global.powerUp.meshProperty[random].visible = true;
+		global.powerUp.meshProperty[random].positionX = Math.floor((Math.random() * (global.arena.width - global.powerUp.circleRadius)) - (global.arena.width - global.powerUp.circleRadius)/ 2);
+		global.powerUp.meshProperty[random].positionY = Math.floor((Math.random() * (global.arena.height - global.powerUp.circleRadius)) - (global.arena.height -global.powerUp.circleRadius) / 2);
+		global.powerUp.meshProperty[random].positionZ = Math.floor((Math.random() * (global.arena.depth / 3)) - (global.arena.depth / 3));
 	}
 }
 
-export function matchFixMulti() {
-	const randomNumArray = [];
-	let j = 0;
-	const players = Object.keys(global.socket.gameInfo.player)
-	global.socket.gameInfo.round = players.length - 1;
-	while (randomNumArray.length != players.length) {
-		const randomNum = Math.floor(Math.random() * players.length)
-		if (randomNumArray.every(array => {
-			return array != randomNum
-		}))
-			randomNumArray.push(randomNum);
-	}
-	for (let i = 0; i < randomNumArray.length - 1; i++) {
-		
-		const round = [];
-		for (let k = j; k < j + 2 && j < (randomNumArray.length - 1) * 2 ; k++) {
-			const player = {
-				alias:'',
-				score:0,
-				winner:false,
-				cheatCount:global.gameplay.defaultCheatCount
-			};
-			if (randomNumArray[k] !== undefined)
-				player.alias = players[randomNumArray[k]];
-			else
-				player.alias = "?";
-			round.push(player)
-		}
-		j += 2;
-		global.socket.gameInfo.playerGame.push(round);
-	}
-}
+
 
 //addeventlistener
-export function keyBinding() {
+function keyBindingGame() {
 	const canvas = document.querySelector(".canvas");
 	canvas.addEventListener("mousemove", canvasMouseMove);
 	canvas.addEventListener("touchmove", canvasTouchMove);
@@ -530,7 +510,6 @@ export function keyBinding() {
 				global.ui.toggleGame = 0;
 		}
 	})
-
 	const toggleCanvas = document.querySelector(".toggle-canvas");
 	toggleCanvas.addEventListener("click", (e)=>{
 		global.ui.toggleCanvas? global.ui.toggleCanvas = 0:global.ui.toggleCanvas = 1;
@@ -771,7 +750,6 @@ export function keyBinding() {
 			}
 		}
 		populateWinner();
-		
 	})
 
 	const menuHome = document.querySelectorAll(".menu-home");
@@ -900,7 +878,6 @@ function isZCollision(sphereMeshProperty) {
 }
 
 function isPowerUpCollision(sphereMeshProperty) {
-	
 	const sphereRadius = global.sphere.radius;
 	const powerUpCircleRadius = global.powerUp.circleRadius;
 	const vectorSphereMesh = new THREE.Vector3(sphereMeshProperty.positionX, sphereMeshProperty.positionY, sphereMeshProperty.positionZ);
@@ -918,7 +895,7 @@ function isPowerUpCollision(sphereMeshProperty) {
 	return false;
 }
 
-export function adjustPaddles(paddlesProperty) {
+function adjustPaddles(paddlesProperty) {
 	const halfArenaWidth = global.arena.width / 2;
 	const halfArenaHeight = global.arena.height / 2;
 
@@ -932,9 +909,8 @@ export function adjustPaddles(paddlesProperty) {
 		paddlesProperty.positionY = -halfArenaHeight + paddlesProperty.height / 2;
 }
 
-export function powerUpCollisionEffect(sphereMeshProperty) {
+function powerUpCollisionEffect(sphereMeshProperty) {
 	let index;
-	
 	//set visibility of powerup sphere to false;
 	global.powerUp.meshProperty.forEach((meshProperty,idx)=>{
 		if (meshProperty.visible)
@@ -1046,49 +1022,7 @@ export function powerUpCollisionEffect(sphereMeshProperty) {
 	}
 }
 
-export function resetPowerUp() {
-		global.sphere.sphereMeshProperty.forEach((sphereMeshProperty, idx)=>{
-			//reset visible for sphere circle
-			sphereMeshProperty.circleVisible = false;
-			//invisibility reset
-			sphereMeshProperty.opacity = 1;
-			//double and ultimate sphere reset
-			if (idx === 0)
-				sphereMeshProperty.visible = true;
-			else
-				sphereMeshProperty.visible = false;
-		})
-		//reset visible for powerup mesh
-		global.powerUp.meshProperty.forEach(meshProperty=>{
-			meshProperty.visible = false;
-		})
-		if (global.gameplay.local) 
-			global.paddle.paddlesProperty.forEach(paddleProperty=>{
-				//large paddles reset
-				paddleProperty.largePaddle = 0;
-				paddleProperty.width = global.paddle.defaultWidth;
-				paddleProperty.height = global.paddle.defaultHeight;
-				//paddles invisibility reset
-				paddleProperty.invisibility = 0;
-			});
-		else {
-			if (global.socket.gameSocket && global.socket.gameSocket.readyState === WebSocket.OPEN)
-				global.socket.gameSocket.send(JSON.stringify({
-					mode:"resetPaddle",
-				}))
-		}
-		//shake reset
-		global.powerUp.shake.enable = 0;
 
-		//set new random powerup and position
-		if (global.powerUp.enable) {
-			const random = Math.floor(Math.random() * 5);
-			global.powerUp.meshProperty[random].visible = true;
-			global.powerUp.meshProperty[random].positionX = Math.floor((Math.random() * (global.arena.width - global.powerUp.circleRadius)) - (global.arena.width - global.powerUp.circleRadius)/ 2);
-			global.powerUp.meshProperty[random].positionY = Math.floor((Math.random() * (global.arena.height - global.powerUp.circleRadius)) - (global.arena.height -global.powerUp.circleRadius) / 2);
-			global.powerUp.meshProperty[random].positionZ = Math.floor((Math.random() * (global.arena.depth / 3)) - (global.arena.depth / 3));
-		}
-}
 
 function updateSpherePosition(sphereMeshProperty) {
 	sphereMeshProperty.positionX += sphereMeshProperty.velocityX;
@@ -1096,7 +1030,7 @@ function updateSpherePosition(sphereMeshProperty) {
 	sphereMeshProperty.positionZ += sphereMeshProperty.velocityZ;
 }
 
-export function processGame() {
+function processGame() {
 	if (global.gameplay.local || (!global.gameplay.local && global.socket.gameInfo.mainClient === global.gameplay.username)) {
 		if (global.gameplay.roundStart && global.gameplay.gameStart && !global.gameplay.pause && !global.gameplay.gameEnd) {
 			global.sphere.sphereMeshProperty.forEach(sphereMeshProperty=>{
@@ -1169,14 +1103,10 @@ export function processGame() {
 				}
 			})
 		}
-		
 	}
-	
-	
 }
 
-
-export function movePaddle() {
+function movePaddle() {
 	let arenaWidth = global.arena.width;
 	let arenaHeight = global.arena.height;
 	let paddleWidth = global.paddle.defaultWidth;
@@ -1284,9 +1214,10 @@ export function movePaddle() {
 					paddleTwo.positionX -= global.keyboard.left * global.keyboard.speed;
 			}
 		}
-		
 	}
 }
+
+export { gameStart, resetGame, resetPowerUp, keyBindingGame, adjustPaddles, powerUpCollisionEffect, processGame, movePaddle }
 
 
 

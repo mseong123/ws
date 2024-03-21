@@ -1,8 +1,8 @@
 import * as THREE from 'https://threejs.org/build/three.module.js';
+import { global } from './global.js';
 import { resetPowerUp } from "./gameplay.js"
-import { global } from './init.js';
 
-export function createFirstHalfCircleGeometry(radius) {
+function createFirstHalfCircleGeometry(radius) {
 	const circleRadius = radius;
 	const circleSegments = 32;
 	const circlePoints = [];
@@ -19,7 +19,7 @@ export function createFirstHalfCircleGeometry(radius) {
 	return new THREE.BufferGeometry().setFromPoints(circlePoints);
 }
 
-export function createSecondHalfCircleGeometry(radius) {
+function createSecondHalfCircleGeometry(radius) {
 	const circleRadius = radius;
 	const circleSegments = 32;
 	const circlePoints = [];
@@ -112,7 +112,7 @@ function createUltimate(arena3D, sphereGeometry, firstHalfCircleGeometry, Second
 	arena3D.add(ultimateSphereMesh);
 }
 
-export function createPowerUp(arena3D) {
+function createPowerUp(arena3D) {
 	
 	const sphereGeometry = new THREE.SphereGeometry( global.powerUp.radius, global.powerUp.widthSegments, global.powerUp.heightSegments );
 	const firstHalfCircleGeometry = createFirstHalfCircleGeometry(global.powerUp.circleRadius);
@@ -134,4 +134,6 @@ export function createPowerUp(arena3D) {
 	//enable powerup for starting screen
 	resetPowerUp()
 }
+
+export { createFirstHalfCircleGeometry, createSecondHalfCircleGeometry, createPowerUp }
 

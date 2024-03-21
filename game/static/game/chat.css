@@ -18,16 +18,8 @@
 	.chat-inner-container {
 		padding:1rem 0.25rem;
 	}
-	.chat-expand {
-		font-size: 2rem;
-	}
 }
 
-@media (min-width:993px) {
-	.chat-expand {
-		font-size: 3rem;
-	}
-}
 
 
 

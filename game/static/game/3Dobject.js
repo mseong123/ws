@@ -1,6 +1,7 @@
-import { createFirstHalfCircleGeometry, createSecondHalfCircleGeometry } from './3Dpowerup.js';
+
 import * as THREE from 'https://threejs.org/build/three.module.js';
-import { global } from './init.js';
+import { global } from './global.js';
+import { createFirstHalfCircleGeometry, createSecondHalfCircleGeometry } from './3Dpowerup.js';
 
 function createArenaMesh(arena3D) {
 	const arenaMaterial = new THREE.LineBasicMaterial( { color: global.arena.color } );

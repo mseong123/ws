@@ -9,7 +9,7 @@ const global = {
 		color:"#fff",
 		thickness:6,
 	},
-	desktopCanvasWidth:800,
+	desktopCanvasWidth:900,
 	sphere:{
 		sphereMeshProperty:[],
 		radiusDivision:100,
@@ -236,13 +236,4 @@ global.socket.gameInfo = {
 	durationCount:global.gameplay.defaultDuration,
 };
 
-
-
-
 export {global};
-
-export function init() {
-	
-	
-	windowResize();
-}
