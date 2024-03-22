@@ -30,11 +30,22 @@ button:hover, button:focus {
 
 .main-container {
 	height:100vh;
-	overflow:hidden;
+	position:relative;
+}
+
+.login-banner-container {
+	position:absolute;
+	top:0;
+	left:0;
+	z-index:1;
+	font-size: 2rem;
+	color:white;
+	margin-left:0.25rem;
+	margin-top:1rem;
 }
 
 .main-nav {
-	transition:height 0.3s ease-in-out, width 0.3s ease-in-out;
+	transition:height 0.5s linear, width 0.5s linear;
 }
 
 .main-nav button {
@@ -46,10 +57,6 @@ button:hover, button:focus {
 .main-nav-header {
 	padding:0.25rem 1rem;
 	margin:0;
-}
-
-.main-nav-header :nth-child(3) {
-	margin-left:auto;
 }
 
 .display-none {
@@ -67,7 +74,6 @@ button:hover, button:focus {
 @media (min-width:577px) {
 	.main-container {
 		display:grid;
-		overflow:auto;
 		grid-template-columns: 1fr auto auto auto auto 1fr;
 	}
 	.main-nav-header {
@@ -89,7 +95,8 @@ button:hover, button:focus {
 	.main-container {
 		margin:0 auto;
 		align-items:center;
-		overflow:auto;
+		overflow-x:auto;
+		overflow-y:hidden;
 	}
 	
 	.main-nav button {
@@ -97,11 +104,5 @@ button:hover, button:focus {
 	}
 	.main-nav-header i {
 		padding:0 0.5rem;
-	}
-}
-
-@media (min-width:1200px) {
-	.main-container {
-		width:80%;
 	}
 }

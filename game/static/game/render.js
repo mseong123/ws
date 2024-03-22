@@ -1,7 +1,7 @@
 import * as THREE from 'https://threejs.org/build/three.module.js';
 import { global } from './global.js';
 import { createGameSocket, multiGameStart} from './multiplayer.js';
-import { updateGameSummary, updateMatchFix } from './utilities.js';
+import { updateGameSummary, updateMatchFix, transformX, transformY } from './utilities.js';
 
 function processCamera(camera) {
 	if (!global.gameplay.gameStart || global.gameplay.gameEnd) {
@@ -107,15 +107,15 @@ function processUI() {
 	if (global.ui.auth) {
 		document.querySelector(".nav-local").classList.add("display-none");
 		document.querySelector(".nav-multi").classList.remove("display-none");
+		document.querySelector(".login-container").classList.add("display-none")
 	}
 	else {
 		document.querySelector(".nav-local").classList.remove("display-none");
 		document.querySelector(".nav-multi").classList.add("display-none");
+		document.querySelector(".login-container").classList.remove("display-none");
 	}
 	global.ui.mainMenu?
 		document.querySelector(".main-menu").classList.add("display-block"):document.querySelector(".main-menu").classList.remove("display-block");
-	global.ui.auth?
-		document.querySelector(".login-container").classList.add("display-none"):document.querySelector(".login-container").classList.remove("display-none");
 	global.ui.local?
 		document.querySelector(".local-menu").classList.add("display-block"):document.querySelector(".local-menu").classList.remove("display-block");
 	global.ui.single?
@@ -417,7 +417,8 @@ function processUI() {
 		//for starting screen before gameStart
 		document.querySelector(".game-summary-display").innerHTML = '';
 		document.querySelector(".game-end-display-container").classList.add("display-none");
-		document.querySelector(".banner").classList.remove("display-none");
+		if (global.ui.auth)
+			document.querySelector(".banner").classList.remove("display-none");
 		document.querySelector(".scoreboard").classList.add("display-none");
 		document.querySelector(".toggle-game").classList.add("display-none");
 		document.querySelector(".toggle-cheat").classList.add("display-none");
@@ -659,6 +660,8 @@ function processUI() {
 	if (global.ui.auth || global.ui.authNotRequired) {
 		const canvas = document.querySelector(".canvas-container");
 		const body = document.querySelector("body");
+		document.querySelector(".banner").classList.remove("display-none");
+		document.querySelector(".login-banner-container").classList.add("display-none");
 		if (body.clientWidth < 577) {
 			canvas.style.width = "100%"
 			canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
@@ -678,7 +681,7 @@ function processUI() {
 		}
 		else if (body.clientWidth >= 577 && body.clientWidth <= 993) {
 			canvas.style.height = body.clientHeight;
-			canvas.style.width = (canvas.clientHeight * global.arena.aspect) + 'px';
+			canvas.style.width = (body.clientHeight * global.arena.aspect) + 'px';
 			document.querySelector(".profile-container").style.height = "100vh";
 			document.querySelector(".chat-container").style.height = "100vh";
 			document.querySelector(".main-nav").style.height ="100vh";
@@ -695,36 +698,47 @@ function processUI() {
 		}
 		else {
 			canvas.style.width = global.desktopCanvasWidth;
-			canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
+			canvas.style.height = (global.desktopCanvasWidth / global.arena.aspect) + 'px';
+			
 			document.querySelector(".profile-container").style.height = global.desktopCanvasWidth / global.arena.aspect;
 			document.querySelector(".main-nav").style.height = global.desktopCanvasWidth / global.arena.aspect;
 			document.querySelector(".main-nav").style.width = global.mainNavInitDesktopWidth;
 			document.querySelector(".chat-container").style.height = global.desktopCanvasWidth / global.arena.aspect;
-			
 			if (global.ui.profile){
-				console.log(global.mainNavInitDesktopWidth / global.arena.aspect)
-				document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - (global.desktopCanvasWidth / global.arena.aspect) - global.mainNavInitDesktopWidth;
+				document.querySelector(".profile-container").style.width = global.minWidthProfileChat;
 				document.querySelector(".chat-container").style.width = "0";
 			}
 			else {
+				document.querySelector(".chat-container").style.width = global.minWidthProfileChat;
 				document.querySelector(".profile-container").style.width = "0";
-				document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - (global.desktopCanvasWidth / global.arena.aspect) - global.mainNavInitDesktopWidth;
 			}
 		}
 	}
 	else if (!global.ui.auth) {
 		const canvas = document.querySelector(".canvas-container");
 		const body = document.querySelector("body");
+		document.querySelector(".banner").classList.add("display-none");
+		document.querySelector(".login-banner-container").classList.remove("display-none");
 		if (body.clientWidth < 577) {
 			canvas.style.height = body.clientHeight;
-			canvas.style.width = (canvas.clientHeight * global.arena.aspect) + 'px';
+			canvas.style.width = (body.clientHeight * global.arena.aspect) + 'px';
 			document.querySelector(".profile-container").style.height = "0";
 			document.querySelector(".chat-container").style.height = "0";
 			document.querySelector(".main-nav").style.height = "0";
 		}
 		else {
-			canvas.style.width = body.clientWidth;
-			canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
+			let canvasWidth = body.clientWidth;
+			let canvasHeight = body.clientWidth / global.arena.aspect;
+			if (canvasHeight < body.clientHeight) {
+				canvas.style.height = body.clientHeight;
+				canvas.style.width =  body.clientHeight * global.arena.aspect
+			}
+			else {
+				canvas.style.width = canvasWidth;
+				canvas.style.height = canvasHeight;
+			}
+
+			
 			document.querySelector(".profile-container").style.width = "0";
 			document.querySelector(".chat-container").style.width = "0";
 			document.querySelector(".main-nav").style.width = "0";

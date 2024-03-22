@@ -1,6 +1,6 @@
 .profile-container {
 	overflow:auto;
-	transition:height 0.3s ease-in-out, width 0.3s ease-in-out;
+	transition:height 0.5s linear, width 0.5s linear;
 }
 .profile-inner-container {
 	/* padding:0 1rem; */

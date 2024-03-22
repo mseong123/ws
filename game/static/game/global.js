@@ -13,6 +13,7 @@ const global = {
 	mainNavInitMobileHeight:34, //hardcoded, need to change based on css
 	mainNavInitMobileWidth:35, //hardcoded, need to change based on css
 	mainNavInitDesktopWidth:80, //hardcoded, need to change based on css
+	minWidthProfileChat:400,
 	sphere:{
 		sphereMeshProperty:[],
 		radiusDivision:100,
