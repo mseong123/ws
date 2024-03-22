@@ -1,9 +1,10 @@
 .canvas-container {
 	flex:0 0 auto;
 	position:relative;
-	overflow-x:hidden;
+	overflow:hidden;
 	margin:0;
 	width:100%;
+	transition:height 0.5s ease-in-out, width 0.5s ease-in-out;
 }
 
 .canvas-background-1 {

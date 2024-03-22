@@ -146,7 +146,6 @@ const global = {
 		toggleGame:0,
 		chat:1,
 		mainMenu:1,
-		login:0,
 		local:0,
 		single:0,
 		two:0,
@@ -154,6 +153,7 @@ const global = {
 		multiLobby:0,
 		multiCreate:0,
 		auth:0,
+		authNotRequired:0,
 		authWarning:0,
 		profile:0,
 	},
@@ -178,7 +178,24 @@ const global = {
 global.arena.width = global.clientWidth / global.arena.widthDivision;
 global.arena.height = global.clientWidth / global.arena.aspect / global.arena.widthDivision;
 global.arena.depth = global.clientWidth / global.arena.aspect;
-global.desktopCanvasHeight = global.desktopCanvasWidth * global.arena.aspect;
+
+if (document.querySelector("body").cliehtWidth < 557) {
+	global.mainNavInitMobileHeight = document.querySelector(".main-nav").clientHeight;
+	global.mainNavInitDesktopWidth = global.mainNavInitMobileWidth * 993 / 577;
+}
+else if (document.querySelector("body").cliehtWidth >= 557 && document.querySelector("body").cliehtWidth <= 993) {
+	global.mainNavInitMobileWidth = document.querySelector(".main-nav").clientWidth;
+	global.mainNavInitMobileHeight = document.querySelector(".main-nav").clientHeight ;
+	global.mainNavInitDesktopWidth = global.mainNavInitMobileWidth * 993 / 577;
+	global.mainNavInitDesktopHeight = global.mainNavInitMobileHeight * 993 / 577;
+
+
+	global.mainNavInitDesktopWidth = document.querySelector(".main-nav").clientWidth;
+	global.mainNavInitDesktopHeight = document.querySelector(".main-nav").clientHeight;
+	global.mainNavInitMobileWidth = global.mainNavInitDesktopWidth * 577 / 993;
+	global.mainNavInitMobileHeight = global.mainNavInitDesktopHeight * 577 / 993;
+}
+global.mainNavInitDeskTopWidth = global.mainNavInitWidth * 993 / 577;
 global.sphere.radius = global.clientWidth /global.sphere.radiusDivision;
 global.sphere.velocityX = global.clientWidth / global.sphere.velocityDivision;
 global.sphere.velocityY = global.clientWidth / global.sphere.velocityDivision;

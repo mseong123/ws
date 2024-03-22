@@ -510,6 +510,13 @@ function keyBindingGame() {
 				global.ui.toggleGame = 0;
 		}
 	})
+
+	const logout =document.querySelector(".logout");
+	logout.addEventListener("click", (e)=>{
+		global.ui.auth = 0;
+		global.ui.authNotRequired = 0;
+
+	})
 	const toggleCanvas = document.querySelector(".toggle-canvas");
 	toggleCanvas.addEventListener("click", (e)=>{
 		global.ui.toggleCanvas? global.ui.toggleCanvas = 0:global.ui.toggleCanvas = 1;
@@ -783,7 +790,6 @@ function keyBindingGame() {
 			global.ui.single = 0;
 			global.ui.two = 0;
 			global.ui.tournament = 0;
-			global.ui.login = 0;
 			global.ui.multiLobby = 0;
 			global.ui.multiCreate = 0;
 		})

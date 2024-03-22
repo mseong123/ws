@@ -10,20 +10,14 @@ import { keyBindingChat} from './chat.js';
 
 function windowResize(e) {
 	const canvas = document.querySelector(".canvas-container");
-	const mainContainer = document.querySelector("body");
-	if (mainContainer.clientWidth >= 577 && mainContainer.clientWidth <= 993) {
-		canvas.style.height = mainContainer.clientHeight;
-		canvas.style.width = (canvas.clientHeight * global.arena.aspect) + 'px';
-	}
-	else if (mainContainer.clientWidth < 577) {
-		canvas.style.width = "100%"
-		canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
-	}
-	else {
-		canvas.style.width = global.desktopCanvasWidth;
-		canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
-	}
-	global.desktopCanvasHeight = canvas.clientHeight;
+	
+	// if (!global.ui.auth) {
+		
+	// }
+	// else if (global.ui.auth || global.ui.authNotRequired) {
+		
+	// }
+	
 	
 	//for each individual client
 	global.directionalLight.positionX = canvas.clientWidth;
@@ -141,3 +135,5 @@ function main() {
 }
 
 main();
+
+export { windowResize }

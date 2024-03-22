@@ -30,6 +30,11 @@ button:hover, button:focus {
 
 .main-container {
 	height:100vh;
+	overflow:hidden;
+}
+
+.main-nav {
+	transition:height 0.5s ease-in-out, width 0.5s ease-in-out;
 }
 
 .main-nav button {
@@ -41,6 +46,10 @@ button:hover, button:focus {
 .main-nav-header {
 	padding:0.25rem 1rem;
 	margin:0;
+}
+
+.main-nav-header :nth-child(3) {
+	margin-left:auto;
 }
 
 .display-none {
@@ -81,6 +90,7 @@ button:hover, button:focus {
 		align-items:center;
 		overflow:auto;
 	}
+	
 	.main-nav button {
 		font-size: 2.5rem;
 	}
@@ -93,3 +103,4 @@ button:hover, button:focus {
 	.main-container {
 		width:80%;
 	}
+}

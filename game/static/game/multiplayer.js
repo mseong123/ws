@@ -14,62 +14,62 @@ function getCookie2() {
 	return document.querySelector('[name="csrfmiddlewaretoken"]').value;
 }
 
-document.addEventListener('DOMContentLoaded', async function () {
-	try {
-		const response = await fetch(global.fetch.sessionURL, { 
-			method:"POST",
-			credentials: "include",
-			headers: {
-				"X-CSRFToken": getCookie("csrftoken")?getCookie("csrftoken"):getCookie2()
-			  }
-		});
-		const data = await response.json();
-		if (data.authenticated) {
-			global.gameplay.username = data.username;
-			global.ui.auth = 1;
-			global.ui.toggleCanvas = 0;
-			global.ui.login = 0;
-			global.ui.mainMenu = 1;
-		}
-		else
-			global.ui.auth = 0;
+// document.addEventListener('DOMContentLoaded', async function () {
+// 	try {
+// 		const response = await fetch(global.fetch.sessionURL, { 
+// 			method:"POST",
+// 			credentials: "include",
+// 			headers: {
+// 				"X-CSRFToken": getCookie("csrftoken")?getCookie("csrftoken"):getCookie2()
+// 			  }
+// 		});
+// 		const data = await response.json();
+// 		if (data.authenticated) {
+// 			global.gameplay.username = data.username;
+// 			global.ui.auth = 1;
+// 			global.ui.toggleCanvas = 0;
+// 			global.ui.login = 0;
+// 			global.ui.mainMenu = 1;
+// 		}
+// 		else
+// 			global.ui.auth = 0;
 
-	  } catch (error) {
-			console.log(`Server error: ${error.message}`);
-	  }
-})
+// 	  } catch (error) {
+// 			console.log(`Server error: ${error.message}`);
+// 	  }
+// })
 
-async function fetch_login(data) {
-	try {
-		const response = await fetch(global.fetch.authURL, { 
-			method:"POST",
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-				"X-CSRFToken": getCookie("csrftoken")
-			  },
-			body: JSON.stringify(data),
-		});
-		return response.json();
-	  } catch (error) {
-			console.log(`Server error: ${error.message}`);
-	  }
-}
+// async function fetch_login(data) {
+// 	try {
+// 		const response = await fetch(global.fetch.authURL, { 
+// 			method:"POST",
+// 			credentials: "include",
+// 			headers: {
+// 				"Content-Type": "application/json",
+// 				"X-CSRFToken": getCookie("csrftoken")
+// 			  },
+// 			body: JSON.stringify(data),
+// 		});
+// 		return response.json();
+// 	  } catch (error) {
+// 			console.log(`Server error: ${error.message}`);
+// 	  }
+// }
 
-async function fetch_logout() {
-	try {
-		const response = await fetch(global.fetch.logoutURL, { 
-			method:"POST",
-			credentials: "include",
-			headers: {
-				"X-CSRFToken": getCookie('csrftoken')
-			  },
-		});
-		return response.json();
-	  } catch (error) {
-			console.log(`Server error: ${error.message}`);
-	  }
-}
+// async function fetch_logout() {
+// 	try {
+// 		const response = await fetch(global.fetch.logoutURL, { 
+// 			method:"POST",
+// 			credentials: "include",
+// 			headers: {
+// 				"X-CSRFToken": getCookie('csrftoken')
+// 			  },
+// 		});
+// 		return response.json();
+// 	  } catch (error) {
+// 			console.log(`Server error: ${error.message}`);
+// 	  }
+// }
 
 async function createGameLobbyWebSocket() {
 	global.socket.gameLobbySocket = new WebSocket(
@@ -523,43 +523,13 @@ function keyBindingMultiplayer() {
 		if (global.socket.gameSocket && global.socket.gameSocket.readyState === WebSocket.OPEN)
 			global.socket.gameSocket.send(JSON.stringify({mode:"updateReady", ready:global.socket.ready}))
 	})
-	const login = document.querySelector(".nav-login");
-	login.addEventListener("click", (e)=>{
-		global.ui.mainMenu = 0;
-		global.ui.login = 1;
-	})
-	const logout = document.querySelector(".nav-logout");
-	logout.addEventListener("click", (e)=>{
-		fetch_logout().then(data=>{
-			global.ui.auth = 0;
-			global.gameplay.username = "";
-		})
-	})
-	const loginBack = document.querySelector(".login-back");
-	loginBack.addEventListener("click", (e)=>{
-		global.ui.mainMenu = 1;
-		global.ui.login = 0;
-	})
-	const loginSubmit = document.querySelector(".login");
-	loginSubmit.addEventListener("submit", (e)=>{
-		global.ui.authWarning = 0;
-		e.preventDefault();
-		fetch_login({username:document.getElementById("username").value, password:document.getElementById("password").value}).then(data=>{
-			if (data.authenticated) {
-				global.gameplay.username = data.username;
-				global.ui.auth = 1;
-				global.ui.toggleCanvas = 0;
-				global.ui.login = 0;
-				global.ui.mainMenu = 1;
-				global.ui.toggleCanvas = 1;
-			}
-			else {
-				global.gameplay.username = "";
-				global.ui.auth = 0;
-				global.ui.authWarning = 1;
-			}
-		});
-	})
+	// const logout = document.querySelector(".nav-logout");
+	// logout.addEventListener("click", (e)=>{
+	// 	fetch_logout().then(data=>{
+	// 		global.ui.auth = 0;
+	// 		global.gameplay.username = "";
+	// 	})
+	// })
 	const multiCreateVersus = document.querySelector(".multi-create-versus");
 	multiCreateVersus.addEventListener("click", (e)=>{
 		if (global.socket.gameLobbyInfo.every(gameLobbyInfo=>{

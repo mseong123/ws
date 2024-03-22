@@ -114,8 +114,8 @@ function processUI() {
 	}
 	global.ui.mainMenu?
 		document.querySelector(".main-menu").classList.add("display-block"):document.querySelector(".main-menu").classList.remove("display-block");
-	global.ui.login?
-		document.querySelector(".login-menu").classList.add("display-block"):document.querySelector(".login-menu").classList.remove("display-block");
+	global.ui.auth?
+		document.querySelector(".login-container").classList.add("display-none"):document.querySelector(".login-container").classList.remove("display-none");
 	global.ui.local?
 		document.querySelector(".local-menu").classList.add("display-block"):document.querySelector(".local-menu").classList.remove("display-block");
 	global.ui.single?
@@ -212,16 +212,6 @@ function processUI() {
 
 	global.gameplay.ludicrious?
 		document.querySelector(".timer").classList.add("timer-ludicrious"):document.querySelector(".timer").classList.remove("timer-ludicrious");
-	if (global.ui.auth) {
-		document.querySelector(".nav-logout").classList.remove("display-none");
-		document.querySelector(".nav-login").classList.add("display-none");
-	}
-	else {
-		document.querySelector(".nav-logout").classList.add("display-none");
-		document.querySelector(".nav-login").classList.remove("display-none");
-	}
-	global.ui.authWarning? document.querySelector(".login-warning").classList.remove("display-none") : document.querySelector(".login-warning").classList.add("display-none");
-	
 	for (let i = 0; i < global.gameplay.localSingleInfo.player.length; i++) {
 		const parent = document.querySelector(".single-alias-display-inside");
 		const target = document.querySelector(".single-" + global.gameplay.localSingleInfo.player[i].alias)
@@ -666,47 +656,79 @@ function processUI() {
 		}
 		global.socket.spectate? document.querySelector(".nav-pause").classList.add("display-none"):document.querySelector(".nav-pause").classList.remove("display-none");
 	}
-	
-	if (document.querySelector("body").clientWidth < 577) {
-		document.querySelector(".profile-container").style.width = "100%";
-		document.querySelector(".chat-container").style.width = "100%";
-		document.querySelector(".main-nav").style.height = "initial";
-		document.querySelector(".main-nav").style.width = "100%";
-		
-		if (global.ui.profile){
-			document.querySelector(".profile-container").style.height = document.querySelector(".main-container").clientHeight - document.querySelector(".canvas-container").clientHeight - document.querySelector(".main-nav").clientHeight;
-			document.querySelector(".chat-container").style.height = "0";
+	if (global.ui.auth || global.ui.authNotRequired) {
+		const canvas = document.querySelector(".canvas-container");
+		const body = document.querySelector("body");
+		if (body.clientWidth < 577) {
+			canvas.style.width = "100%"
+			canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
+			document.querySelector(".profile-container").style.width = "100%";
+			document.querySelector(".chat-container").style.width = "100%";
+			document.querySelector(".main-nav").style.width = "100%";
+			document.querySelector(".main-nav").style.height = global.mainNavInitMobileHeight;
+			if (global.ui.profile){
+				document.querySelector(".profile-container").style.height = document.querySelector(".main-container").clientHeight - document.querySelector(".canvas-container").clientHeight - global.mainNavInitHeight;
+				document.querySelector(".chat-container").style.height = "0";
+			}
+			else {
+				document.querySelector(".profile-container").style.height = "0";
+				document.querySelector(".chat-container").style.height = document.querySelector(".main-container").clientHeight - document.querySelector(".canvas-container").clientHeight - global.mainNavInitHeight;
+			}
+			
+		}
+		else if (body.clientWidth >= 577 && body.clientWidth <= 993) {
+			canvas.style.height = body.clientHeight;
+			canvas.style.width = (canvas.clientHeight * global.arena.aspect) + 'px';
+			document.querySelector(".profile-container").style.height = "100vh";
+			document.querySelector(".chat-container").style.height = "100vh";
+			document.querySelector(".main-nav").style.height ="100vh";
+			document.querySelector(".main-nav").style.width = global.mainNavInitWidth;
+			if (global.ui.profile){
+				document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - global.mainNavInitWidth;
+				document.querySelector(".chat-container").style.width = "0";
+			}
+			else {
+				document.querySelector(".profile-container").style.width = "0";
+				document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - global.mainNavInitWidth;
+			}
+			
 		}
 		else {
+			canvas.style.width = global.desktopCanvasWidth;
+			canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
+			document.querySelector(".profile-container").style.height = canvas.clientHeight;
+			document.querySelector(".main-nav").style.height = canvas.clientHeight;
+			document.querySelector(".main-nav").style.width = global.mainNavInitDeskTopWidth;
+			document.querySelector(".chat-container").style.height = canvas.clientHeight;
+			
+			if (global.ui.profile){
+				document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
+				document.querySelector(".chat-container").style.width = "0";
+			}
+			else {
+				document.querySelector(".profile-container").style.width = "0";
+				document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
+			}
+			document.querySelector(".main-nav").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".profile-container").clientWidth - document.querySelector(".chat-container").clientWidth;
+		}
+	}
+	else if (!global.ui.auth) {
+		const canvas = document.querySelector(".canvas-container");
+		const body = document.querySelector("body");
+		if (body.clientWidth < 577) {
+			canvas.style.height = body.clientHeight;
+			canvas.style.width = (canvas.clientHeight * global.arena.aspect) + 'px';
 			document.querySelector(".profile-container").style.height = "0";
-			document.querySelector(".chat-container").style.height = document.querySelector(".main-container").clientHeight - document.querySelector(".canvas-container").clientHeight - document.querySelector(".main-nav").clientHeight;
-		}
-	}
-	else if (document.querySelector("body").clientWidth >= 577 && document.querySelector("body").clientWidth <= 993) {
-		document.querySelector(".profile-container").style.height = "100vh";
-		document.querySelector(".chat-container").style.height = "100vh";
-		document.querySelector(".main-nav").style.height ="100vh";
-		if (global.ui.profile){
-			document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
-			document.querySelector(".chat-container").style.width = "0";
+			document.querySelector(".chat-container").style.height = "0";
+			document.querySelector(".main-nav").style.height = "0";
 		}
 		else {
+			canvas.style.width = body.clientWidth;
+			canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
 			document.querySelector(".profile-container").style.width = "0";
-			document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
-		}
-	}
-	else {
-		document.querySelector(".profile-container").style.height = global.desktopCanvasHeight;
-		document.querySelector(".main-nav").style.height = global.desktopCanvasHeight;
-		document.querySelector(".chat-container").style.height = global.desktopCanvasHeight;
-		if (global.ui.profile){
-			document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
 			document.querySelector(".chat-container").style.width = "0";
+			document.querySelector(".main-nav").style.width = "0";
 		}
-		else {
-			document.querySelector(".profile-container").style.width = "0";
-			document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
-		}	
 	}
 	global.socket.spectate? document.querySelector(".spectate-container").classList.remove("display-none"):document.querySelector(".spectate-container").classList.add("display-none")
 }
