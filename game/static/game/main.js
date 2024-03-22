@@ -10,15 +10,6 @@ import { keyBindingChat} from './chat.js';
 
 function windowResize(e) {
 	const canvas = document.querySelector(".canvas-container");
-	
-	// if (!global.ui.auth) {
-		
-	// }
-	// else if (global.ui.auth || global.ui.authNotRequired) {
-		
-	// }
-	
-	
 	//for each individual client
 	global.directionalLight.positionX = canvas.clientWidth;
 	global.directionalLight.positionY = canvas.clientWidth;

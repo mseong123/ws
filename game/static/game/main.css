@@ -34,7 +34,7 @@ button:hover, button:focus {
 }
 
 .main-nav {
-	transition:height 0.5s ease-in-out, width 0.5s ease-in-out;
+	transition:height 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
 .main-nav button {
@@ -67,6 +67,7 @@ button:hover, button:focus {
 @media (min-width:577px) {
 	.main-container {
 		display:grid;
+		overflow:auto;
 		grid-template-columns: 1fr auto auto auto auto 1fr;
 	}
 	.main-nav-header {

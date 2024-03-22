@@ -10,6 +10,9 @@ const global = {
 		thickness:6,
 	},
 	desktopCanvasWidth:900,
+	mainNavInitMobileHeight:34, //hardcoded, need to change based on css
+	mainNavInitMobileWidth:35, //hardcoded, need to change based on css
+	mainNavInitDesktopWidth:80, //hardcoded, need to change based on css
 	sphere:{
 		sphereMeshProperty:[],
 		radiusDivision:100,
@@ -178,24 +181,6 @@ const global = {
 global.arena.width = global.clientWidth / global.arena.widthDivision;
 global.arena.height = global.clientWidth / global.arena.aspect / global.arena.widthDivision;
 global.arena.depth = global.clientWidth / global.arena.aspect;
-
-if (document.querySelector("body").cliehtWidth < 557) {
-	global.mainNavInitMobileHeight = document.querySelector(".main-nav").clientHeight;
-	global.mainNavInitDesktopWidth = global.mainNavInitMobileWidth * 993 / 577;
-}
-else if (document.querySelector("body").cliehtWidth >= 557 && document.querySelector("body").cliehtWidth <= 993) {
-	global.mainNavInitMobileWidth = document.querySelector(".main-nav").clientWidth;
-	global.mainNavInitMobileHeight = document.querySelector(".main-nav").clientHeight ;
-	global.mainNavInitDesktopWidth = global.mainNavInitMobileWidth * 993 / 577;
-	global.mainNavInitDesktopHeight = global.mainNavInitMobileHeight * 993 / 577;
-
-
-	global.mainNavInitDesktopWidth = document.querySelector(".main-nav").clientWidth;
-	global.mainNavInitDesktopHeight = document.querySelector(".main-nav").clientHeight;
-	global.mainNavInitMobileWidth = global.mainNavInitDesktopWidth * 577 / 993;
-	global.mainNavInitMobileHeight = global.mainNavInitDesktopHeight * 577 / 993;
-}
-global.mainNavInitDeskTopWidth = global.mainNavInitWidth * 993 / 577;
 global.sphere.radius = global.clientWidth /global.sphere.radiusDivision;
 global.sphere.velocityX = global.clientWidth / global.sphere.velocityDivision;
 global.sphere.velocityY = global.clientWidth / global.sphere.velocityDivision;

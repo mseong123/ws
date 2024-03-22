@@ -667,12 +667,12 @@ function processUI() {
 			document.querySelector(".main-nav").style.width = "100%";
 			document.querySelector(".main-nav").style.height = global.mainNavInitMobileHeight;
 			if (global.ui.profile){
-				document.querySelector(".profile-container").style.height = document.querySelector(".main-container").clientHeight - document.querySelector(".canvas-container").clientHeight - global.mainNavInitHeight;
+				document.querySelector(".profile-container").style.height = document.querySelector(".main-container").clientHeight - (body.clientWidth / global.arena.aspect) - global.mainNavInitMobileHeight;
 				document.querySelector(".chat-container").style.height = "0";
 			}
 			else {
 				document.querySelector(".profile-container").style.height = "0";
-				document.querySelector(".chat-container").style.height = document.querySelector(".main-container").clientHeight - document.querySelector(".canvas-container").clientHeight - global.mainNavInitHeight;
+				document.querySelector(".chat-container").style.height = document.querySelector(".main-container").clientHeight - (body.clientWidth / global.arena.aspect) - global.mainNavInitMobileHeight;
 			}
 			
 		}
@@ -682,34 +682,34 @@ function processUI() {
 			document.querySelector(".profile-container").style.height = "100vh";
 			document.querySelector(".chat-container").style.height = "100vh";
 			document.querySelector(".main-nav").style.height ="100vh";
-			document.querySelector(".main-nav").style.width = global.mainNavInitWidth;
+			document.querySelector(".main-nav").style.width = global.mainNavInitMobileWidth;
 			if (global.ui.profile){
-				document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - global.mainNavInitWidth;
+				document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - (body.clientHeight * global.arena.aspect) - global.mainNavInitMobileWidth;
 				document.querySelector(".chat-container").style.width = "0";
 			}
 			else {
 				document.querySelector(".profile-container").style.width = "0";
-				document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - global.mainNavInitWidth;
+				document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - (body.clientHeight * global.arena.aspect) - global.mainNavInitMobileWidth;
 			}
 			
 		}
 		else {
 			canvas.style.width = global.desktopCanvasWidth;
 			canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
-			document.querySelector(".profile-container").style.height = canvas.clientHeight;
-			document.querySelector(".main-nav").style.height = canvas.clientHeight;
-			document.querySelector(".main-nav").style.width = global.mainNavInitDeskTopWidth;
-			document.querySelector(".chat-container").style.height = canvas.clientHeight;
+			document.querySelector(".profile-container").style.height = global.desktopCanvasWidth / global.arena.aspect;
+			document.querySelector(".main-nav").style.height = global.desktopCanvasWidth / global.arena.aspect;
+			document.querySelector(".main-nav").style.width = global.mainNavInitDesktopWidth;
+			document.querySelector(".chat-container").style.height = global.desktopCanvasWidth / global.arena.aspect;
 			
 			if (global.ui.profile){
-				document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
+				console.log(global.mainNavInitDesktopWidth / global.arena.aspect)
+				document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - (global.desktopCanvasWidth / global.arena.aspect) - global.mainNavInitDesktopWidth;
 				document.querySelector(".chat-container").style.width = "0";
 			}
 			else {
 				document.querySelector(".profile-container").style.width = "0";
-				document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".main-nav").clientWidth;
+				document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - (global.desktopCanvasWidth / global.arena.aspect) - global.mainNavInitDesktopWidth;
 			}
-			document.querySelector(".main-nav").style.width = document.querySelector(".main-container").clientWidth - document.querySelector(".canvas-container").clientWidth - document.querySelector(".profile-container").clientWidth - document.querySelector(".chat-container").clientWidth;
 		}
 	}
 	else if (!global.ui.auth) {
