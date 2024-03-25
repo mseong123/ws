@@ -3,7 +3,7 @@
 	color:rgb(177,177,177);
 	overflow:auto;
 	width:100%;
-	transition:height 0.5s linear, width 0.5s linear;
+	transition: height 0.5s linear, width 0.5s linear;
 }
 
 .chat-expand {
@@ -25,6 +25,11 @@
 	}
 }
 
+@media (min-width:993px) {
+	.chat-container {
+		transition: height 0.5s linear, width 0.5s linear;
+	}
+}
 
 
 

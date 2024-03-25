@@ -1,5 +1,6 @@
 import { getCookie, showLoading, hideLoading, storeLoginLocalStorage, displayErrorMessages, initializeVerifyEmail, initializeUserInterface, createOtpField } from "./utils.js"
 import { global } from "./global.js";
+import { windowResize } from "./main.js"
 
 document.addEventListener('DOMContentLoaded', function () {
   // Initializations
@@ -12,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
   loginForm.addEventListener('submit', function(e){
 	  e.preventDefault();
 	  global.ui.auth = 1;
+	  windowResize();
+
   });
 
   const savedEmail = localStorage.getItem("savedEmail");

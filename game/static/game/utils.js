@@ -33,7 +33,7 @@ function initializeVerifyEmail() {
 }
 
 function initializeUserInterface() {
-    document.getElementById('login-form-div').style.display = 'inline';
+    document.getElementById('login-form-div').style.display = 'block';
     document.getElementById('register-form-div').style.display = 'none';
 
     const registerToggle = document.getElementById("register-toggle");
@@ -46,7 +46,7 @@ function initializeUserInterface() {
     const loginToggle = document.getElementById("login-toggle");
     loginToggle.addEventListener("click", (event) => {
         event.preventDefault();
-        document.getElementById('login-form-div').style.display = 'inline';
+        document.getElementById('login-form-div').style.display = 'block';
         document.getElementById('register-form-div').style.display = 'none';
     });
 
@@ -58,7 +58,7 @@ function initializeUserInterface() {
     });
 
     document.getElementById('reset-password-close-button').onclick = function () {
-        document.getElementById('login-form-div').style.display = 'inline';
+        document.getElementById('login-form-div').style.display = 'block';
         document.getElementById('reset-password-form').style.display = 'none';
         return false;
     };

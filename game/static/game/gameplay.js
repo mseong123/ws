@@ -1,6 +1,7 @@
 import * as THREE from 'https://threejs.org/build/three.module.js';
 import {global} from './global.js';
 import { matchFix, populateWinner } from './utilities.js'
+import { windowResize } from './main.js'
 
 function canvasKeydown(e) {
 	let arrow = e.key;
@@ -515,6 +516,7 @@ function keyBindingGame() {
 	logout.addEventListener("click", (e)=>{
 		global.ui.auth = 0;
 		global.ui.authNotRequired = 0;
+		windowResize();
 
 	})
 	const toggleCanvas = document.querySelector(".toggle-canvas");

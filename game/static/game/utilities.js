@@ -459,22 +459,5 @@ function populateWinner() {
 	}
 }
 
-function transformX(initialX, newX, element) {
-	
-	if (initialX <= 0)
-		initialX = 1;
-	// console.log("old X", initialX)
-	//   console.log("new X", newX)
-	//   console.log(`scaleX(${parseInt(newX) / parseInt(initialX)})`)
-	element.style.transform = `scaleX(${parseInt(newX) / parseInt(initialX)})`;
-	// element.style.transform = `scaleX(1797)`;
-  }
 
-  function transformY(initialY, newY, element) {
-	//   console.log("old Y", initialY)
-	//   console.log("new", newY)
-	//   element.style.transform = `scaleY(1.4)`;
-	element.style.transform = `scaleY(${parseInt(newY) / parseInt(initialY)})`;
-  }
-
-export { updateGameSummary, updateMatchFix, matchFix, matchFixMulti, populateWinner, transformX, transformY } 
+export { updateGameSummary, updateMatchFix, matchFix, matchFixMulti, populateWinner } 

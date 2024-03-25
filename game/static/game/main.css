@@ -30,7 +30,7 @@ button:hover, button:focus {
 
 .main-container {
 	height:100vh;
-	position:relative;
+	overflow:hidden;
 }
 
 .login-banner-container {
@@ -44,8 +44,12 @@ button:hover, button:focus {
 	margin-top:1rem;
 }
 
+.login-banner {
+	font-size: 2rem;
+}
+
 .main-nav {
-	transition:height 0.5s linear, width 0.5s linear;
+	transition: height 0.5s linear, width 0.5s linear;
 }
 
 .main-nav button {
@@ -104,5 +108,13 @@ button:hover, button:focus {
 	}
 	.main-nav-header i {
 		padding:0 0.5rem;
+	}
+	.login-banner-container {
+		margin-top:2rem;
+		margin-left:2rem;
+		
+	}
+	.login-banner {
+		font-size: 3.5rem;
 	}
 }

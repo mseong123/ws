@@ -1,7 +1,7 @@
 import * as THREE from 'https://threejs.org/build/three.module.js';
 import { global } from './global.js';
 import { createGameSocket, multiGameStart} from './multiplayer.js';
-import { updateGameSummary, updateMatchFix, transformX, transformY } from './utilities.js';
+import { updateGameSummary, updateMatchFix } from './utilities.js';
 
 function processCamera(camera) {
 	if (!global.gameplay.gameStart || global.gameplay.gameEnd) {
@@ -105,12 +105,12 @@ function processUI() {
 	else
 		document.querySelector(".menu-game").classList.add("display-none");
 	if (global.ui.auth) {
-		document.querySelector(".nav-local").classList.add("display-none");
+		// document.querySelector(".nav-local").classList.add("display-none");
 		document.querySelector(".nav-multi").classList.remove("display-none");
 		document.querySelector(".login-container").classList.add("display-none")
 	}
 	else {
-		document.querySelector(".nav-local").classList.remove("display-none");
+		// document.querySelector(".nav-local").classList.remove("display-none");
 		document.querySelector(".nav-multi").classList.add("display-none");
 		document.querySelector(".login-container").classList.remove("display-none");
 	}
@@ -657,93 +657,7 @@ function processUI() {
 		}
 		global.socket.spectate? document.querySelector(".nav-pause").classList.add("display-none"):document.querySelector(".nav-pause").classList.remove("display-none");
 	}
-	if (global.ui.auth || global.ui.authNotRequired) {
-		const canvas = document.querySelector(".canvas-container");
-		const body = document.querySelector("body");
-		document.querySelector(".banner").classList.remove("display-none");
-		document.querySelector(".login-banner-container").classList.add("display-none");
-		if (body.clientWidth < 577) {
-			canvas.style.width = "100%"
-			canvas.style.height = (canvas.clientWidth / global.arena.aspect) + 'px';
-			document.querySelector(".profile-container").style.width = "100%";
-			document.querySelector(".chat-container").style.width = "100%";
-			document.querySelector(".main-nav").style.width = "100%";
-			document.querySelector(".main-nav").style.height = global.mainNavInitMobileHeight;
-			if (global.ui.profile){
-				document.querySelector(".profile-container").style.height = document.querySelector(".main-container").clientHeight - (body.clientWidth / global.arena.aspect) - global.mainNavInitMobileHeight;
-				document.querySelector(".chat-container").style.height = "0";
-			}
-			else {
-				document.querySelector(".profile-container").style.height = "0";
-				document.querySelector(".chat-container").style.height = document.querySelector(".main-container").clientHeight - (body.clientWidth / global.arena.aspect) - global.mainNavInitMobileHeight;
-			}
-			
-		}
-		else if (body.clientWidth >= 577 && body.clientWidth <= 993) {
-			canvas.style.height = body.clientHeight;
-			canvas.style.width = (body.clientHeight * global.arena.aspect) + 'px';
-			document.querySelector(".profile-container").style.height = "100vh";
-			document.querySelector(".chat-container").style.height = "100vh";
-			document.querySelector(".main-nav").style.height ="100vh";
-			document.querySelector(".main-nav").style.width = global.mainNavInitMobileWidth;
-			if (global.ui.profile){
-				document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - (body.clientHeight * global.arena.aspect) - global.mainNavInitMobileWidth;
-				document.querySelector(".chat-container").style.width = "0";
-			}
-			else {
-				document.querySelector(".profile-container").style.width = "0";
-				document.querySelector(".chat-container").style.width = document.querySelector(".main-container").clientWidth - (body.clientHeight * global.arena.aspect) - global.mainNavInitMobileWidth;
-			}
-			
-		}
-		else {
-			canvas.style.width = global.desktopCanvasWidth;
-			canvas.style.height = (global.desktopCanvasWidth / global.arena.aspect) + 'px';
-			
-			document.querySelector(".profile-container").style.height = global.desktopCanvasWidth / global.arena.aspect;
-			document.querySelector(".main-nav").style.height = global.desktopCanvasWidth / global.arena.aspect;
-			document.querySelector(".main-nav").style.width = global.mainNavInitDesktopWidth;
-			document.querySelector(".chat-container").style.height = global.desktopCanvasWidth / global.arena.aspect;
-			if (global.ui.profile){
-				document.querySelector(".profile-container").style.width = global.minWidthProfileChat;
-				document.querySelector(".chat-container").style.width = "0";
-			}
-			else {
-				document.querySelector(".chat-container").style.width = global.minWidthProfileChat;
-				document.querySelector(".profile-container").style.width = "0";
-			}
-		}
-	}
-	else if (!global.ui.auth) {
-		const canvas = document.querySelector(".canvas-container");
-		const body = document.querySelector("body");
-		document.querySelector(".banner").classList.add("display-none");
-		document.querySelector(".login-banner-container").classList.remove("display-none");
-		if (body.clientWidth < 577) {
-			canvas.style.height = body.clientHeight;
-			canvas.style.width = (body.clientHeight * global.arena.aspect) + 'px';
-			document.querySelector(".profile-container").style.height = "0";
-			document.querySelector(".chat-container").style.height = "0";
-			document.querySelector(".main-nav").style.height = "0";
-		}
-		else {
-			let canvasWidth = body.clientWidth;
-			let canvasHeight = body.clientWidth / global.arena.aspect;
-			if (canvasHeight < body.clientHeight) {
-				canvas.style.height = body.clientHeight;
-				canvas.style.width =  body.clientHeight * global.arena.aspect
-			}
-			else {
-				canvas.style.width = canvasWidth;
-				canvas.style.height = canvasHeight;
-			}
-
-			
-			document.querySelector(".profile-container").style.width = "0";
-			document.querySelector(".chat-container").style.width = "0";
-			document.querySelector(".main-nav").style.width = "0";
-		}
-	}
+	
 	global.socket.spectate? document.querySelector(".spectate-container").classList.remove("display-none"):document.querySelector(".spectate-container").classList.add("display-none")
 }
 
