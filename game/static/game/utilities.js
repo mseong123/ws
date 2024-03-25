@@ -462,10 +462,8 @@ function populateWinner() {
 
 function transformDesktop(newX, newY) {
 	const canvas = document.querySelector(".canvas-container");
-	if (newY / canvas.clientHeight > 1.6)
-		canvas.style.transform = `scaleX(${1.6}) scaleY(${1.6})`;
-	else
-		canvas.style.transform = `scaleX(${newX / canvas.clientWidth}) scaleY(${newY / canvas.clientHeight})`;
+	
+	canvas.style.transform = `scaleX(${newX / canvas.clientWidth}) scaleY(${newY / canvas.clientHeight})`;
 }
 
 export { updateGameSummary, updateMatchFix, matchFix, matchFixMulti, populateWinner, transformDesktop} 
