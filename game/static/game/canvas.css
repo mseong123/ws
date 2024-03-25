@@ -4,7 +4,7 @@
 	overflow:hidden;
 	margin:0;
 	width:100%;
-	transition:height 0.5s linear, width 0.5s linear;
+	transition:height 0.5s linear, width 0.5s linear, transform 0.5s linear;
 	
 }
 
@@ -671,6 +671,9 @@ hr {
 		margin-top:2rem;
 		margin-left:2rem;
 		font-size: 3.5rem;
+	}
+	.canvas-container {
+		transition:transform 0.5s linear;
 	}
 	.toggle-canvas .icon-bar, .toggle-game .icon-bar{
 		width: 24px;

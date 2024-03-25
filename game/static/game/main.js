@@ -7,6 +7,7 @@ import { keyBindingGame, processGame, movePaddle } from './gameplay.js';
 import { keyBindingMultiplayer, sendMultiPlayerData} from './multiplayer.js';
 import { keyBindingProfile} from './profile.js';
 import { keyBindingChat} from './chat.js';
+import { transformDesktop } from './utilities.js'
 
 function windowResize(e) {
 	const canvas = document.querySelector(".canvas-container");
@@ -26,6 +27,7 @@ function windowResize(e) {
 			document.querySelector(".chat-container").style.width = "100%";
 			document.querySelector(".main-nav").style.width = body.clientWidth;
 			document.querySelector(".main-nav").style.height = global.mainNavInitMobileHeight;
+			canvas.style.transform ='';
 			if (global.ui.profile){
 				document.querySelector(".profile-container").style.height = document.querySelector(".main-container").clientHeight - (body.clientWidth / global.arena.aspect) - global.mainNavInitMobileHeight;
 				document.querySelector(".chat-container").style.height = "0";
@@ -43,6 +45,7 @@ function windowResize(e) {
 			document.querySelector(".chat-container").style.height = "100vh";
 			document.querySelector(".main-nav").style.height ="100vh";
 			document.querySelector(".main-nav").style.width = global.mainNavInitMobileWidth;
+			canvas.style.transform ='';
 			if (global.ui.profile){
 				document.querySelector(".profile-container").style.width = document.querySelector(".main-container").clientWidth - (body.clientHeight * global.arena.aspect) - global.mainNavInitMobileWidth;
 				document.querySelector(".chat-container").style.width = "0";
@@ -55,7 +58,9 @@ function windowResize(e) {
 		}
 		else {
 			canvas.style.width = global.desktopCanvasWidth;
-			canvas.style.height = (global.desktopCanvasWidth / global.arena.aspect) + 'px';
+			canvas.style.height = global.desktopCanvasWidth / global.arena.aspect;
+
+			transformDesktop(global.desktopCanvasWidth, global.desktopCanvasWidth / global.arena.aspect);
 			document.querySelector(".profile-container").style.height = global.desktopCanvasWidth / global.arena.aspect;
 			document.querySelector(".main-nav").style.height = global.desktopCanvasWidth / global.arena.aspect;
 			document.querySelector(".main-nav").style.width = global.mainNavInitDesktopWidth;
@@ -78,6 +83,7 @@ function windowResize(e) {
 		if (body.clientWidth < 577) {
 			canvas.style.height = body.clientHeight;
 			canvas.style.width = (body.clientHeight * global.arena.aspect) + 'px';
+			canvas.style.transform ='';
 			document.querySelector(".profile-container").style.height = "0";
 			document.querySelector(".chat-container").style.height = "0";
 			document.querySelector(".main-nav").style.height = "0";
@@ -87,6 +93,7 @@ function windowResize(e) {
 			let canvasHeight = body.clientWidth / global.arena.aspect;
 			canvas.style.width = canvasWidth;
 			canvas.style.height = canvasHeight;
+			canvas.style.transform ='';
 			document.querySelector(".profile-container").style.width = "0";
 			document.querySelector(".chat-container").style.width = "0";
 			document.querySelector(".main-nav").style.width = "0";
@@ -94,8 +101,13 @@ function windowResize(e) {
 		else {
 			let canvasHeight = body.clientHeight;
 			let canvasWidth = body.clientHeight * global.arena.aspect;
-			canvas.style.width = canvasWidth;
-			canvas.style.height = canvasHeight;
+			if (canvasWidth < body.clientWidth) {
+				canvasWidth = body.clientWidth;
+				canvasHeight = body.clientWidth / global.arena.aspect;
+			}
+			canvas.style.width = global.desktopCanvasWidth;
+			canvas.style.height = global.desktopCanvasWidth / global.arena.aspect;
+			transformDesktop(canvasWidth, canvasHeight);
 			document.querySelector(".profile-container").style.width = "0";
 			document.querySelector(".chat-container").style.width = "0";
 			document.querySelector(".main-nav").style.width = "0";
