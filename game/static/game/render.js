@@ -104,14 +104,14 @@ function processUI() {
 		document.querySelector(".menu-game").classList.remove("display-none");
 	else
 		document.querySelector(".menu-game").classList.add("display-none");
-	if (global.ui.auth) {
-		// document.querySelector(".nav-local").classList.add("display-none");
-		document.querySelector(".nav-multi").classList.remove("display-none");
+	if (global.ui.auth || global.ui.authNotRequired) {
+		if (global.ui.auth)
+			document.querySelector(".nav-multi").classList.remove("display-none");
 		document.querySelector(".login-container").classList.add("display-none")
 	}
 	else {
-		// document.querySelector(".nav-local").classList.remove("display-none");
-		document.querySelector(".nav-multi").classList.add("display-none");
+		if (!global.ui.auth)
+			document.querySelector(".nav-multi").classList.add("display-none");
 		document.querySelector(".login-container").classList.remove("display-none");
 	}
 	global.ui.mainMenu?

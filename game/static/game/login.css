@@ -260,6 +260,17 @@
     color: #1c76d7;
 }
 
+.login-local {
+	border:0;
+	background-color:transparent;
+	color:white;
+}
+.foutytwo-link {
+	display:flex;
+	margin:0.25rem 0;
+	justify-content:space-between;
+}
+
 @media (min-width:577px) {
 	.wrapper {
 		width:50%;

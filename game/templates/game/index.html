@@ -46,6 +46,7 @@
 							<div class="foutytwo-link">
 								<a href="#" id="start"><img src="{% static '42Logo.png'%}"
 										style="width:42px;height:42px;border-radius:10px;"></a>
+								<button type="button" class="login-local"><i class="fas fa-location-dot fa-2x"></i></button>
 							</div>
 						</form>
 					</div>
@@ -174,7 +175,7 @@
 						<span class="icon-bar"></span>
 					</button>
 					<div class="menu-canvas display-none">
-						<hr></hr>
+						<hr>
 						<div class="main-menu display-none">
 							<button type="button" class="nav nav-local"><i class="fas fa-location-dot"></i>Local &nbsp;<i class="fa fa-caret-right"></i></button>
 							<button type="button" class="nav nav-multi"><i class="fas fa-network-wired"></i>Multiplayer &nbsp;<i class="fa fa-caret-right"></i></button>
@@ -457,7 +458,6 @@
 		</div>
 		
 	</body>
-	
 	<script type="module" src="{% static 'game/global.js' %}"></script>
 	<script type="module" src="{% static 'game/3Dobject.js' %}"></script>
 	<script type="module" src="{% static 'game/3Dpowerup.js' %}"></script>
@@ -469,5 +469,4 @@
 	<script type="module" src="{% static 'game/main.js' %}"></script>
 	<script type="module" src="{% static 'game/login-utils.js' %}"></script>
 	<script type="module" src="{% static 'game/login.js' %}"></script>
-	
 </html>

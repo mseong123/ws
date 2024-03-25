@@ -14,8 +14,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	  e.preventDefault();
 	  global.ui.auth = 1;
 	  windowResize();
-
   });
+
+  //login without authentication for local game
+  const loginlocal = document.querySelector('.login-local');
+  loginlocal.addEventListener('click', function(e){
+	global.ui.authNotRequired = 1;
+	windowResize();
+});
 
   const savedEmail = localStorage.getItem("savedEmail");
   const savedPassword = localStorage.getItem("savedPassword");
@@ -311,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // document.getElementById("access_token").innerText = body.access_token;
         // document.getElementById("start").classList = "hidden";
         // document.getElementById("token").classList = "";
-        console.log(body);
+        
         if (body.key)
           sessionStorage.setItem("Authorization", "Token " + body.key)
         // Replace the history entry to remove the auth code from the browser address bar

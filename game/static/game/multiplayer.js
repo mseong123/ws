@@ -523,13 +523,6 @@ function keyBindingMultiplayer() {
 		if (global.socket.gameSocket && global.socket.gameSocket.readyState === WebSocket.OPEN)
 			global.socket.gameSocket.send(JSON.stringify({mode:"updateReady", ready:global.socket.ready}))
 	})
-	// const logout = document.querySelector(".nav-logout");
-	// logout.addEventListener("click", (e)=>{
-	// 	fetch_logout().then(data=>{
-	// 		global.ui.auth = 0;
-	// 		global.gameplay.username = "";
-	// 	})
-	// })
 	const multiCreateVersus = document.querySelector(".multi-create-versus");
 	multiCreateVersus.addEventListener("click", (e)=>{
 		if (global.socket.gameLobbyInfo.every(gameLobbyInfo=>{

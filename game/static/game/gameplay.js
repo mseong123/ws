@@ -516,6 +516,22 @@ function keyBindingGame() {
 	logout.addEventListener("click", (e)=>{
 		global.ui.auth = 0;
 		global.ui.authNotRequired = 0;
+		if (global.socket.gameInfo.mainClient) {
+			global.socket.ready = 0;
+			global.socket.gameInfo = {
+				mainClient:"",
+				gameMode:"",
+				player:{},
+				playerGame:[],
+				currentRound:0,
+				round:0,
+				ludicrious:global.gameplay.defaultLudicrious,
+				powerUp:global.gameplay.defaultPowerUp,
+				duration:global.gameplay.defaultDuration,
+				durationCount:global.gameplay.defaultDuration,
+			};
+		}
+		resetGame();
 		windowResize();
 
 	})

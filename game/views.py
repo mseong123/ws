@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate,login, logout
 
 # Create your views here.
 def index(request):
-	return render(request, "game/ft_transcendence.html")
+	return render(request, "game/index.html")
 
 def auth(request):
 	if request.method == 'POST':
