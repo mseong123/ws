@@ -92,6 +92,12 @@ button:hover, button:focus {
 	.main-nav-header i {
 		padding:0;
 	}
+	.login-banner-container {
+		margin:0.25rem 0;
+	}
+	.login-banner {
+		margin:0.25rem 0;
+	}
  
 }
 

@@ -22,12 +22,12 @@ function initializeVerifyEmail() {
             console.log(data);
 
             document.getElementById('login-form-div').style.display = 'none';
-            document.getElementById('verify-success').style.display = 'inline';
+            document.getElementById('verify-success').style.display = 'block';
 
         }).catch(err => {
             console.error('Fetch error:', err);
             document.getElementById('login-form-div').style.display = 'none';
-            document.getElementById('verify-failed').style.display = 'inline';
+            document.getElementById('verify-failed').style.display = 'block';
         })
     }
 }
@@ -40,7 +40,7 @@ function initializeUserInterface() {
     registerToggle.addEventListener("click", (event) => {
         event.preventDefault();
         document.getElementById('login-form-div').style.display = 'none';
-        document.getElementById('register-form-div').style.display = 'inline';
+        document.getElementById('register-form-div').style.display = 'block';
     });
 
     const loginToggle = document.getElementById("login-toggle");
@@ -54,7 +54,7 @@ function initializeUserInterface() {
     resetPassBtn.addEventListener("click", (event) => {
         event.preventDefault();
         document.getElementById('login-form-div').style.display = 'none';
-        document.getElementById('reset-password-form').style.display = 'inline';
+        document.getElementById('reset-password-form').style.display = 'block';
     });
 
     document.getElementById('reset-password-close-button').onclick = function () {
@@ -82,14 +82,14 @@ function showLoading() {
     document.getElementById("login-btn").style.display = "none";
     document.getElementById("register-btn").style.display = "none";
     document.getElementById("reset-pass-btn").style.display = "none";
-    document.getElementById("loading-spinner").style.display = "inline";
-    document.getElementById("dimmed-bg").style.display = "inline";
+    document.getElementById("loading-spinner").style.display = "block";
+    document.getElementById("dimmed-bg").style.display = "block";
 }
 
 function hideLoading() {
-    document.getElementById("login-btn").style.display = "inline";
-    document.getElementById("register-btn").style.display = "inline";
-    document.getElementById("reset-pass-btn").style.display = "inline";
+    document.getElementById("login-btn").style.display = "block";
+    document.getElementById("register-btn").style.display = "block";
+    document.getElementById("reset-pass-btn").style.display = "block";
     document.getElementById("loading-spinner").style.display = "none";
     document.getElementById("dimmed-bg").style.display = "none";
 }

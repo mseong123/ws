@@ -30,7 +30,7 @@
 								</div>
 							</div>
 							<div class="remember-forgot">
-								<label><input id="remember-me" type="checkbox"> Remember me</label>
+								<label for="remember-me"><input id="remember-me" type="checkbox"> Remember me</label>
 								<a id="reset-password-btn" type="button">Forgot password?</a>
 							</div>
 							<div class="login-error" id="login-error"></div>
@@ -42,11 +42,7 @@
 							<div class="register-link">
 								<p>Don't have an account? <a id="register-toggle" type="button">Register</a></p>
 							</div>
-
-							<div class="seperator-link">
-								<p>________________________________________</p>
-							</div>
-
+							<hr>
 							<div class="foutytwo-link">
 								<a href="#" id="start"><img src="{% static '42Logo.png'%}"
 										style="width:42px;height:42px;border-radius:10px;"></a>
@@ -471,7 +467,7 @@
 	<script type="module" src="{% static 'game/profile.js' %}"></script>
 	<script type="module" src="{% static 'game/chat.js' %}"></script>
 	<script type="module" src="{% static 'game/main.js' %}"></script>
-	<script type="module" src="{% static 'game/utils.js' %}"></script>
-	<script type="module" src="{% static 'game/home.js' %}"></script>
+	<script type="module" src="{% static 'game/login-utils.js' %}"></script>
+	<script type="module" src="{% static 'game/login.js' %}"></script>
 	
 </html>

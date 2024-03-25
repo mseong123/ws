@@ -20,7 +20,6 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, .2);
     color: #fff;
     border-radius: 10px;
-	
 	position:relative;
 	z-index: 1;
 }
@@ -32,24 +31,23 @@
 }
 
 .wrapper .input-box {
-    height: 1.5rem;
-    margin: 1rem 0;
+    margin: 0.5rem 0;
 }
 
 .wrapper .auth-form {
     margin: 0 auto;
-    padding: 1rem 1rem;
+    padding: 0.5rem 0.5rem;
 }
 
 .wrapper .reset-password-form {
     display: none;
-    margin: auto;
-    padding: 20px 0;
+	margin: 0 auto;
+    padding: 0.5rem 0.5rem;
 }
 
 .wrapper .confirm-reset-password-form {
     margin: auto;
-    padding: 20px 0 20px 0;
+	padding: 0.5rem 0.5rem;
 }
 
 .wrapper .reset-password-form .reset-password-close-button {
@@ -70,7 +68,7 @@
 
 .input-box input {
     width: 100%;
-    height: 100%;
+	height:0.5rem;
     background: transparent;
     border: none;
     outline: none;
@@ -95,19 +93,15 @@
 }
 
 .wrapper .remember-forgot {
-    display: flex;
-    justify-content: space-between;
     font-size: 14.5px;
-    margin: -15px 0 15px;
-}
-
-.remember-forgot label input {
-    margin-right: 3px;
+    margin: 0.5rem;
 }
 
 .remember-forgot a {
     color: #fff;
-    text-decoration: none;
+	text-decoration: none;
+	display:block;
+	margin:0.5rem 0;
 }
 
 .remember-forgot a:hover {
@@ -141,14 +135,6 @@
     font-weight: 600;
 }
 
-.seperator-link p {
-    color: rgba(255, 255, 255, .2);
-    text-decoration: none;
-    text-align: center;
-    margin: 20px 0 15px;
-    font-weight: 600;
-}
-
 .register-link p a:hover {
     text-decoration: underline;
     cursor: pointer;
@@ -168,13 +154,13 @@
 .wrapper .login-link {
     font-size: 14.5px;
     text-align: center;
-    margin: 20px;
+    margin: 1rem;
 }
 
 .wrapper .login-error {
     font-size: 14.5px;
     text-align: center;
-    margin: 20px;
+    margin: 20px 0;
     color: #ffbb00;
 }
 
@@ -275,269 +261,79 @@
 }
 
 @media (min-width:577px) {
-	
-
 	.wrapper {
-		width: 420px;
-		background: transparent;
-		border: 2px solid rgba(255, 255, 255, .2);
-		backdrop-filter: blur(20px);
-		box-shadow: 0 0 10px rgba(0, 0, 0, .2);
-		color: #fff;
-		border-radius: 10px;
-		/* padding: 30px 40px; */
-		display: flex;
-		position:relative;
-		z-index: 1;
+		width:50%;
 	}
-	
 	.wrapper h1 {
-		font-size: 36px;
-		text-align: center;
+		font-size: 1.5rem;
 	}
-	
+	#login-input-fields {
+		display:flex;
+	}
 	.wrapper .input-box {
-		width: 100%;
-		height: 50px;
-		margin: 30px 0;
+		margin: 0.25rem 0.25rem;
 	}
-	
-	.wrapper .auth-form {
-		margin: auto;
-		padding: 20px 0 20px 0;
+	.remember-forgot {
+		display:flex;
+		justify-content:space-between;
 	}
-	
-	.wrapper .reset-password-form {
-		display: none;
-		margin: auto;
-		padding: 20px 0 20px 0;
-	}
-	
-	.wrapper .confirm-reset-password-form {
-		margin: auto;
-		padding: 20px 0 20px 0;
-	}
-	
-	.wrapper .reset-password-form .reset-password-close-button {
-		/* padding:2px 5px; */
-		position: absolute;
-		border: none;
-		top: 10px;
-		right: 10px;
-		background: transparent;
-	}
-	
-	.wrapper .reset-password-form .reset-password-close-button:hover {
-		/* padding:2px 5px; */
-		background: transparent;
-		color: rgba(255, 255, 255, .2);
-		cursor: pointer;
-	}
-	
-	.input-box input {
-		width: 100%;
-		height: 100%;
-		background: transparent;
-		border: none;
-		outline: none;
-		border: 2px solid rgba(255, 255, 255, .2);
-		border-radius: 40px;
-		font-size: 16px;
-		color: #fff;
-		background-color: #ffffff00;
-		padding: 1rem 2rem;
-	}
-	
-	.input-box input::placeholder {
-		color: #fff;
-	}
-	
-	.input-box i {
-		position: absolute;
-		right: 20px;
-		top: 50%;
-		/* transform: translateY(-50%); */
-		font-size: 20px;
-	}
-	
-	.wrapper .remember-forgot {
-		display: flex;
-		justify-content: space-between;
-		font-size: 14.5px;
-		margin: -15px 0 15px;
-	}
-	
-	.remember-forgot label input {
-		accent-color: #fff;
-		margin-right: 3px;
-	}
-	
 	.remember-forgot a {
-		color: #fff;
-		text-decoration: none;
+		margin: 0;
 	}
-	
-	.remember-forgot a:hover {
-		text-decoration: underline;
-		cursor: pointer;
-	}
-	
-	.wrapper .btn {
-		width: 100%;
-		height: 45px;
-		background: #fff;
-		border: none;
-		outline: none;
-		border-radius: 40px;
-		box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-		cursor: pointer;
-		font-size: 16px;
-		color: #333;
-		font-weight: 600;
-	}
-	
 	.wrapper .register-link {
-		font-size: 14.5px;
-		text-align: center;
-		margin: 20px 0 15px;
+		margin: 0.5rem 0;
 	}
-	
-	.register-link p a {
-		color: #fff;
-		text-decoration: none;
-		font-weight: 600;
+	#login-form {
+		margin:0;
 	}
-	
-	.seperator-link p {
-		color: rgba(255, 255, 255, .2);
-		text-decoration: none;
-		text-align: center;
-		margin: 20px 0 15px;
-		font-weight: 600;
+
+} 
+
+@media (min-width:993px) {
+	.wrapper {
+		width:420px;
 	}
-	
-	.register-link p a:hover {
-		text-decoration: underline;
-		cursor: pointer;
+	.wrapper h1 {
+		margin:1rem 0;
+		font-size: 2rem;
 	}
-	
-	.dimmed-background {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.5);
-		z-index: 999;
-		display: none;
+	.wrapper .auth-form, .wrapper .reset-password-form {
+		margin: 0 auto;
+		padding: 1rem 1rem;
 	}
-	
+
+	#login-input-fields {
+		display:block;
+	}
+	.wrapper .input-box {
+		margin: 1rem 0;
+	}
+	.wrapper .remember-forgot {
+		display:block;
+		font-size: 1rem;
+	}
 	.wrapper .login-link {
-		font-size: 14.5px;
-		text-align: center;
-		margin: 20px;
+		font-size: 1rem;
 	}
-	
-	.wrapper .login-error {
-		font-size: 14.5px;
-		text-align: center;
-		margin: 20px;
-		color: #ffbb00;
+	.remember-forgot label {
+		display:block;
+		margin: 0.75rem 0;
 	}
-	
-	.loading-spinner {
-		border: 10px solid #f3f3f3;
-		/* Light grey */
-		border-top: 10px solid #dbc234;
-		/* Blue */
-		border-radius: 50%;
-		width: 100px;
-		height: 100px;
-		animation: spin 2s linear infinite;
-		position: absolute;
-		top: 40%;
-		left: 40%;
-		transform: translate(-50%, -50%);
-		z-index: 9999;
-		/* Ensure spinner is on top of other elements */
-		display: none;
-		/* Initially hidden */
+	.remember-forgot a {
+		margin: 0.75rem 0;
 	}
-	
-	@keyframes spin {
-		0% {
-			transform: rotate(0deg);
-		}
-	
-		100% {
-			transform: rotate(360deg);
-		}
+	.input-box input {
+		height:2.5rem;
+		font-size: 1.25rem;
 	}
-	
-	.login-link p a {
-		color: #fff;
-		text-decoration: none;
-		font-weight: 600;
+	.wrapper .register-link {
+		margin: 1.5rem 0;
+		font-size: 1rem;
+	}
+	.foutytwo-link {
+		margin:1rem 0;
 	}
 	
 	
-	.login-link p a:hover {
-		text-decoration: underline;
-		cursor: pointer;
-	}
-	
-	/* Circular loading home */
-	.loading-container {
-		/* position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%); */
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		height: 10rem;
-		/* Adjust height as needed */
-	}
-	
-	.loading {
-		border: 12px solid #1d13135c;
-		border-top: 12px solid #ffffff;
-		border-radius: 50%;
-		width: 100px;
-		height: 100px;
-		animation: spin 2s linear infinite;
-	}
-	
-	@keyframes spin {
-		0% {
-			transform: rotate(0deg);
-		}
-	
-		100% {
-			transform: rotate(360deg);
-		}
-	}
-	
-	/* End of cirular loading */
-	
-	.verify-dialog {
-		text-align: center;
-		display: none;
-		margin: auto;
-		padding: 20px 0 20px 0;
-		display: none;
-	}
-	
-	.verify-dialog a {
-		color: #fff;
-		text-decoration: underline;
-		font-weight: 600;
-		transition: color 0.3s ease;
-	}
-	
-	.verify-dialog a:hover {
-		text-decoration: underline;
-		color: #1c76d7;
-	}
 }
+

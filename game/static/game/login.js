@@ -1,4 +1,4 @@
-import { getCookie, showLoading, hideLoading, storeLoginLocalStorage, displayErrorMessages, initializeVerifyEmail, initializeUserInterface, createOtpField } from "./utils.js"
+import { getCookie, showLoading, hideLoading, storeLoginLocalStorage, displayErrorMessages, initializeVerifyEmail, initializeUserInterface, createOtpField } from "./login-utils.js"
 import { global } from "./global.js";
 import { windowResize } from "./main.js"
 
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
       else
         window.alert("Internal server error. Please try again.");
     } else {
-      document.getElementById("register-success").style.display = "inline";
+      document.getElementById("register-success").style.display = "block";
       registerForm.style.display = "none";
     }
   }
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
       window.alert("Internal server error. Please try again.");
     } else {
       window.alert("Reset password email was sent!");
-      document.getElementById("reset-password-dialog").style.display = "inline";
+      document.getElementById("reset-password-dialog").style.display = "block";
       resetPassForm.style.display = "none";
     }
   }
